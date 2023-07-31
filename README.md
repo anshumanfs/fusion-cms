@@ -12,3 +12,5 @@ GraphCMS is an open source initiative to improve the development speed of backen
     - GraphQL
     - REST
 - GraphQL interface for efficient querying
+- Centralized monitoring of applications deployed
+
