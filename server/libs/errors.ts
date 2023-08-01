@@ -192,6 +192,16 @@ const Error = {
                 status: 599
             }
         });
+    },
+    GRAPHQL_VALIDATION_FAILED: (message: string) => {
+        return new GraphQLError(message, {
+            extensions: {
+                code: 'GRAPHQL_VALIDATION_FAILED',
+                status: 400
+            }
+        });
     }
 
 }
+
+export default Error;

@@ -103,3 +103,70 @@ const createIndexSchema = () => {
     return indexSchema;
 }
 
+/**
+ * Generates a GraphQL schema based on the provided JSON schema.
+ *
+ * @param {SchemaInput} jsonSchema - The JSON schema to generate the GraphQL schema from.
+ * @param {string} singularCollectionName - The singular representative name of the collection.
+ * @param {string} pluralCollectionName - The plural representative name of the collection.
+ * @return {string} The generated GraphQL schema.
+ */
+const generateGraphqlSchema = (jsonSchema: SchemaInput, singularCollectionName: string, pluralCollectionName: string) => {
+    const jsonSchemaWithGraphqlTypes = jsonGraphqlMapper(jsonSchema);
+    let idType = 'ID!';
+    // Generating graphql schema
+    const queryFields = Object.keys(jsonSchemaWithGraphqlTypes).map((field) => {
+        if (field === '_id') {
+            idType = jsonSchemaWithGraphqlTypes[field].type + '!';
+        }
+        return `${field}: ${jsonSchemaWithGraphqlTypes[field].type}`;
+    });
+
+    const inputFields = Object.keys(jsonSchemaWithGraphqlTypes).map((field) => {
+        let type = jsonSchemaWithGraphqlTypes[field].hasOwnProperty('ref') ? 'JSON' : jsonSchemaWithGraphqlTypes[field].type;
+        if (jsonSchemaWithGraphqlTypes[field].required) {
+            type = type + '!';
+        }
+        return `${field}: ${type}`;
+    })
+
+    const graphqlSchema = `
+        const Schema = \`#graphql
+            extend type Query {
+                ${singularCollectionName}(_id: ${idType}): ${singularCollectionName}
+                ${pluralCollectionName}(filters:JSON, options:QueryOptions): [${singularCollectionName}]
+                count_${pluralCollectionName}(filters:JSON): Int
+                aggregate_${pluralCollectionName}(pipeline:[JSON!]!): JSON
+            }
+
+            extend type Mutation {
+                create_${singularCollectionName}(input: ${singularCollectionName}Input): ${singularCollectionName}
+                update_${singularCollectionName}(_id: ${idType}, input: ${singularCollectionName}Input): ${singularCollectionName}
+                delete_${singularCollectionName}(_id: ${idType}): ${singularCollectionName}
+            }
+
+            input ${singularCollectionName}Input {
+                ${inputFields.join('\n')}
+            }
+
+            type ${singularCollectionName} {
+                ${queryFields.join('\n')}
+            }
+
+            input QueryOptions {
+                allowDiskUse: Boolean
+                batchSize: BigInt
+                comment: String
+                hint: JSON
+                limit: BigInt
+                projection: JSONObject
+                readPreference: String
+                skip: Int
+                sort: JSONObject
+            }\`;
+        module.exports = Schema;
+    `;
+    return graphqlSchema;
+}
+
+export { generateGraphqlSchema, createIndexSchema };

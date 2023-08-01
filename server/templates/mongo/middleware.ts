@@ -73,5 +73,6 @@ const generateMiddleware = (pluralCollectionName: string, singularCollectionName
             MutationPostMiddleware
         }
     `;
+};
 
-}
+export { generateMiddleware };

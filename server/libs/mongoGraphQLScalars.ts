@@ -1,1 +1,0 @@
-import { GraphQLScalarType } from 'graphql';
