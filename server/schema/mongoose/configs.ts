@@ -1,0 +1,22 @@
+import { Types, Optional } from '../../templates/mongo/utils/schemaHelper';
+import { Schema } from 'mongoose';
+import { conn } from '../../db';
+
+const QuerySchema: any = new Schema(
+    {
+        _id: Types.ObjectId,
+        type: Types.String,
+        nextAvailablePort: Optional(Types.Number),
+    },
+    {
+        timestamps: true,
+        toJSON: {
+            getters: true,
+        },
+        toObject: {
+            getters: true,
+        },
+    }
+);
+
+export default conn.model('cms_configs', QuerySchema, 'cms_configs');

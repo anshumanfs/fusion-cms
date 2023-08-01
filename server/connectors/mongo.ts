@@ -21,7 +21,6 @@ interface MongooseConfig {
     options: Partial<MongooseConfigOptions>;
 }
 
-
 export default function connect(config: MongooseConfig) {
     const { uri, options } = config;
     const conn = mongoose.createConnection(uri, options);
