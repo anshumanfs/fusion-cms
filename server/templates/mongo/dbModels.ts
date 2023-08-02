@@ -1,12 +1,12 @@
-import lodash from "lodash";
+import lodash from 'lodash';
 
 /**
  * Generates a Mongoose schema string from a JSON schema.
  *
- * @param {SchemaInput} schema - The JSON schema to convert.
+ * @param {MongoSchemaInput} schema - The JSON schema to convert.
  * @returns {string} - The generated Mongoose schema string.
  */
-const jsonToMongooseSchema = (schema: SchemaInput) => {
+const jsonToMongooseSchema = (schema: MongoSchemaInput) => {
     const jsonSchema = lodash.cloneDeep(schema);
     let dbSchemaString = '{';
     for (const [key, value] of Object.entries(jsonSchema)) {
@@ -54,17 +54,21 @@ const jsonToMongooseSchema = (schema: SchemaInput) => {
     }
     dbSchemaString += '}';
     return dbSchemaString;
-}
+};
 
 /**
  * Generates the content of a model file based on the provided parameters.
  *
  * @param {string} originalCollectionName - The name of the original collection.
  * @param {string} pluralCollectionName - The pluralized name of the collection.
- * @param {SchemaInput} schema - The input schema for generating the model file content.
+ * @param {MongoSchemaInput} schema - The input schema for generating the model file content.
  * @return {string} The generated model file content.
  */
-const generateModelFileContent = (originalCollectionName: string, pluralCollectionName: string, schema: SchemaInput) => {
+const generateModelFileContent = (
+    originalCollectionName: string,
+    pluralCollectionName: string,
+    schema: MongoSchemaInput
+) => {
     const dbSchemaString = jsonToMongooseSchema(schema);
     const modelFileContent = `
         const conn = require('../db');
@@ -84,6 +88,6 @@ const generateModelFileContent = (originalCollectionName: string, pluralCollecti
         module.exports = conn.model('${originalCollectionName}', ${pluralCollectionName}Schema, '${originalCollectionName}');
     `;
     return modelFileContent;
-}
+};
 
-export { generateModelFileContent }
+export { generateModelFileContent };

@@ -21,13 +21,13 @@ const generateIndexResolver = () => {
         };
     `;
     return indexResolverContent;
-}
+};
 
 const generateResolver = (
     sourceName: string,
     originalCollectionName: string,
     singularCollectionName: string,
     pluralCollectionName: string
-) => {
+) => {};
 
-}
+export { generateResolver, generateIndexResolver };

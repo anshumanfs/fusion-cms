@@ -32,7 +32,6 @@ declare global {
     type MySQLSchemaFields = {
         required: boolean | false;
         type: string;
-        ref: string | undefined;
         isArray: boolean | false;
         enums: string | undefined | null;
         defaultValue: string | undefined;
@@ -41,10 +40,15 @@ declare global {
         isUnique: boolean | false;
         isSparse: boolean | false;
         isPrimaryKey: boolean | false;
+        autoIncrement: boolean | false;
     };
 
-    type SchemaInput = {
-        [key: string]: MongoSchemaFields | MySQLSchemaFields;
+    type MySQLSchemaInput = {
+        [key: string]: MySQLSchemaFields;
+    };
+
+    type MongoSchemaInput = {
+        [key: string]: MongoSchemaFields;
     };
 }
 

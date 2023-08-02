@@ -3,11 +3,11 @@ import lodash from 'lodash';
 /**
  * Transforms a JSON schema to a GraphQL schema.
  *
- * @param {SchemaInput} schema - The JSON schema to be transformed.
- * @return {SchemaInput} - The transformed GraphQL schema.
+ * @param {MongoSchemaInput} schema - The JSON schema to be transformed.
+ * @return {MongoSchemaInput} - The transformed GraphQL schema.
  */
-const jsonGraphqlMapper = (schema: SchemaInput) => {
-    const jsonData: SchemaInput = lodash.cloneDeep(schema);
+const jsonGraphqlMapper = (schema: MongoSchemaInput) => {
+    const jsonData: MongoSchemaInput = lodash.cloneDeep(schema);
     for (const [key, value] of Object.entries(jsonData)) {
         switch (value.type) {
             case 'String':
@@ -70,7 +70,7 @@ const jsonGraphqlMapper = (schema: SchemaInput) => {
         }
     }
     return jsonData;
-}
+};
 
 /**
  * Generates the index schema for the GraphQL API.
@@ -101,17 +101,21 @@ const createIndexSchema = () => {
         module.exports = [...importedModules, typeDefs];
     `;
     return indexSchema;
-}
+};
 
 /**
  * Generates a GraphQL schema based on the provided JSON schema.
  *
- * @param {SchemaInput} jsonSchema - The JSON schema to generate the GraphQL schema from.
+ * @param {MongoSchemaInput} jsonSchema - The JSON schema to generate the GraphQL schema from.
  * @param {string} singularCollectionName - The singular representative name of the collection.
  * @param {string} pluralCollectionName - The plural representative name of the collection.
  * @return {string} The generated GraphQL schema.
  */
-const generateGraphqlSchema = (jsonSchema: SchemaInput, singularCollectionName: string, pluralCollectionName: string) => {
+const generateGraphqlSchema = (
+    jsonSchema: MongoSchemaInput,
+    singularCollectionName: string,
+    pluralCollectionName: string
+) => {
     const jsonSchemaWithGraphqlTypes = jsonGraphqlMapper(jsonSchema);
     let idType = 'ID!';
     // Generating graphql schema
@@ -123,12 +127,14 @@ const generateGraphqlSchema = (jsonSchema: SchemaInput, singularCollectionName: 
     });
 
     const inputFields = Object.keys(jsonSchemaWithGraphqlTypes).map((field) => {
-        let type = jsonSchemaWithGraphqlTypes[field].hasOwnProperty('ref') ? 'JSON' : jsonSchemaWithGraphqlTypes[field].type;
+        let type = jsonSchemaWithGraphqlTypes[field].hasOwnProperty('ref')
+            ? 'JSON'
+            : jsonSchemaWithGraphqlTypes[field].type;
         if (jsonSchemaWithGraphqlTypes[field].required) {
             type = type + '!';
         }
         return `${field}: ${type}`;
-    })
+    });
 
     const graphqlSchema = `
         const Schema = \`#graphql
@@ -167,6 +173,6 @@ const generateGraphqlSchema = (jsonSchema: SchemaInput, singularCollectionName: 
         module.exports = Schema;
     `;
     return graphqlSchema;
-}
+};
 
 export { generateGraphqlSchema, createIndexSchema };
