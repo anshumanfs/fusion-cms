@@ -1,5 +1,5 @@
 const serverJSGenerator = (port: number | string, appName: string) => {
-    const appJSString = `  
+  const appJSString = `  
       const app = require('express')(); 
       const { ApolloServer } = require('@apollo/server'); 
       const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer'); 
@@ -30,6 +30,6 @@ const serverJSGenerator = (port: number | string, appName: string) => {
       } 
       startApolloServer(dev);`;
 
-    return appJSString;
+  return appJSString;
 };
 export { serverJSGenerator };

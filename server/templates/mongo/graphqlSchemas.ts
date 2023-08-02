@@ -7,69 +7,69 @@ import lodash from 'lodash';
  * @return {MongoSchemaInput} - The transformed GraphQL schema.
  */
 const jsonGraphqlMapper = (schema: MongoSchemaInput) => {
-    const jsonData: MongoSchemaInput = lodash.cloneDeep(schema);
-    for (const [key, value] of Object.entries(jsonData)) {
-        switch (value.type) {
-            case 'String':
-                value.type = 'String';
-                break;
-            case 'BigInt':
-                value.type = 'BigInt';
-                break;
-            case 'Number':
-                value.type = 'Int';
-                break;
-            case 'PositiveNumber':
-                value.type = 'PositiveInt';
-                break;
-            case 'NegativeNumber':
-                value.type = 'NegativeInt';
-                break;
-            case 'Boolean':
-                value.type = 'Boolean';
-                break;
-            case 'Buffer':
-                value.type = 'Buffer';
-                break;
-            case 'Date':
-                value.type = 'Date';
-                break;
-            case 'ObjectId':
-                value.type = 'ID';
-                break;
-            case 'Time':
-                value.type = 'Time';
-                break;
-            case 'DateTime':
-                value.type = 'DateTime';
-                break;
-            case 'Decimal128':
-                value.type = 'Decimal128';
-                break;
-            case 'DbRef':
-                value.type = 'DbRef';
-                break;
-            case 'JSON':
-                value.type = 'JSON';
-                break;
-            case 'Mixed':
-                value.type = 'Mixed';
-                break;
-            case 'Map':
-                value.type = 'Map';
-                break;
-            case 'UUID':
-                value.type = 'UUID';
-                break;
-            default:
-                value.type = 'Any';
-                break;
-        }
-        if (value.isArray) {
-            value.type = `[${value.type}]`;
-        }
+  const jsonData: MongoSchemaInput = lodash.cloneDeep(schema);
+  for (const [key, value] of Object.entries(jsonData)) {
+    switch (value.type) {
+      case 'String':
+        value.type = 'String';
+        break;
+      case 'BigInt':
+        value.type = 'BigInt';
+        break;
+      case 'Number':
+        value.type = 'Int';
+        break;
+      case 'PositiveNumber':
+        value.type = 'PositiveInt';
+        break;
+      case 'NegativeNumber':
+        value.type = 'NegativeInt';
+        break;
+      case 'Boolean':
+        value.type = 'Boolean';
+        break;
+      case 'Buffer':
+        value.type = 'Buffer';
+        break;
+      case 'Date':
+        value.type = 'Date';
+        break;
+      case 'ObjectId':
+        value.type = 'ID';
+        break;
+      case 'Time':
+        value.type = 'Time';
+        break;
+      case 'DateTime':
+        value.type = 'DateTime';
+        break;
+      case 'Decimal128':
+        value.type = 'Decimal128';
+        break;
+      case 'DbRef':
+        value.type = 'DbRef';
+        break;
+      case 'JSON':
+        value.type = 'JSON';
+        break;
+      case 'Mixed':
+        value.type = 'Mixed';
+        break;
+      case 'Map':
+        value.type = 'Map';
+        break;
+      case 'UUID':
+        value.type = 'UUID';
+        break;
+      default:
+        value.type = 'Any';
+        break;
     }
-    return jsonData;
+    if (value.isArray) {
+      value.type = `[${value.type}]`;
+    }
+  }
+  return jsonData;
 };
 
 /**
@@ -78,7 +78,7 @@ const jsonGraphqlMapper = (schema: MongoSchemaInput) => {
  * @return {string} The generated index schema.
  */
 const createIndexSchema = () => {
-    const indexSchema = `
+  const indexSchema = `
         const fs = require('fs-extra');
         const path = require('path');
         const directory = path.join(__dirname, './graphqlSchemas');
@@ -100,7 +100,7 @@ const createIndexSchema = () => {
         \`;
         module.exports = [...importedModules, typeDefs];
     `;
-    return indexSchema;
+  return indexSchema;
 };
 
 /**
@@ -112,31 +112,31 @@ const createIndexSchema = () => {
  * @return {string} The generated GraphQL schema.
  */
 const generateGraphqlSchema = (
-    jsonSchema: MongoSchemaInput,
-    singularCollectionName: string,
-    pluralCollectionName: string
+  jsonSchema: MongoSchemaInput,
+  singularCollectionName: string,
+  pluralCollectionName: string
 ) => {
-    const jsonSchemaWithGraphqlTypes = jsonGraphqlMapper(jsonSchema);
-    let idType = 'ID!';
-    // Generating graphql schema
-    const queryFields = Object.keys(jsonSchemaWithGraphqlTypes).map((field) => {
-        if (field === '_id') {
-            idType = jsonSchemaWithGraphqlTypes[field].type + '!';
-        }
-        return `${field}: ${jsonSchemaWithGraphqlTypes[field].type}`;
-    });
+  const jsonSchemaWithGraphqlTypes = jsonGraphqlMapper(jsonSchema);
+  let idType = 'ID!';
+  // Generating graphql schema
+  const queryFields = Object.keys(jsonSchemaWithGraphqlTypes).map((field) => {
+    if (field === '_id') {
+      idType = jsonSchemaWithGraphqlTypes[field].type + '!';
+    }
+    return `${field}: ${jsonSchemaWithGraphqlTypes[field].type}`;
+  });
 
-    const inputFields = Object.keys(jsonSchemaWithGraphqlTypes).map((field) => {
-        let type = jsonSchemaWithGraphqlTypes[field].hasOwnProperty('ref')
-            ? 'JSON'
-            : jsonSchemaWithGraphqlTypes[field].type;
-        if (jsonSchemaWithGraphqlTypes[field].required) {
-            type = type + '!';
-        }
-        return `${field}: ${type}`;
-    });
+  const inputFields = Object.keys(jsonSchemaWithGraphqlTypes).map((field) => {
+    let type = jsonSchemaWithGraphqlTypes[field].hasOwnProperty('ref')
+      ? 'JSON'
+      : jsonSchemaWithGraphqlTypes[field].type;
+    if (jsonSchemaWithGraphqlTypes[field].required) {
+      type = type + '!';
+    }
+    return `${field}: ${type}`;
+  });
 
-    const graphqlSchema = `
+  const graphqlSchema = `
         const Schema = \`#graphql
             extend type Query {
                 ${singularCollectionName}(_id: ${idType}): ${singularCollectionName}
@@ -172,7 +172,7 @@ const generateGraphqlSchema = (
             }\`;
         module.exports = Schema;
     `;
-    return graphqlSchema;
+  return graphqlSchema;
 };
 
 export { generateGraphqlSchema, createIndexSchema };

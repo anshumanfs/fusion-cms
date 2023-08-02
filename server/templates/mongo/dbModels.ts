@@ -7,53 +7,53 @@ import lodash from 'lodash';
  * @returns {string} - The generated Mongoose schema string.
  */
 const jsonToMongooseSchema = (schema: MongoSchemaInput) => {
-    const jsonSchema = lodash.cloneDeep(schema);
-    let dbSchemaString = '{';
-    for (const [key, value] of Object.entries(jsonSchema)) {
-        let schemaPart = ``;
-        let { isNullable, required, isArray, type, enums, defaultValue, ref, isIndex, isUnique, isSparse } = value;
-        type = type === 'DbRef' ? `DbRef('${ref}')` : type;
-        if (required) {
-            schemaPart = `Types.${type}`;
-        } else {
-            schemaPart = `Optional(Types.${type})`;
-        }
-
-        if (!['true', true].includes(isNullable)) {
-            if (isArray) {
-                schemaPart = `ObjArray(${schemaPart})`;
-            }
-        } else {
-            if (isArray) {
-                schemaPart = `Nullable.ObjArray(ObjArray(${schemaPart}))`;
-            } else {
-                schemaPart = `Nullable.Types(${schemaPart})`;
-            }
-        }
-
-        if (![undefined, null, ''].includes(enums)) {
-            schemaPart = `addEnums(${schemaPart}, ${enums})`;
-        }
-
-        if (![undefined, null, ''].includes(defaultValue)) {
-            schemaPart = `addDefaultValue(${schemaPart}, ${defaultValue})`;
-        }
-
-        if (isIndex) {
-            schemaPart = `index(${schemaPart})`;
-        }
-
-        if (isUnique) {
-            schemaPart = `unique(${schemaPart})`;
-        }
-
-        if (isSparse) {
-            schemaPart = `sparse(${schemaPart})`;
-        }
-        dbSchemaString += `${key}: ${schemaPart},`;
+  const jsonSchema = lodash.cloneDeep(schema);
+  let dbSchemaString = '{';
+  for (const [key, value] of Object.entries(jsonSchema)) {
+    let schemaPart = ``;
+    let { isNullable, required, isArray, type, enums, defaultValue, ref, isIndex, isUnique, isSparse } = value;
+    type = type === 'DbRef' ? `DbRef('${ref}')` : type;
+    if (required) {
+      schemaPart = `Types.${type}`;
+    } else {
+      schemaPart = `Optional(Types.${type})`;
     }
-    dbSchemaString += '}';
-    return dbSchemaString;
+
+    if (!['true', true].includes(isNullable)) {
+      if (isArray) {
+        schemaPart = `ObjArray(${schemaPart})`;
+      }
+    } else {
+      if (isArray) {
+        schemaPart = `Nullable.ObjArray(ObjArray(${schemaPart}))`;
+      } else {
+        schemaPart = `Nullable.Types(${schemaPart})`;
+      }
+    }
+
+    if (![undefined, null, ''].includes(enums)) {
+      schemaPart = `addEnums(${schemaPart}, ${enums})`;
+    }
+
+    if (![undefined, null, ''].includes(defaultValue)) {
+      schemaPart = `addDefaultValue(${schemaPart}, ${defaultValue})`;
+    }
+
+    if (isIndex) {
+      schemaPart = `index(${schemaPart})`;
+    }
+
+    if (isUnique) {
+      schemaPart = `unique(${schemaPart})`;
+    }
+
+    if (isSparse) {
+      schemaPart = `sparse(${schemaPart})`;
+    }
+    dbSchemaString += `${key}: ${schemaPart},`;
+  }
+  dbSchemaString += '}';
+  return dbSchemaString;
 };
 
 /**
@@ -65,12 +65,12 @@ const jsonToMongooseSchema = (schema: MongoSchemaInput) => {
  * @return {string} The generated model file content.
  */
 const generateModelFileContent = (
-    originalCollectionName: string,
-    pluralCollectionName: string,
-    schema: MongoSchemaInput
+  originalCollectionName: string,
+  pluralCollectionName: string,
+  schema: MongoSchemaInput
 ) => {
-    const dbSchemaString = jsonToMongooseSchema(schema);
-    const modelFileContent = `
+  const dbSchemaString = jsonToMongooseSchema(schema);
+  const modelFileContent = `
         const conn = require('../db');
         const mongoose = require('mongoose');
         const {addEnums, addDefaultValue, index, unique, sparse, ObjArray, Nullable, Types } = require('../utils/schemaHelper');
@@ -87,7 +87,7 @@ const generateModelFileContent = (
         );
         module.exports = conn.model('${originalCollectionName}', ${pluralCollectionName}Schema, '${originalCollectionName}');
     `;
-    return modelFileContent;
+  return modelFileContent;
 };
 
 export { generateModelFileContent };

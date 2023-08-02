@@ -5,11 +5,11 @@
  * @return {Object} - An object with the SQL string and attributes.
  */
 const mapGqlFieldToSql = (info: any) => {
-    const fields = info.fieldNodes[0].selectionSet.selections.map((field: any) => field.name.value);
-    return {
-        sqlString: fields.join(','),
-        attributes: fields,
-    };
+  const fields = info.fieldNodes[0].selectionSet.selections.map((field: any) => field.name.value);
+  return {
+    sqlString: fields.join(','),
+    attributes: fields,
+  };
 };
 
 export { mapGqlFieldToSql };

@@ -1,5 +1,5 @@
 const generateIndexResolver = () => {
-    const indexResolverContent = `
+  const indexResolverContent = `
         const path = require('path');
         const keys = require('./config.json');
         const directory = path.resolve(__dirname, './graphqlResolvers');
@@ -20,14 +20,14 @@ const generateIndexResolver = () => {
             Mutation
         };
     `;
-    return indexResolverContent;
+  return indexResolverContent;
 };
 
 const generateResolver = (
-    sourceName: string,
-    originalCollectionName: string,
-    singularCollectionName: string,
-    pluralCollectionName: string
+  sourceName: string,
+  originalCollectionName: string,
+  singularCollectionName: string,
+  pluralCollectionName: string
 ) => {};
 
 export { generateResolver, generateIndexResolver };

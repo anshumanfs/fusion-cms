@@ -5,13 +5,13 @@
  * @return {object} The projection object.
  */
 const getProjections = (info) => {
-    const projection = {}
-    info.fieldNodes[0].selectionSet.selections
-        .map((field) => field.name.value)
-        .forEach((e) => {
-            projection[e] = 1
-        })
-    return projection
-}
+  const projection = {};
+  info.fieldNodes[0].selectionSet.selections
+    .map((field) => field.name.value)
+    .forEach((e) => {
+      projection[e] = 1;
+    });
+  return projection;
+};
 
-module.exports = { getProjections }
+module.exports = { getProjections };

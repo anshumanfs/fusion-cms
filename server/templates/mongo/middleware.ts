@@ -1,5 +1,5 @@
 const generateMiddleware = (pluralCollectionName: string, singularCollectionName: string) => {
-    const fileContent = `
+  const fileContent = `
         const QueryPreMiddleware = async ( root, args, context, info) => {
             ${pluralCollectionName} : async (root, args, context, info) => {
                 // please write your code here

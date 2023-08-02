@@ -1,5 +1,5 @@
 const generateMiddlewareFile = (pluralCollectionName: string, singularCollectionName: string) => {
-    const fileContent = ` 
+  const fileContent = ` 
       const QueryPreMiddleware = { 
           ${pluralCollectionName} : async(parent, args, contextValue, info) => { 
               // please write your scripts here 
@@ -62,11 +62,11 @@ const generateMiddlewareFile = (pluralCollectionName: string, singularCollection
    
       module.exports= { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } `;
 
-    return fileContent;
+  return fileContent;
 };
 
 const rawSQLMiddlewareGenerator = () => {
-    return `const rawSQLMiddleware = { 
+  return `const rawSQLMiddleware = { 
           pre: async(parent, args, contextValue, info) => { 
               // please write your scripts here 
               return {parent, args, contextValue, info} 

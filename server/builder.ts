@@ -5,6 +5,4 @@
 //
 // Path: server\builder.ts
 
-export default function builder() {
-
-}
+export default function builder() {}

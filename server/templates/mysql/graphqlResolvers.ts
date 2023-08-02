@@ -5,7 +5,7 @@
  * @return {string} The content of the index resolver.
  */
 const createIndexResolver = (appName: string) => {
-    const indexResolverContent = ` 
+  const indexResolverContent = ` 
         const path = require('path'); 
         const keys = require('./app.json'); 
         const directory = path.resolve(__dirname,'./resolvers'); 
@@ -33,7 +33,7 @@ const createIndexResolver = (appName: string) => {
           Mutation = { ...Mutation, ...ref.Mutation } 
         }); 
         module.exports = { ...customScalarResolvers , ...scalarResolvers, Query , Mutation};`;
-    return indexResolverContent;
+  return indexResolverContent;
 };
 
 /**
@@ -45,7 +45,7 @@ const createIndexResolver = (appName: string) => {
  * @return {string} The generated resolver file content.
  */
 const generateResolver = (appName: string, singularCollectionName: string, pluralCollectionName: string) => {
-    const resolverFileContent = `
+  const resolverFileContent = `
     const ${pluralCollectionName} = require('../dbModels/${pluralCollectionName}.js'); 
     const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
     const { mapGqlFieldToSql } = require('../utils/resolverUtils'); 
@@ -106,7 +106,7 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
       }; 
       module.exports = resolvers;
     `;
-    return resolverFileContent;
+  return resolverFileContent;
 };
 
 export { generateResolver, createIndexResolver };

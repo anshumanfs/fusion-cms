@@ -1,5 +1,5 @@
 const generateDbConFile = (appName: string) => {
-    const dbConString = `  
+  const dbConString = `  
       const { Sequelize } = require('sequelize'); 
       const path = require('path'); 
       const { username, password, accountName, dbName, dbSchemaName, dbWarehouseName, roleName } = require('./app.json').dbCreds; 
@@ -21,7 +21,7 @@ const generateDbConFile = (appName: string) => {
         console.error('❌ ${appName} :- Unable to establish Connection', err); 
       }); 
       module.exports =conn;`;
-    return dbConString;
+  return dbConString;
 };
 
 export { generateDbConFile };

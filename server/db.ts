@@ -2,17 +2,17 @@ import mongoose from 'mongoose';
 import configs from './config.json';
 
 const connectorLocations = {
-    mongo: './connectors/mongo.ts',
-    mysql: './connectors/mysql.ts',
-    postgres: './connectors/postgres.ts',
-    sqlite: './connectors/sqlite.ts',
+  mongo: './connectors/mongo.ts',
+  mysql: './connectors/mysql.ts',
+  postgres: './connectors/postgres.ts',
+  sqlite: './connectors/sqlite.ts',
 };
 
 const orms = {
-    mongo: 'mongoose',
-    mysql: 'sequelize',
-    postgres: 'sequelize',
-    sqlite: 'sequelize',
+  mongo: 'mongoose',
+  mysql: 'sequelize',
+  postgres: 'sequelize',
+  sqlite: 'sequelize',
 };
 
 let conn: any;

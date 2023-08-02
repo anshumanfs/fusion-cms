@@ -5,7 +5,7 @@
  * @return {string} The content of the generated database file.
  */
 const generateDbFile = (appName: string) => {
-    const fileContent = `
+  const fileContent = `
     const mongoose = require('mongoose');
     const path = require('path');
     const { url, connectionOptions } = require('../config.json');
@@ -18,7 +18,7 @@ const generateDbFile = (appName: string) => {
     })
     module.exports = conn;
     `;
-    return fileContent;
-}
+  return fileContent;
+};
 
 export { generateDbFile };
