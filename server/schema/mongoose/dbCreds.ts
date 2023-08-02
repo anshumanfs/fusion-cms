@@ -2,6 +2,7 @@ import { Optional, Types, addGetter, addSetter } from '../../templates/mongo/uti
 import { Schema } from 'mongoose';
 import { conn } from '../../db';
 import { AES, enc } from 'crypto-js';
+import mongooseQueryServices from '../services/mongoose';
 
 require('dotenv').config();
 const CIPHER_KEY = process.env.CIPHER_KEY;
@@ -53,4 +54,6 @@ const QuerySchema: any = new Schema(
   }
 );
 
-export default conn.model('cms_dbCreds', QuerySchema, 'cms_dbCreds');
+const model = conn.model('cms_dbCreds', QuerySchema, 'cms_dbCreds');
+const services = mongooseQueryServices(model);
+export { model, services };

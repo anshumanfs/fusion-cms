@@ -1,12 +1,11 @@
 import lodash from 'lodash';
-
 /**
  * Converts a JSON schema to a Snowflake schema.
  *
  * @param {MySQLSchemaInput} schema - The JSON schema to convert.
- * @return {string} - The Snowflake schema string.
+ * @return {string} - The MySQL schema string.
  */
-const jsonToSnowflakeSchema = (schema: MySQLSchemaInput) => {
+const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
   const jsonSchema: MySQLSchemaInput = lodash.cloneDeep(schema);
   let dbSchemaString = '{';
   for (const [key, value] of Object.entries(jsonSchema)) {
@@ -72,12 +71,12 @@ const jsonToSnowflakeSchema = (schema: MySQLSchemaInput) => {
  * @param {MySQLSchemaInput} schema - The schema for the collection in MySQL format.
  * @return {string} The generated schema content.
  */
-const generateSnowflakeSchema = (
+const generateMySqlSchema = (
   originalCollectionName: string,
   pluralCollectionName: string,
   schema: MySQLSchemaInput
 ) => {
-  const schemaString = jsonToSnowflakeSchema(schema);
+  const schemaString = jsonToSequelizeSchema(schema);
   const schemaContentToWrite = ` 
     const conn = require('../db.js'); 
     const { DataTypes } = require('sequelize'); 
@@ -104,4 +103,4 @@ const generateSnowflakeSchema = (
   return schemaContentToWrite;
 };
 
-export { generateSnowflakeSchema };
+export { generateMySqlSchema };

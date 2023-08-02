@@ -3,14 +3,14 @@ const fs = require('fs-extra');
 const beautify = require('js-beautify').js;
 const path = require('path');
 const { dbModels } = require('../../db');
-const { generateSnowflakeSchema } = require('./dbModels');
+const { generateMySqlSchema } = require('./dbModels');
 const { createIndexSchema, generateGqlSchema } = require('./graphqlSchemas');
 const { createIndexResolver, generateResolver } = require('./graphqlResolvers');
 
 const { generateDbConFile } = require('./dbGenerator');
 const { serverJSGenerator } = require('./serverGenerator');
 const { generateAppJsonFile } = require('./appJsonGenerator');
-const beautifyOption = require('../../beautify.json').beautifyOptions;
+const beautifyOption = require('../../libs/beautify.json').beautifyOptions;
 
 const updateGlobalConfig = async (appName: string, running: boolean) => {
   let port;
@@ -36,9 +36,6 @@ const updateGlobalConfig = async (appName: string, running: boolean) => {
 
 const createApp = async (fields: any, files: any) => {
   const { appName, env, username, password, accountName, dbName, dbSchemaName, dbWarehouseName, roleName } = fields;
-  const appDir = path.resolve(__dirname, '../../apps/' + appName);
-  const filesDir = path.resolve(__dirname, '../../../data/files');
-  const sslFileName = `${appName}_${env}.pem`;
   // add to db
   await dbModels.dbCreds.findOneAndUpdate(
     { appName, env },
@@ -79,7 +76,7 @@ const createDbModels = async (options: DbModelsInput) => {
   fs.ensureFileSync(`${dbModelsDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
     `${dbModelsDir}/${pluralCollectionName}.js`,
-    beautify(generateSnowflakeSchema(originalCollectionName, pluralCollectionName, schema), beautifyOption)
+    beautify(generateMySqlSchema(originalCollectionName, pluralCollectionName, schema), beautifyOption)
   );
 
   // disabled app specific REST endpoints for time unless its required

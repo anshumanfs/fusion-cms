@@ -62,6 +62,25 @@ const unique = (obj: any) => {
   return Obj;
 };
 
+const addSetter = (obj: any, setter: any) => {
+  return {
+    ...obj,
+    set(value: any) {
+      return setter(value);
+    },
+  };
+};
+
+const addGetter = (obj: any, propertyName: string, getter: any) => {
+  return {
+    ...obj,
+    get() {
+      const value = this.getDataValue(propertyName);
+      return getter(value);
+    },
+  };
+};
+
 /**
  *
  * @param {object} Object

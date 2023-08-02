@@ -1,6 +1,7 @@
 import { Types } from '../../templates/mongo/utils/schemaHelper';
 import { Schema } from 'mongoose';
 import { conn } from '../../db';
+import mongooseQueryServices from '../services/mongoose';
 
 const QuerySchema: any = new Schema(
   {
@@ -21,5 +22,6 @@ const QuerySchema: any = new Schema(
     },
   }
 );
-
-export default conn.model('cms_dbSchemas', QuerySchema, 'cms_dbSchemas');
+const model = conn.model('cms_dbSchemas', QuerySchema, 'cms_dbSchemas');
+const services = mongooseQueryServices(model);
+export { model, services };

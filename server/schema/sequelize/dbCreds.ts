@@ -13,18 +13,14 @@ const {
   Types,
 } = require('../../templates/mysql/utils/schemaHelper');
 const model: any = conn.define(
-  'cms_accessSchemas',
+  'cms_dbCreds',
   {
     _id: autoIncrement(primaryKey(Types.NUMBER)),
-    userName: Types.STRING,
-    appName: Types.STRING,
-    canCreate: Types.JSON,
-    canRead: Types.JSON,
-    canUpdate: Types.JSON,
-    canDelete: Types.JSON,
+    type: Types.STRING,
+    nextAvailablePort: Optional(Types.NUMBER),
   },
   {
-    tableName: 'cms_accessSchemas',
+    tableName: 'cms_dbCreds',
   }
 );
 const services = sequelizeQueryServices(model);

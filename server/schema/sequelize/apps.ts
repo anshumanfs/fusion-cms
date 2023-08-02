@@ -13,18 +13,17 @@ const {
   Types,
 } = require('../../templates/mysql/utils/schemaHelper');
 const model: any = conn.define(
-  'cms_accessSchemas',
+  'cms_apps',
   {
     _id: autoIncrement(primaryKey(Types.NUMBER)),
-    userName: Types.STRING,
     appName: Types.STRING,
-    canCreate: Types.JSON,
-    canRead: Types.JSON,
-    canUpdate: Types.JSON,
-    canDelete: Types.JSON,
+    port: Types.NUMBER,
+    running: Types.BOOLEAN,
+    isAppCompleted: Types.BOOLEAN,
+    dbType: addEnums(Types.STRING, ['mongo', 'snowflake']),
   },
   {
-    tableName: 'cms_accessSchemas',
+    tableName: 'cms_apps',
   }
 );
 const services = sequelizeQueryServices(model);

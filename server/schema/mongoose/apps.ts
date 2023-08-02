@@ -1,6 +1,7 @@
 import { Types, addEnums } from '../../templates/mongo/utils/schemaHelper';
 import { Schema } from 'mongoose';
 import { conn } from '../../db';
+import mongooseQueryServices from '../services/mongoose';
 
 const QuerySchema: any = new Schema(
   {
@@ -33,4 +34,6 @@ QuerySchema.virtual('schemas', {
   foreignField: 'appName',
 });
 
-export default conn.model('cms_apps', QuerySchema, 'cms_apps');
+const model = conn.model('cms_apps', QuerySchema, 'cms_apps');
+const services = mongooseQueryServices(model);
+export { model, services };

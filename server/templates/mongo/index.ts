@@ -9,7 +9,7 @@ const { createIndexResolver, generateResolver } = require('./resolvers/resolverG
 const { generateDbFile } = require('./db');
 const { serverJSGenerator } = require('./serverGenerator');
 const { generateAppJsonFile } = require('./appJsonGenerator');
-const beautifyOption = require('../../beautify.json').beautifyOptions;
+const beautifyOption = require('../../libs/beautify.json').beautifyOptions;
 
 const createApp = async (fields: any, files: any) => {
   const { appName, dbUsername, dbPassword, dbUrl, useSSL, env } = fields;
@@ -88,7 +88,7 @@ const createDbModels = async (options: DbModelsInput) => {
   // fs.ensureFileSync(${appDir}/routes/${pluralCollectionName}.js)
   // fs.writeFileSync(${appDir}/routes/${pluralCollectionName}.js, beautify(routesGenerator(pluralCollectionName, singularCollectionName), beautifyOption))
 
-  //generate index route
+  // generate index route
   // fs.ensureFileSync(${appDir}/indexRouter.js)
   // fs.writeFileSync(${appDir}/indexRouter.js, beautify(generateIndexRoute(appName), beautifyOption))
 
