@@ -13,17 +13,17 @@ const {
   Types,
 } = require('../../templates/mysql/utils/schemaHelper');
 const model: any = conn.define(
-  'cms_apps',
+  'cms_dbSchemas',
   {
     _id: autoIncrement(primaryKey(Types.NUMBER)),
-    appName: unique(Types.STRING),
-    port: Types.NUMBER,
-    running: Types.BOOLEAN,
-    isAppCompleted: Types.BOOLEAN,
-    dbType: addEnums(Types.STRING, ['mongo', 'snowflake']),
+    appName: Types.STRING,
+    singularCollectionName: Types.STRING,
+    originalCollectionName: Types.STRING,
+    pluralCollectionName: Types.STRING,
+    schema: Types.JSON,
   },
   {
-    tableName: 'cms_apps',
+    tableName: 'cms_dbSchemas',
     timestamps: true,
   }
 );

@@ -1,4 +1,4 @@
-import { Types, addEnums } from '../../templates/mongo/utils/schemaHelper';
+import { Types, addEnums, unique } from '../../templates/mongo/utils/schemaHelper';
 import { Schema } from 'mongoose';
 import { conn } from '../../db';
 import mongooseQueryServices from '../services/mongoose';
@@ -6,7 +6,7 @@ import mongooseQueryServices from '../services/mongoose';
 const QuerySchema: any = new Schema(
   {
     _id: Types.ObjectId,
-    appName: Types.String,
+    appName: unique(Types.String),
     port: Types.Number,
     running: Types.Boolean,
     isAppCompleted: Types.Boolean,

@@ -29,6 +29,8 @@ require(`./schema/${ormType}/configs`);
 require(`./schema/${ormType}/dbCreds`);
 require(`./schema/${ormType}/accessSchemas`);
 
-const dbModels = {};
+const dbModels = {
+    users:,
+};
 
 export { conn };

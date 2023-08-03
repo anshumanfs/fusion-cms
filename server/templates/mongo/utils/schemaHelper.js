@@ -252,12 +252,6 @@ const Types = {
     required: true,
     type: schemaTypes.Decimal128,
   },
-  DomainId: {
-    minLength: 7,
-    required: true,
-    set: setters.DomainId,
-    type: schemaTypes.String,
-  },
   Map: {
     required: true,
     type: schemaTypes.Map,

@@ -8,8 +8,8 @@ const QuerySchema: any = new Schema(
     _id: Types.ObjectId,
     userName: Types.String,
     useSSO: Types.Boolean,
-    contactPerson: Types.DomainId,
-    hashedApiKey: Types.String,
+    contactPerson: Types.String,
+    apiKey: Types.String,
   },
   {
     timestamps: true,

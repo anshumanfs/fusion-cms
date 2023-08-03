@@ -62,6 +62,13 @@ const unique = (obj: any) => {
   return Obj;
 };
 
+/**
+ * Adds a setter method to an object.
+ *
+ * @param {any} obj - The object to add the setter method to.
+ * @param {any} setter - The setter function to be called when the setter method is invoked.
+ * @return {object} - The modified object with the setter method.
+ */
 const addSetter = (obj: any, setter: any) => {
   return {
     ...obj,
@@ -71,6 +78,14 @@ const addSetter = (obj: any, setter: any) => {
   };
 };
 
+/**
+ * Adds a getter method to an object.
+ *
+ * @param {any} obj - The object to add the getter method to.
+ * @param {string} propertyName - The name of the property to get.
+ * @param {any} getter - The getter function to apply to the property value.
+ * @return {object} - The updated object with the getter method.
+ */
 const addGetter = (obj: any, propertyName: string, getter: any) => {
   return {
     ...obj,
@@ -237,6 +252,8 @@ const Types = {
 
 module.exports = {
   addEnums,
+  addGetter,
+  addSetter,
   unique,
   addDefaultValue,
   primaryKey,
