@@ -1,11 +1,10 @@
-import mongoose from 'mongoose';
-import configs from './config.json';
+import cmsConfigs from './config.json';
 
 const connectorLocations = {
-  mongo: './connectors/mongo.ts',
-  mysql: './connectors/mysql.ts',
-  postgres: './connectors/postgres.ts',
-  sqlite: './connectors/sqlite.ts',
+  mongo: './connectors/mongo',
+  mysql: './connectors/mysql',
+  postgres: './connectors/postgres',
+  sqlite: './connectors/sqlite',
 };
 
 const orms = {
@@ -17,20 +16,25 @@ const orms = {
 
 let conn: any;
 
-const dbType = configs.metadataDb.type || 'sqlite';
-const connector = require(connectorLocations[dbType as keyof typeof connectorLocations]);
-conn = connector(configs.metadataDb.configs);
+const dbType = cmsConfigs.metadataDb.type || 'sqlite';
+const { connector } = require(connectorLocations[dbType as keyof typeof connectorLocations]);
+conn = connector('metadata', cmsConfigs.metadataDb.configs);
 const ormType = orms[dbType as keyof typeof connectorLocations];
 
-require(`./schema/${ormType}/users`);
-require(`./schema/${ormType}/dbSchemas`);
-require(`./schema/${ormType}/apps`);
-require(`./schema/${ormType}/configs`);
-require(`./schema/${ormType}/dbCreds`);
-require(`./schema/${ormType}/accessSchemas`);
+const users = require(`./schema/${ormType}/users`).services;
+const dbSchemas = require(`./schema/${ormType}/dbSchemas`).services;
+const apps = require(`./schema/${ormType}/apps`).services;
+const configs = require(`./schema/${ormType}/configs`).services;
+const dbCreds = require(`./schema/${ormType}/dbCreds`).services;
+const accessSchema = require(`./schema/${ormType}/accessSchemas`).services;
 
 const dbModels = {
-    users:,
+  users,
+  dbSchemas,
+  apps,
+  configs,
+  dbCreds,
+  accessSchema,
 };
 
-export { conn };
+export { conn, dbModels };

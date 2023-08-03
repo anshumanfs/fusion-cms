@@ -1,4 +1,4 @@
-import { dbModels } from '../db';
+import { dbModels } from '../../db';
 import Errors from '../../libs/errors';
 const templates = {
   mongo: require('../templates/mongoTemplate'),

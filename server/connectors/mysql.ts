@@ -8,20 +8,20 @@ interface MySQLConnectionOptions {
   database: string;
 }
 
-export default function connect(appName: string, config: MySQLConnectionOptions) {
+function connector(appName: string, config: MySQLConnectionOptions) {
   const conn = new Sequelize(config.database, config.username, config.password, {
     host: config.host,
     port: config.port,
     dialect: 'mysql',
   });
 
-  conn
-    .authenticate()
-    .then(() => {
-      console.log(`✓ ${appName} MySQL connected`);
-    })
-    .catch((err) => {
-      console.log(`✗ ${appName} MySQL connection error: ${err}`);
-    });
+  conn.addHook('afterConnect', (connection: any) => {
+    console.log(`✓ ${appName} MySQL connected`);
+  });
+  conn.addHook('afterDisconnect', () => {
+    console.log(`✗ ${appName} MySQL disconnected`);
+  });
   return conn;
 }
+
+export { connector };

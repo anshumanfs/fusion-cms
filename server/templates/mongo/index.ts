@@ -3,12 +3,12 @@ const fs = require('fs-extra');
 const beautify = require('js-beautify').js;
 const path = require('path');
 const { dbModels } = require('../../db');
-const { generateMongooseSchema } = require('./models/modelsGenerator');
-const { createIndexSchema, generateGqlSchema } = require('./schemas/graphqlSchemaGenerator');
-const { createIndexResolver, generateResolver } = require('./resolvers/resolverGenerator');
+const { generateMongooseSchema } = require('./dbModels');
+const { createIndexSchema, generateGqlSchema } = require('./graphqlSchemas');
+const { createIndexResolver, generateResolver } = require('./graphqlResolvers');
 const { generateDbFile } = require('./db');
-const { serverJSGenerator } = require('./serverGenerator');
-const { generateAppJsonFile } = require('./appJsonGenerator');
+const { serverJSGenerator } = require('./server');
+const { generateAppJsonFile } = require('./appJson');
 const beautifyOption = require('../../libs/beautify.json').beautifyOptions;
 
 const createApp = async (fields: any, files: any) => {

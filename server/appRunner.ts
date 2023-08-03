@@ -3,40 +3,25 @@ import { expressMiddleware } from '@apollo/server/express4';
 import path from 'path';
 import { conn, dbModels } from './db';
 import pm2 from 'pm2';
-import emptyRouter from './routes/emptyRouter';
-import generator from './routes/generator';
-import appsInfo from './routes/appsInfo';
-import userApps from './routes/userApps';
-import migrateData from './routes/dbMigration';
-import health from './routes/health';
 import { buildAppsFromDB } from './controllers/manageApp';
 import { json } from 'body-parser';
 import cors from 'cors';
-import { graphQlErrorHandler, apiValidators } from './middleware/auth';
-import { customFileParser } from './utils/customFileParser';
+import { customFileParser } from './libs/customFileParser';
+import cmsConfig from './config.json';
 
-const work_env = 'WORK_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
+const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
 const checkEnv = ['prod', 'perf'];
 
 const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boolean; subfolder: string }) => {
   const Resolver = require(`./apps/${subfolder}/indexResolver`);
   const Schema = require(`./apps/${subfolder}/indexSchema`);
-  const contextFunction: any = apiValidators(subfolder);
   const apollo = new ApolloServer({
     introspection: !checkEnv.includes(work_env),
     resolvers: Resolver,
     typeDefs: Schema,
-    formatError: graphQlErrorHandler,
   });
   await apollo.start();
-  app.use(
-    `/graphql/${subfolder}`,
-    cors(),
-    json(),
-    expressMiddleware(apollo, {
-      context: contextFunction,
-    })
-  );
+  app.use(`/graphql/${subfolder}`, cors(), json(), expressMiddleware(apollo));
   console.log(`✔ ${subfolder} :- GraphQL running on /graphql/${subfolder}`);
   return true;
 };
@@ -44,22 +29,12 @@ const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boole
 const appManagerApolloServer = async ({ app }: { app: any }) => {
   const Resolver = require('./graphQLResolvers/index');
   const Schema = require('./graphQLSchema/index');
-  const contextFunction: any = apiValidators('appManager');
   const apollo = new ApolloServer({
     resolvers: Resolver,
     typeDefs: Schema,
-    formatError: graphQlErrorHandler,
   });
   await apollo.start();
-  app.use(
-    `/appManager`,
-    cors(),
-    json(),
-    customFileParser,
-    expressMiddleware(apollo, {
-      context: contextFunction,
-    })
-  );
+  app.use(`/appManager`, cors(), json(), customFileParser, expressMiddleware(apollo));
   console.log(`✔ appManager :- GraphQL running on /appManager`);
   return true;
 };
@@ -67,22 +42,13 @@ const appManagerApolloServer = async ({ app }: { app: any }) => {
 const createGraphQlFederation = async (app: any) => {
   const Schemas = require('./federatedEP/schema');
   const Resolvers = require('./federatedEP/resolvers');
-  const contextFunction: any = apiValidators('federation');
   const apollo = new ApolloServer({
     introspection: !checkEnv.includes(work_env),
     resolvers: Resolvers,
     typeDefs: Schemas,
-    formatError: graphQlErrorHandler,
   });
   await apollo.start();
-  app.use(
-    `/graphql`,
-    cors(),
-    json(),
-    expressMiddleware(apollo, {
-      context: contextFunction,
-    })
-  );
+  app.use(`/graphql`, cors(), json(), expressMiddleware(apollo));
   console.log(`✔ Federated GraphQL running on /graphql`);
   return true;
 };
@@ -130,8 +96,8 @@ const runAsMicroService = async () => {
       await buildAppsFromDB();
     }
     const promiseArr: any = [];
-    const apps: Apps[] = await dbModels.apps.find({});
-    apps.forEach((e: Apps) => {
+    const apps: any = await dbModels.apps.find({});
+    apps.forEach((e: any) => {
       const { appName, running } = e;
       const script = path.resolve(__dirname, `./apps/${appName}/server.js`);
       if (running) {
@@ -145,21 +111,16 @@ const runAsMicroService = async () => {
 
 const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
   return new Promise<void>((resolve, reject) => {
-    conn.on('connected', async () => {
-      if (work_env === 'local') {
+    const monolithFunctions = async () => {
+      if (work_env === 'development') {
         await buildAppsFromDB();
       }
-      const router = require('express').Router();
       const promiseArr: any = [];
-      const importedModules: any = [];
       const apps = await dbModels.apps.find({});
-      // connect REST endpoints
-      router.use('/', [...importedModules, emptyRouter]);
-      if (work_env === 'local') {
+      console.log('hitting');
+      if (work_env === 'development') {
         promiseArr.push(appManagerApolloServer({ app }));
       }
-      router.use('/health', health);
-      app.use(router);
       //start GraphQL and add REST routes
       apps.forEach((e: any) => {
         if (e.running) {
@@ -170,8 +131,30 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
 
       await Promise.all(promiseArr);
       await createGraphQlFederation(app);
-      resolve();
-    });
+    };
+    if (cmsConfig.metadataDb.orm === 'mongoose') {
+      conn.on('connected', async () => {
+        await monolithFunctions();
+        resolve();
+      });
+    }
+
+    if (cmsConfig.metadataDb.orm === 'sequelize') {
+      conn.addHook('afterConnect', async () => {
+        conn
+          .sync({ alter: true })
+          .then(async () => {
+            await monolithFunctions();
+            resolve();
+          })
+          .catch((err: any) => {
+            reject(err);
+          });
+      });
+      conn.authenticate().catch((err: any) => {
+        reject(err);
+      });
+    }
   });
 };
 

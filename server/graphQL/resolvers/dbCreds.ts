@@ -1,4 +1,4 @@
-import { dbModels } from '../db';
+import { dbModels } from '../../db';
 import Errors from '../../libs/errors';
 
 const getdbCreds = async (_: any, args: any) => {

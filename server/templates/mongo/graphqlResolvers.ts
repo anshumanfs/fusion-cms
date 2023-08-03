@@ -24,10 +24,104 @@ const generateIndexResolver = () => {
 };
 
 const generateResolver = (
-  sourceName: string,
+  appName: string,
   originalCollectionName: string,
   singularCollectionName: string,
   pluralCollectionName: string
-) => {};
+) => {
+  const resolverString = `
+  const ${pluralCollectionName} = require('../dbModels/${pluralCollectionName}.js'); 
+  const { validateAggregatePipeline, validateAggregationQuery, verifyQueryAccess, verifyMutationAccess } = require('../../../utils/accessManager'); 
+  const { populate } = require('../utils/populate'); 
+  const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
+  const { getProjections } = require('../utils/resolverUtils'); 
+  const Errors = require('../../../utils/errors') 
+
+  const resolvers = { 
+    Query: { 
+      ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
+        const projection = getProjections(info); 
+        const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info); 
+        const { filter, options , resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args; 
+        let result = await ${pluralCollectionName}.find(filter,projection,options); 
+        if(resolveDbRefs){ 
+          result = await populate(result, dbRefPreserveFields) 
+        }             
+        const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
+        return verifyQueryAccess(postMiddlewareResult, contextValue, '${originalCollectionName}','${appName}'); 
+      }, 
+      count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
+        const preMiddlewareResult = await QueryPreMiddleware.count_${pluralCollectionName}(parent, args, contextValue, info); 
+        const { filter, projection, options} = preMiddlewareResult.args; 
+        const result = await ${pluralCollectionName}.find({}).count(); 
+        const postMiddlewareResult = await QueryPostMiddleware.count_${pluralCollectionName}(result); 
+        return postMiddlewareResult; 
+      },
+      aggregation_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
+        try { 
+        const preMiddlewareResult = await QueryPreMiddleware.aggregation_${pluralCollectionName}(parent, args, contextValue, info); 
+        let { pipeline } = preMiddlewareResult.args; 
+        pipeline = validateAggregatePipeline(pipeline); 
+        const result = await ${pluralCollectionName}.aggregate(pipeline).allowDiskUse(true); 
+        const postMiddlewareResult = await QueryPostMiddleware.aggregation_${pluralCollectionName}(result); 
+        return validateAggregationQuery( postMiddlewareResult, args, contextValue, '${originalCollectionName}','${appName}'); 
+        } catch (error) { 
+          throw Errors.default.INVALID_AGGREGATE_PIPELINE(error) 
+        }  
+      }, 
+      ${singularCollectionName}: async (parent, args, contextValue, info) =>{ 
+        const projection = getProjections(info); 
+        const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info); 
+        const { _id, resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args; 
+        let result = await ${pluralCollectionName}.findById(_id); 
+        if(resolveDbRefs){ 
+          result = await populate(result, dbRefPreserveFields); 
+        } 
+        const postMiddlewareResult = await QueryPostMiddleware.${singularCollectionName}(result); 
+        return verifyQueryAccess(postMiddlewareResult, contextValue, '${originalCollectionName}','${appName}'); 
+      }
+    }, 
+    Mutation: { 
+      create_${singularCollectionName}: async (parent, args, contextValue, info) => { 
+        const preMiddlewareResult = await MutationPreMiddleware.create_${singularCollectionName}(parent, args, contextValue, info); 
+        const verifierResponse = await verifyMutationAccess( parent, args, contextValue, info, '${originalCollectionName}', '${appName}', 'canCreate'); 
+        parent = verifierResponse.parent 
+        args = verifierResponse.args 
+        contextValue = verifierResponse.contextValue 
+        info = verifierResponse.info 
+        const model = new ${pluralCollectionName}(preMiddlewareResult.args.input); 
+        const result = await model.save(); 
+        const postMiddlewareResult = await MutationPostMiddleware.create_${singularCollectionName}(result); 
+        return postMiddlewareResult; 
+      }, 
+      update_${singularCollectionName}: async (parent, args, contextValue, info) => { 
+        const preMiddlewareResult = await MutationPreMiddleware.update_${singularCollectionName}(parent, args, contextValue, info);  
+        const verifierResponse = await verifyMutationAccess( parent, args, contextValue, info, '${originalCollectionName}', '${appName}', 'canUpdate'); 
+        parent = verifierResponse.parent 
+        args = verifierResponse.args 
+        contextValue = verifierResponse.contextValue 
+        info = verifierResponse.info 
+        const { _id, ...rest } = preMiddlewareResult.args; 
+        const result = await ${pluralCollectionName}.findByIdAndUpdate(_id, rest, { new: true }); 
+        const postMiddlewareResult = await MutationPostMiddleware.update_${singularCollectionName}(result); 
+        return postMiddlewareResult; 
+      }, 
+      delete_${singularCollectionName}: async (parent, args, contextValue, info) => { 
+        const preMiddlewareResult = await MutationPreMiddleware.delete_${singularCollectionName}(parent, args, contextValue, info); 
+        const verifierResponse = await verifyMutationAccess( parent, args, contextValue, info, '${originalCollectionName}', '${appName}', 'canDelete'); 
+        parent = verifierResponse.parent 
+        args = verifierResponse.args 
+        contextValue = verifierResponse.contextValue 
+        info = verifierResponse.info 
+        const { _id } =  preMiddlewareResult.args; 
+        const result = await ${pluralCollectionName}.findByIdAndDelete(_id); 
+        const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(result); 
+        return postMiddlewareResult; 
+      } 
+    } 
+  }; 
+  module.exports = resolvers;`;
+  return resolverString;
+};
 
 export { generateResolver, generateIndexResolver };

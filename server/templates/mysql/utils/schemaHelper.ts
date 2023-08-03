@@ -52,6 +52,7 @@ const autoIncrement = (obj: any) => {
 
 const Optional = (obj: any) => {
   const Obj = lodash.cloneDeep(obj);
+  Obj.allowNull = true;
   Obj.defaultValue = null;
   return Obj;
 };

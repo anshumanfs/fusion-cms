@@ -7,9 +7,9 @@ const { generateMySqlSchema } = require('./dbModels');
 const { createIndexSchema, generateGqlSchema } = require('./graphqlSchemas');
 const { createIndexResolver, generateResolver } = require('./graphqlResolvers');
 
-const { generateDbConFile } = require('./dbGenerator');
-const { serverJSGenerator } = require('./serverGenerator');
-const { generateAppJsonFile } = require('./appJsonGenerator');
+const { generateDbConFile } = require('./db');
+const { serverJSGenerator } = require('./server');
+const { generateAppJsonFile } = require('./appJson');
 const beautifyOption = require('../../libs/beautify.json').beautifyOptions;
 
 const updateGlobalConfig = async (appName: string, running: boolean) => {

@@ -15,7 +15,7 @@ const {
 const model: any = conn.define(
   'cms_dbSchemas',
   {
-    _id: autoIncrement(primaryKey(Types.NUMBER)),
+    _id: autoIncrement(primaryKey(Types.INTEGER)),
     appName: Types.STRING,
     singularCollectionName: Types.STRING,
     originalCollectionName: Types.STRING,

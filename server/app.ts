@@ -1,7 +1,4 @@
 import Express from 'express';
-import cors from 'cors';
-import fs from 'fs';
-import https from 'https';
 import next from 'next';
 import path from 'path';
 import { runAsMicroService, runAsMonolith } from './appRunner';
@@ -14,7 +11,7 @@ const app_mode = 'APP_MODE' in process.env ? process.env.APP_MODE.trim() : 'mono
 const dev = node_env === 'development';
 const childProcess = require('child_process');
 const app: Express.Application = Express();
-const checkEnv = ['local', 'uat', 'dev'];
+const checkEnv = ['local', 'uat', 'development'];
 
 const startExpressApp = async () => {
   app.get('/test', (_req, res) => {
