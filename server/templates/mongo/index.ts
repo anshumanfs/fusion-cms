@@ -10,21 +10,12 @@ const { generateDbFile } = require('./db');
 const { serverJSGenerator } = require('./server');
 const { generateAppJsonFile } = require('./appJson');
 const beautifyOption = require('../../libs/beautify.json').beautifyOptions;
+const DEFAULT_INDIVIDUAL_PORT = 3500;
 
 const createApp = async (fields: any, files: any) => {
-  const { appName, dbUsername, dbPassword, dbUrl, useSSL, env } = fields;
-  const filesDir = path.resolve(__dirname, '../../../data/files');
-  const sslFileName = `${appName}_${env}.pem`;
+  const { appName, env, credentials } = fields;
   // add to db
-  await dbModels.dbCreds.findOneAndUpdate(
-    { appName, env },
-    { dbUsername, dbPassword, dbUrl, sslFileName, useSSL: Boolean(useSSL) },
-    { upsert: true }
-  );
-
-  if (Boolean(useSSL)) {
-    fs.copySync(files.pemFile.filepath, path.resolve(__dirname, `${filesDir}/${sslFileName}`));
-  }
+  await dbModels.dbCredentials.findOneAndUpdate({ appName, env }, { credentials }, { upsert: true });
   await updateGlobalConfig(appName, false); // by default apps will not be running so running = false
 };
 
@@ -47,7 +38,7 @@ const updateGlobalConfig = async (appName: string, running: boolean) => {
     await dbModels.apps.create({ appName, port, running, isAppCompleted: false, dbType: 'mongo' });
     // setting isAppCompleted to false since (0 -> Incomplete)
   }
-  return 3500 + port; // since default port set for this will start from 3500
+  return port;
 };
 
 const createDbModels = async (options: DbModelsInput) => {
@@ -62,7 +53,6 @@ const createDbModels = async (options: DbModelsInput) => {
     `../../../data/files/middleware/${appName}/${pluralCollectionName}.js`
   );
 
-  //const subDirs = ['/middleware', '/dbModels', '/certs', '/graphQlSchemas', '/resolvers', '/routes']
   const subDirs = ['/middleware', '/dbModels', '/graphQlSchemas', '/graphqlResolvers'];
   let dirPromises = subDirs.map((e) => {
     fs.ensureDirSync(appDir + e);
@@ -83,15 +73,6 @@ const createDbModels = async (options: DbModelsInput) => {
     beautify(generateMongooseSchema(originalCollectionName, schema, pluralCollectionName), beautifyOption)
   );
 
-  // disabled app specific REST endpoints for time unless its required
-  //generate other routes
-  // fs.ensureFileSync(${appDir}/routes/${pluralCollectionName}.js)
-  // fs.writeFileSync(${appDir}/routes/${pluralCollectionName}.js, beautify(routesGenerator(pluralCollectionName, singularCollectionName), beautifyOption))
-
-  // generate index route
-  // fs.ensureFileSync(${appDir}/indexRouter.js)
-  // fs.writeFileSync(${appDir}/indexRouter.js, beautify(generateIndexRoute(appName), beautifyOption))
-
   // for graphql schema
   fs.ensureFileSync(`${graphQlSchemaDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
@@ -110,6 +91,7 @@ const createDbModels = async (options: DbModelsInput) => {
     fs.ensureFileSync(middlewareFile);
     fs.writeFileSync(middlewareFile, beautify(generateMiddleware(pluralCollectionName, singularCollectionName)));
   }
+
   //for graphql resolvers
   fs.ensureFileSync(`${resolverDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
@@ -123,6 +105,7 @@ const createDbModels = async (options: DbModelsInput) => {
   //create index Resolver
   fs.ensureFileSync(`${appDir}/indexResolver.js`);
   fs.writeFileSync(`${appDir}/indexResolver.js`, beautify(createIndexResolver(), beautifyOption));
+
   // write app json file
   fs.ensureFileSync(appJson);
   fs.writeJsonSync(appJson, await generateAppJsonFile(appName), { spaces: '\t' });
@@ -134,7 +117,10 @@ const createDbModels = async (options: DbModelsInput) => {
   fs.writeFileSync(`${appDir}/db.js`, beautify(generateDbFile(appName), beautifyOption));
   const { port }: { port: number } = await dbModels.apps.findOne({ appName });
   // write server.js file
-  fs.writeFileSync(`${appDir}/server.js`, beautify(serverJSGenerator(3500 + port, appName), beautifyOption));
+  fs.writeFileSync(
+    `${appDir}/server.js`,
+    beautify(serverJSGenerator(DEFAULT_INDIVIDUAL_PORT + port, appName), beautifyOption)
+  );
 
   await dbModels.apps.findOneAndUpdate({ appName }, { isAppCompleted: true }); // set app to completed status
 };

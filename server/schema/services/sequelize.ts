@@ -1,3 +1,5 @@
+import sequelize from 'sequelize';
+
 export default function sequelizeQueryServices(model: any) {
   return {
     find: async (filter = {}, projection = {}, options = {}) => {
@@ -17,7 +19,22 @@ export default function sequelizeQueryServices(model: any) {
     findOne: async (filter = {}, projection = {}, options = {}) => {
       return model.findOne({ where: filter, attributes: projection, ...options });
     },
-    findOneAndUpdate: async (filter = {}, update = {}, options: any = {}) => {
+    findOneAndUpdate: async (filter: any, update = {}, options: any = {}) => {
+      if (!filter) {
+        throw new Error('Filter is required for findOneAndUpdate');
+      }
+      // snippet to handle $inc coming inside update
+      const updateKeys = Object.keys(update);
+      const updateValues: any = Object.values(update);
+      const newUpdate: any = {};
+      updateKeys.forEach((key, index) => {
+        if (updateValues[index].$inc) {
+          newUpdate[key] = sequelize.literal(`${key} + ${updateValues[index].$inc}`);
+        } else {
+          newUpdate[key] = updateValues[index];
+        }
+      });
+
       if (options.upsert === true) {
         const existing = await model.findOne({ where: filter, ...options });
         if (existing) {
@@ -35,13 +52,28 @@ export default function sequelizeQueryServices(model: any) {
     create: async (data = {}) => {
       return model.create(data);
     },
-    updateOne: async (filter = {}, update = {}, options = {}) => {
+    updateOne: async (filter: any, update = {}, options = {}) => {
+      if (!filter) {
+        throw new Error('Filter is required for updateOne');
+      }
       return model.update(update, { where: filter, ...options });
     },
-    updateMany: async (filter = {}, update = {}, options = {}) => {
+    updateMany: async (filter: any, update = {}, options = {}) => {
+      if (!filter) {
+        throw new Error('Filter is required for updateMany');
+      }
       return model.update(update, { where: filter, ...options });
     },
-    deleteOne: async (filter = {}, options = {}) => {
+    deleteOne: async (filter: any, options = {}) => {
+      if (!filter) {
+        throw new Error('Filter is required for deleteOne');
+      }
+      return model.destroy({ where: filter, ...options });
+    },
+    deleteMany: async (filter: any, options = {}) => {
+      if (!filter) {
+        throw new Error('Filter is required for deleteMany');
+      }
       return model.destroy({ where: filter, ...options });
     },
   };

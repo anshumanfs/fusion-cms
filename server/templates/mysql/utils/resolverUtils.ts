@@ -12,4 +12,4 @@ const mapGqlFieldToSql = (info: any) => {
   };
 };
 
-export { mapGqlFieldToSql };
+module.exports = { mapGqlFieldToSql };

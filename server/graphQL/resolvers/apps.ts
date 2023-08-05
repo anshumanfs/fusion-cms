@@ -7,13 +7,13 @@ const templates = {
 
 const getAppsData = async (_: any, args: any) => {
   const { filter } = args;
-  const appsData = await dbModels.apps.find(filter || {}).populate(['schemas']);
+  const appsData = await dbModels.apps.find(filter || {});
   return appsData;
 };
 
 const getAppData = async (_: any, args: any) => {
   const { appName } = args;
-  const appData = await dbModels.apps.findOne({ appName }).populate(['schemas']);
+  const appData = await dbModels.apps.findOne({ appName });
   if (!appData) {
     throw Errors.NOT_FOUND('No app exists with provided appName');
   }
@@ -56,10 +56,9 @@ const removeApp = async (_: any, args: any) => {
     if (Boolean(running) === true) {
       throw Errors.NOT_ACCEPTABLE('The app is running please close it before to remove.');
     }
-
-    const deleteApp = await dbModels.apps.deleteOne({ appName });
-    const deleteCreds = await dbModels.dbCreds.deleteMany({ appName });
-    return { deleteApp, deleteCreds };
+    const deletedApp = await dbModels.apps.deleteOne({ appName });
+    const deletedCredentials = await dbModels.dbCredentials.deleteMany({ appName });
+    return { deletedApp, deletedCredentials };
   }
 };
 

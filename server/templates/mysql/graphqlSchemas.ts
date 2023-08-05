@@ -74,7 +74,7 @@ const createIndexSchema = () => {
           const moduleName = file.substring(0, file.length - 3); 
           importedModules.push(require(path.join(directory, file))); 
         }); 
-      const Schema = \#graphql 
+      const Schema = \`#graphql 
         \${scalarTypeDefs} 
         \${customScalarTypeDefs} 
         scalar Any 
@@ -83,7 +83,7 @@ const createIndexSchema = () => {
         extend type Query{ 
           RAW_SQL(sql:String, Type: String ): JSON 
         } 
-        \; 
+        \`; 
       module.exports = [...importedModules,Schema];`;
   return indexSchemaContent;
 };

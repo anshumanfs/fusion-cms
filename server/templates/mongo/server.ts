@@ -9,7 +9,7 @@ const serverJSGenerator = (port: number | string, appName: string) => {
     const cors = require('cors'); 
     const { json } = require('body-parser'); 
     const http = require('http'); 
-    const work_env = ('WORK_ENV' in process.env) ? process.env.WORK_ENV.trim() : 'local'; 
+    const work_env = ('NODE_ENV' in process.env) ? process.env.NODE_ENV.trim() : 'local'; 
     const dev = work_env.trim() === 'local' app.use(cors({ origin: '*' })); 
     const server = http.createServer(app); 
     const startApolloServer = async (dev) => { 

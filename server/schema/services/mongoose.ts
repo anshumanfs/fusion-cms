@@ -15,14 +15,29 @@ export default function mongooseQueryServices(model: any) {
     create: async (data = {}) => {
       return model.create(data);
     },
-    updateOne: async (filter = {}, update = {}, options = {}) => {
+    updateOne: async (filter: any, update = {}, options = {}) => {
+      if (!filter) {
+        throw new Error('Filter is required for updateOne');
+      }
       return model.updateOne(filter, update, options);
     },
-    updateMany: async (filter = {}, update = {}, options = {}) => {
+    updateMany: async (filter: any, update = {}, options = {}) => {
+      if (!filter) {
+        throw new Error('Filter is required for updateMany');
+      }
       return model.updateMany(filter, update, options);
     },
-    deleteOne: async (filter = {}, options = {}) => {
+    deleteOne: async (filter: any, options = {}) => {
+      if (!filter) {
+        throw new Error('Filter is required for deleteOne');
+      }
       return model.deleteOne(filter, options);
+    },
+    deleteMany: async (filter: any, options = {}) => {
+      if (!filter) {
+        throw new Error('Filter is required for deleteMany');
+      }
+      return model.deleteMany(filter, options);
     },
   };
 }

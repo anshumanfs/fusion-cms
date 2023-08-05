@@ -4,11 +4,11 @@
  * @param {object} info - The information object.
  * @return {object} The projection object.
  */
-const getProjections = (info) => {
-  const projection = {};
+const getProjections = (info: any) => {
+  const projection: any = {};
   info.fieldNodes[0].selectionSet.selections
-    .map((field) => field.name.value)
-    .forEach((e) => {
+    .map((field: any) => field.name.value)
+    .forEach((e: any) => {
       projection[e] = 1;
     });
   return projection;

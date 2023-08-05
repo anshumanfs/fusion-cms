@@ -31,13 +31,13 @@ const updateGlobalConfig = async (appName: string, running: boolean) => {
     await dbModels.apps.create({ appName, port, running, isAppCompleted: false, dbType: 'snowflake' });
     // setting isAppCompleted to false since (0 -> Incomplete)
   }
-  return 3500 + port; // since default port set for this will start from 3500
+  return port; // since default port set for this will start from 3500
 };
 
 const createApp = async (fields: any, files: any) => {
   const { appName, env, username, password, accountName, dbName, dbSchemaName, dbWarehouseName, roleName } = fields;
   // add to db
-  await dbModels.dbCreds.findOneAndUpdate(
+  await dbModels.dbCredentials.findOneAndUpdate(
     { appName, env },
     { username, password, accountName, dbName, dbSchemaName, dbWarehouseName, roleName },
     { upsert: true }

@@ -73,6 +73,7 @@ const generateMiddleware = (pluralCollectionName: string, singularCollectionName
             MutationPostMiddleware
         }
     `;
+  return fileContent;
 };
 
 export { generateMiddleware };

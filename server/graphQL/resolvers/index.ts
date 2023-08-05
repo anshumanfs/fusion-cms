@@ -1,20 +1,18 @@
 import { createApp, getAppData, getAppsData, updateApp, removeApp } from './apps';
-import { getdbCred, getdbCreds, createdbCred, updatedbCred, removedbCred } from './dbCreds';
+import { getDbCredential, getDbCredentials, removeDbCredentials } from './dbCreds';
 const { resolvers: scalarResolvers } = require('graphql-scalars');
 const Query = {
   getAppData,
   getAppsData,
-  getdbCred,
-  getdbCreds,
+  getDbCredential,
+  getDbCredentials,
 };
 
 const Mutation = {
   createApp,
-  createdbCred,
   updateApp,
-  updatedbCred,
   removeApp,
-  removedbCred,
+  removeDbCredentials,
 };
 
 module.exports = { ...scalarResolvers, Mutation, Query };

@@ -8,8 +8,8 @@ const generateDbFile = (appName: string) => {
   const fileContent = `
     const mongoose = require('mongoose');
     const path = require('path');
-    const { url, connectionOptions } = require('../config.json');
-    const conn = mongoose.createConnection(url,connectionOptions);
+    const { uri, options } = require('../config.json');
+    const conn = mongoose.createConnection( uri, options);
     conn.on('connected', () => {
         console.log('✓ ${appName} :- MongoDB connected');
     });

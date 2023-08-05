@@ -2,18 +2,10 @@ const generateDbConFile = (appName: string) => {
   const dbConString = `  
       const { Sequelize } = require('sequelize'); 
       const path = require('path'); 
-      const { username, password, accountName, dbName, dbSchemaName, dbWarehouseName, roleName } = require('./app.json').dbCreds; 
-      const conn = new Sequelize(dbName, null, null, { 
-          dialect: 'snowflake', 
-          dialectOptions: { 
-            account: accountName, 
-            role: roleName, 
-            warehouse: dbWarehouseName, 
-            schema: dbSchemaName 
-          }, 
-          username, 
-          password, 
-          database: dbName 
+      const { database, username, password, options } = require('./app.json').dbCreds; 
+      const conn = new Sequelize(database, username, password, { 
+          dialect: 'mysql', 
+          dialectOptions: options
       }); 
       conn.authenticate().then(() => { 
         console.log('✔ ${appName} :- Database Connected Successfully'); 

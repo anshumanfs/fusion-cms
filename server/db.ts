@@ -25,7 +25,7 @@ const users = require(`./schema/${ormType}/users`).services;
 const dbSchemas = require(`./schema/${ormType}/dbSchemas`).services;
 const apps = require(`./schema/${ormType}/apps`).services;
 const configs = require(`./schema/${ormType}/configs`).services;
-const dbCreds = require(`./schema/${ormType}/dbCreds`).services;
+const dbCredentials = require(`./schema/${ormType}/dbCredentials`).services;
 const accessSchema = require(`./schema/${ormType}/accessSchemas`).services;
 
 const dbModels = {
@@ -33,7 +33,7 @@ const dbModels = {
   dbSchemas,
   apps,
   configs,
-  dbCreds,
+  dbCredentials,
   accessSchema,
 };
 
