@@ -5,12 +5,12 @@ import mongooseQueryServices from '../services/mongoose';
 const { Types, addEnums, unique } = require('../../templates/mongo/utils/schemaHelper');
 const QuerySchema: any = new Schema(
   {
-    _id: Types.ObjectId,
-    appName: unique(Types.String),
-    port: Types.Number,
-    running: Types.Boolean,
-    isAppCompleted: Types.Boolean,
-    dbType: addEnums(Types.String, ['mongo', 'snowflake']),
+    _id: Types.ObjectId(),
+    appName: unique(Types.String()),
+    port: Types.Number(),
+    running: Types.Boolean(),
+    isAppCompleted: Types.Boolean(),
+    dbType: addEnums(Types.String(), ['mongo', 'mysql']),
   },
   {
     timestamps: true,

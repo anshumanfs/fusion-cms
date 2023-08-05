@@ -6,12 +6,12 @@ const { Types } = require('../../templates/mongo/utils/schemaHelper');
 
 const QuerySchema: any = new Schema(
   {
-    _id: Types.ObjectId,
-    appName: Types.String,
-    singularCollectionName: Types.String,
-    originalCollectionName: Types.String,
-    pluralCollectionName: Types.String,
-    schema: Types.Mixed,
+    _id: Types.ObjectId(),
+    appName: Types.String(),
+    singularCollectionName: Types.String(),
+    originalCollectionName: Types.String(),
+    pluralCollectionName: Types.String(),
+    schema: Types.Mixed(),
   },
   {
     timestamps: true,

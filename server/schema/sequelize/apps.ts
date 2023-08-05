@@ -21,7 +21,7 @@ const model: any = conn.define(
     port: Types.INTEGER(),
     running: Types.BOOLEAN(),
     isAppCompleted: Types.BOOLEAN(),
-    dbType: addEnums(Types.STRING(), ['mongo', 'snowflake']),
+    dbType: addEnums(Types.STRING(), ['mongo', 'mysql']),
   },
   {
     tableName: 'cms_apps',

@@ -5,11 +5,11 @@ import mongooseQueryServices from '../services/mongoose';
 const { Types } = require('../../templates/mongo/utils/schemaHelper');
 const QuerySchema: any = new Schema(
   {
-    _id: Types.ObjectId,
-    userName: Types.String,
-    useSSO: Types.Boolean,
-    contactPerson: Types.String,
-    apiKey: Types.String,
+    _id: Types.ObjectId(),
+    userName: Types.String(),
+    useSSO: Types.Boolean(),
+    contactPerson: Types.String(),
+    apiKey: Types.String(),
   },
   {
     timestamps: true,

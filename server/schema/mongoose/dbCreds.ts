@@ -27,21 +27,10 @@ const cipherSetter = (value: any) => {
 
 const QuerySchema: any = new Schema(
   {
-    _id: Optional(Types.ObjectId),
-    appName: Types.String,
-    env: Types.String,
-    dbUsername: addGetter(addSetter(Optional(Types.String), cipherSetter), deCipherGetter), // mongo
-    dbPassword: addGetter(addSetter(Optional(Types.String), cipherSetter), deCipherGetter), // mongo
-    username: addGetter(addSetter(Optional(Types.String), cipherSetter), deCipherGetter), // snowflake
-    password: addGetter(addSetter(Optional(Types.String), cipherSetter), deCipherGetter), // snowflake
-    dbUrl: addGetter(addSetter(Optional(Types.String), cipherSetter), deCipherGetter), // mongo
-    useSSL: Optional(Types.Boolean), // mongo
-    sslFileName: Optional(Types.String), // mongo
-    accountName: addGetter(addSetter(Optional(Types.String), cipherSetter), deCipherGetter), // snowflake
-    dbName: addGetter(addSetter(Optional(Types.String), cipherSetter), deCipherGetter), // snowflake
-    dbSchemaName: Optional(Types.String), // snowflake
-    dbWarehouseName: addGetter(addSetter(Optional(Types.String), cipherSetter), deCipherGetter), // snowflake
-    roleName: addGetter(addSetter(Optional(Types.String), cipherSetter), deCipherGetter), // snowflake
+    _id: Optional(Types.ObjectId()),
+    appName: Types.String(),
+    env: Types.String(),
+    credentials: Types.Mixed(),
   },
   {
     timestamps: true,
@@ -54,6 +43,6 @@ const QuerySchema: any = new Schema(
   }
 );
 
-const model = conn.model('cms_dbCreds', QuerySchema, 'cms_dbCreds');
+const model = conn.model('cms_dbCredentials', QuerySchema, 'cms_dbCredentials');
 const services = mongooseQueryServices(model);
 export { model, services };

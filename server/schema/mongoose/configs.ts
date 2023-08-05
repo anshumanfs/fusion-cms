@@ -5,9 +5,9 @@ import mongooseQueryServices from '../services/mongoose';
 const { Types, Optional } = require('../../templates/mongo/utils/schemaHelper');
 const QuerySchema: any = new Schema(
   {
-    _id: Types.ObjectId,
-    type: Types.String,
-    nextAvailablePort: Optional(Types.Number),
+    _id: Types.ObjectId(),
+    type: Types.String(),
+    nextAvailablePort: Optional(Types.Number()),
   },
   {
     timestamps: true,

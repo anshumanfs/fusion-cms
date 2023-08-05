@@ -38,26 +38,15 @@ const cipherSetter = (value: any) => {
 };
 
 const model: any = conn.define(
-  'cms_dbCreds',
+  'cms_dbCredentials',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
     appName: Types.STRING(),
     env: Types.STRING(),
-    dbUsername: addGetter(addSetter(Optional(Types.STRING()), cipherSetter), 'dbUsername', deCipherGetter), // mongo
-    dbPassword: addGetter(addSetter(Optional(Types.STRING()), cipherSetter), 'dbPassword', deCipherGetter), // mongo
-    username: addGetter(addSetter(Optional(Types.STRING()), cipherSetter), 'username', deCipherGetter), // snowflake
-    password: addGetter(addSetter(Optional(Types.STRING()), cipherSetter), 'password', deCipherGetter), // snowflake
-    dbUrl: addGetter(addSetter(Optional(Types.STRING()), cipherSetter), 'dbUrl', deCipherGetter), // mongo
-    useSSL: Optional(Types.BOOLEAN()), // mongo
-    sslFileName: Optional(Types.STRING()), // mongo
-    accountName: addGetter(addSetter(Optional(Types.STRING()), cipherSetter), 'accountName', deCipherGetter), // snowflake
-    dbName: addGetter(addSetter(Optional(Types.STRING()), cipherSetter), 'dbName', deCipherGetter), // snowflake
-    dbSchemaName: Optional(Types.STRING()), // snowflake
-    dbWarehouseName: addGetter(addSetter(Optional(Types.STRING()), cipherSetter), 'dbWarehouseName', deCipherGetter), // snowflake
-    roleName: addGetter(addSetter(Optional(Types.STRING()), cipherSetter), 'roleName', deCipherGetter), // snowflake
+    credentials: Types.JSON(),
   },
   {
-    tableName: 'cms_dbCreds',
+    tableName: 'cms_dbCredentials',
     timestamps: true,
   }
 );
