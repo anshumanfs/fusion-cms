@@ -27,8 +27,8 @@ const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boole
 };
 
 const appManagerApolloServer = async ({ app }: { app: any }) => {
-  const Resolver = require('./graphQLResolvers/index');
-  const Schema = require('./graphQLSchema/index');
+  const Resolver = require('./graphQL/resolvers/index');
+  const Schema = require('./graphQl/schemas/index');
   const apollo = new ApolloServer({
     resolvers: Resolver,
     typeDefs: Schema,
@@ -117,7 +117,6 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
       }
       const promiseArr: any = [];
       const apps = await dbModels.apps.find({});
-      console.log('hitting');
       if (work_env === 'development') {
         promiseArr.push(appManagerApolloServer({ app }));
       }
@@ -130,7 +129,6 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
       });
 
       await Promise.all(promiseArr);
-      await createGraphQlFederation(app);
     };
     if (cmsConfig.metadataDb.orm === 'mongoose') {
       conn.on('connected', async () => {
@@ -141,10 +139,8 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
 
     if (cmsConfig.metadataDb.orm === 'sequelize') {
       await conn.sync();
-      conn.addHook('afterConnect', async () => {
-        await monolithFunctions();
-        resolve();
-      });
+      await monolithFunctions();
+      resolve();
     }
   });
 };

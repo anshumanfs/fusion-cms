@@ -1,7 +1,18 @@
 export default function sequelizeQueryServices(model: any) {
   return {
     find: async (filter = {}, projection = {}, options = {}) => {
-      return model.findAll({ where: filter, attributes: projection, ...options });
+      // modify filter to include $in functionality to sequelize
+      const filterKeys = Object.keys(filter);
+      const filterValues: any = Object.values(filter);
+      const newFilter: any = {};
+      filterKeys.forEach((key, index) => {
+        if (filterValues[index].$in) {
+          newFilter[key] = filterValues[index].$in;
+        } else {
+          newFilter[key] = filterValues[index];
+        }
+      });
+      return model.findAll({ where: newFilter, attributes: projection, ...options });
     },
     findOne: async (filter = {}, projection = {}, options = {}) => {
       return model.findOne({ where: filter, attributes: projection, ...options });

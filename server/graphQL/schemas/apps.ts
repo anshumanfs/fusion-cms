@@ -40,7 +40,7 @@ const Schema = `#graphql
   input createApp{ 
     appName: String! 
     mongo: createMongo  
-    snowflake: createSnowflake 
+    mysql: createMySQL 
     dbType: databaseTypes! 
     env: environmentTypes! 
   } 
@@ -52,8 +52,8 @@ const Schema = `#graphql
     useSSL: Boolean 
   } 
  
-  input createSnowflake { 
-    username: String! 
+  input createMySQL { 
+    username: String!
     password: String! 
     accountName: String! 
     dbName: String! 

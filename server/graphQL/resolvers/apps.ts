@@ -1,8 +1,8 @@
 import { dbModels } from '../../db';
 import Errors from '../../libs/errors';
 const templates = {
-  mongo: require('../templates/mongoTemplate'),
-  snowflake: require('../templates/snowflake'),
+  mongo: require('../../templates/mongo'),
+  mysql: require('../../templates/mysql'),
 };
 
 const getAppsData = async (_: any, args: any) => {
