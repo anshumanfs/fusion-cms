@@ -15,11 +15,11 @@ const {
 const model: any = conn.define(
   'cms_users',
   {
-    _id: autoIncrement(primaryKey(Types.INTEGER)),
-    userName: Types.STRING,
-    useSSO: Types.BOOLEAN,
-    contactPerson: Types.STRING,
-    apiKey: Types.STRING,
+    _id: autoIncrement(primaryKey(Types.INTEGER())),
+    userName: Types.STRING(),
+    useSSO: Types.BOOLEAN(),
+    contactPerson: Types.STRING(),
+    apiKey: Types.STRING(),
   },
   {
     tableName: 'cms_users',

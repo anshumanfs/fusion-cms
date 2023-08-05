@@ -108,148 +108,148 @@ function ObjArray(Obj: any) {
   obj.type = DataTypes.ARRAY(obj.type);
   return obj;
 }
-const Types = {
-  ARRAY: {
+const Types = Object.freeze({
+  ARRAY: () => ({
     allowNull: false,
     type: DataTypes.ARRAY,
-  },
-  BIGINT: {
+  }),
+  BIGINT: () => ({
     allowNull: false,
     type: DataTypes.BIGINT,
-  },
-  BOOLEAN: {
+  }),
+  BOOLEAN: () => ({
     allowNull: false,
     type: DataTypes.BOOLEAN,
-  },
-  CHAR: {
+  }),
+  CHAR: () => ({
     allowNull: false,
     type: DataTypes.CHAR,
-  },
-  CIDR: {
+  }),
+  CIDR: () => ({
     allowNull: false,
     type: DataTypes.CIDR,
-  },
-  CITEXT: {
+  }),
+  CITEXT: () => ({
     allowNull: false,
     type: DataTypes.CITEXT,
-  },
-  DATE: {
+  }),
+  DATE: () => ({
     allowNull: false,
     type: DataTypes.DATE,
-  },
-  DATEONLY: {
+  }),
+  DATEONLY: () => ({
     allowNull: false,
     type: DataTypes.DATEONLY,
-  },
-  DECIMAL: {
+  }),
+  DECIMAL: () => ({
     allowNull: false,
     type: DataTypes.DECIMAL,
-  },
-  DOUBLE: {
+  }),
+  DOUBLE: () => ({
     allowNull: false,
     type: DataTypes.DOUBLE,
-  },
-  ENUM: {
+  }),
+  ENUM: () => ({
     allowNull: false,
     type: DataTypes.ENUM,
-  },
-  FLOAT: {
+  }),
+  FLOAT: () => ({
     allowNull: false,
     type: DataTypes.FLOAT,
-  },
-  GEOGRAPHY: {
+  }),
+  GEOGRAPHY: () => ({
     allowNull: false,
     type: DataTypes.GEOGRAPHY,
-  },
-  GEOMETRY: {
+  }),
+  GEOMETRY: () => ({
     allowNull: false,
     type: DataTypes.GEOMETRY,
-  },
-  HSTORE: {
+  }),
+  HSTORE: () => ({
     allowNull: false,
     type: DataTypes.HSTORE,
-  },
-  INET: {
+  }),
+  INET: () => ({
     allowNull: false,
     type: DataTypes.INET,
-  },
-  INTEGER: {
+  }),
+  INTEGER: () => ({
     allowNull: false,
     type: DataTypes.INTEGER,
-  },
-  JSONB: {
+  }),
+  JSONB: () => ({
     allowNull: false,
     type: DataTypes.JSONB,
-  },
-  JSON: {
+  }),
+  JSON: () => ({
     allowNull: false,
     type: DataTypes.JSON,
-  },
-  MACADDR: {
+  }),
+  MACADDR: () => ({
     allowNull: false,
     type: DataTypes.MACADDR,
-  },
-  MEDIUMINT: {
+  }),
+  MEDIUMINT: () => ({
     allowNull: false,
     type: DataTypes.MEDIUMINT,
-  },
-  NOW: {
+  }),
+  NOW: () => ({
     allowNull: false,
     type: DataTypes.NOW,
-  },
-  NUMBER: {
+  }),
+  NUMBER: () => ({
     allowNull: false,
     type: DataTypes.NUMBER,
-  },
-  RANGE: {
+  }),
+  RANGE: () => ({
     allowNull: false,
     type: DataTypes.RANGE,
-  },
-  REAL: {
+  }),
+  REAL: () => ({
     allowNull: false,
     type: DataTypes.REAL,
-  },
-  SMALLINT: {
+  }),
+  SMALLINT: () => ({
     allowNull: false,
     type: DataTypes.SMALLINT,
-  },
-  STRING: {
+  }),
+  STRING: () => ({
     allowNull: false,
     type: DataTypes.STRING,
-  },
-  TEXT: {
+  }),
+  TEXT: () => ({
     allowNull: false,
     type: DataTypes.TEXT,
-  },
-  TIME: {
+  }),
+  TIME: () => ({
     allowNull: false,
     type: DataTypes.TIME,
-  },
-  TINYINT: {
+  }),
+  TINYINT: () => ({
     allowNull: false,
     type: DataTypes.TINYINT,
-  },
-  TSVECTOR: {
+  }),
+  TSVECTOR: () => ({
     allowNull: false,
     type: DataTypes.TSVECTOR,
-  },
-  UUID: {
+  }),
+  UUID: () => ({
     allowNull: false,
     type: DataTypes.UUID,
-  },
-  UUIDV1: {
+  }),
+  UUIDV1: () => ({
     allowNull: false,
     type: DataTypes.UUIDV1,
-  },
-  UUIDV4: {
+  }),
+  UUIDV4: () => ({
     allowNull: false,
     type: DataTypes.UUIDV4,
-  },
-  VIRTUAL: {
+  }),
+  VIRTUAL: () => ({
     allowNull: false,
     type: DataTypes.VIRTUAL,
-  },
-};
+  }),
+});
 
 module.exports = {
   addEnums,

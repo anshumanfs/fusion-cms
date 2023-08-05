@@ -12,7 +12,7 @@ const jsonToMongooseSchema = (schema: MongoSchemaInput) => {
   for (const [key, value] of Object.entries(jsonSchema)) {
     let schemaPart = ``;
     let { isNullable, required, isArray, type, enums, defaultValue, ref, isIndex, isUnique, isSparse } = value;
-    type = type === 'DbRef' ? `DbRef('${ref}')` : type;
+    type = type === 'DbRef' ? `DbRef('${ref}')` : `${type}()`;
     if (required) {
       schemaPart = `Types.${type}`;
     } else {

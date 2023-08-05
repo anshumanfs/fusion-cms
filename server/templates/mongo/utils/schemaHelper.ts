@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const lodash = require('lodash');
-const { randomUUID } = require('crypto');
+import mongoose from 'mongoose';
+import lodash from 'lodash';
+import { randomUUID } from 'crypto';
 
 const schemaTypes = mongoose.SchemaTypes;
 const Nullable = {
@@ -9,7 +9,7 @@ const Nullable = {
    * @param {object} object Array of objects
    * @return {object} Returns schema for Nullable array
    */
-  ObjArray: (object) => {
+  ObjArray: (object: any) => {
     const obj = lodash.cloneDeep(object);
     obj.default = null;
     obj.required = false;
@@ -21,7 +21,7 @@ const Nullable = {
    * @param {object} object Types Object
    * @return {object} Mongoose schema for Nullable Types
    */
-  Types: (object) => {
+  Types: (object: any) => {
     const obj = lodash.cloneDeep(object);
     obj.default = null;
     obj.required = false;
@@ -38,11 +38,10 @@ const defaults = {
 };
 
 const setters = {
-  Array: (v) => Array.from(v),
-  Date: (v) => new Date(v).toISOString(),
-  DateTime: (v) => new Date(v).toISOString(),
-  DomainId: (v) => v.toString().toUpperCase(),
-  Time: (v) => {
+  Array: (v: any) => Array.from(v),
+  Date: (v: any) => new Date(v).toISOString(),
+  DateTime: (v: any) => new Date(v).toISOString(),
+  Time: (v: any) => {
     const [hours, minutes, seconds] = v.split(':');
     const date = new Date('1970-01-01T00:00:00.000Z');
     date.setHours(hours);
@@ -52,13 +51,13 @@ const setters = {
   },
 };
 
-const addEnums = (obj, enums) => {
+const addEnums = (obj: any, enums: any) => {
   const Obj = lodash.cloneDeep(obj);
   Obj.enum = enums;
   return Obj;
 };
 
-const addDefaultValue = (obj, defaultValue) => {
+const addDefaultValue = (obj: any, defaultValue: any) => {
   const Obj = lodash.cloneDeep(obj);
   switch (defaultValue) {
     case 'CurrentDateTime':
@@ -77,45 +76,45 @@ const addDefaultValue = (obj, defaultValue) => {
   return Obj;
 };
 
-const unique = (obj) => {
+const unique = (obj: any) => {
   const Obj = lodash.cloneDeep(obj);
   Obj.unique = true;
   return Obj;
 };
 
-const index = (obj) => {
+const index = (obj: any) => {
   const Obj = lodash.cloneDeep(obj);
   Obj.index = true;
   return Obj;
 };
 
-const sparse = (obj) => {
+const sparse = (obj: any) => {
   const Obj = lodash.cloneDeep(obj);
   Obj.sparse = true;
   return Obj;
 };
 
-function Optional(obj) {
+function Optional(obj: any) {
   const Obj = lodash.cloneDeep(obj);
   Obj.required = false;
   return Obj;
 }
 
-const addGetter = (obj, getter) => {
+const addGetter = (obj: any, getter: any) => {
   if (typeof getter !== 'function') {
     throw new Error('Getter should be a function');
   }
   return { ...obj, get: getter };
 };
 
-const addSetter = (obj, setter) => {
+const addSetter = (obj: any, setter: any) => {
   if (typeof setter !== 'function') {
     throw new Error('Setter should be a function');
   }
   return { ...obj, set: setter };
 };
 
-function FormatDbRefs(value, ref) {
+function FormatDbRefs(value: any, ref: any) {
   let param;
 
   if (value === null) {
@@ -154,7 +153,7 @@ function FormatDbRefs(value, ref) {
  * @param {string|Date} value - The date value to be formatted. Can be either a string or a Date object.
  * @return {string|null} - The formatted date value. Returns null if the input value is empty or null.
  */
-function FormatDate(value) {
+function FormatDate(value: any) {
   let result;
   if (value === '' || value === null) {
     result = null;
@@ -183,9 +182,9 @@ function FormatDate(value) {
 }
 
 const getters = {
-  Date: (v) => (v == null ? null : new Date(v).toISOString().split('T')[0]),
-  DateTime: (v) => (v == null ? null : new Date(v).toISOString()),
-  Time: (v) =>
+  Date: (v: any) => (v == null ? null : new Date(v).toISOString().split('T')[0]),
+  DateTime: (v: any) => (v == null ? null : new Date(v).toISOString()),
+  Time: (v: any) =>
     v == null
       ? null
       : v.toLocaleTimeString('en-US', { hour12: false, hour: 'numeric', minute: 'numeric', second: 'numeric' }),
@@ -197,8 +196,8 @@ const getters = {
  * @return {object} Mongoose Schema for Array of Objects
  */
 
-function ObjArray(Obj) {
-  const schema = {};
+function ObjArray(Obj: any) {
+  const schema: any = {};
   const obj = lodash.cloneDeep(Obj);
   schema.type = [obj.type];
   schema.required = obj.required;
@@ -211,90 +210,86 @@ function ObjArray(Obj) {
   schema.default = [];
   return schema;
 }
-const Types = {
-  Array: {
+const Types = Object.freeze({
+  Array: () => ({
     required: true,
     set: setters.Array,
     type: schemaTypes.Array,
-  },
-  BigInt: {
-    required: true,
-    type: schemaTypes.BigInt,
-  },
-  Boolean: {
+  }),
+  Boolean: () => ({
     required: true,
     type: schemaTypes.Boolean,
-  },
-  Buffer: {
+  }),
+  Buffer: () => ({
     required: true,
     type: schemaTypes.Buffer,
-  },
-  Date: {
+  }),
+  Date: () => ({
     get: getters.Date,
     required: true,
     set: setters.Date,
     type: schemaTypes.Date, // have to make it to compensate with older saving format
-  },
-  DateTime: {
+  }),
+  DateTime: () => ({
     get: getters.DateTime,
     required: true,
     set: setters.DateTime,
     type: schemaTypes.Date, // have to make it to compensate with older saving format
-  },
-  DbRef: (collectionName) => {
+  }),
+  DbRef: (collectionName: string) => {
     return {
       required: true,
-      set: (value) => FormatDbRefs(value, collectionName),
+      set: (value: any) => FormatDbRefs(value, collectionName),
       type: {},
     };
   },
-  Decimal128: {
+  Decimal128: () => ({
     required: true,
     type: schemaTypes.Decimal128,
-  },
-  Map: {
+  }),
+  Map: () => ({
     required: true,
     type: schemaTypes.Map,
-  },
-  Mixed: {
+  }),
+  Mixed: () => ({
     required: true,
     type: schemaTypes.Mixed,
-  },
-  NegativeNumber: {
+  }),
+  NegativeNumber: () => ({
     max: 0,
     required: true,
     type: schemaTypes.Number,
-  },
-  Number: {
+  }),
+  Number: () => ({
     required: true,
     type: schemaTypes.Number,
-  },
-  ObjectId: {
+  }),
+  ObjectId: () => ({
     default: defaults.ObjectId,
     required: true,
     type: schemaTypes.ObjectId,
-  },
-  PositiveNumber: {
+  }),
+  PositiveNumber: () => ({
     min: 0,
     required: true,
     type: schemaTypes.Number,
-  },
-  String: {
+  }),
+  String: () => ({
     required: true,
     type: schemaTypes.String,
-  },
-  Time: {
+  }),
+  Time: () => ({
     get: getters.Time,
     required: true,
     set: setters.Time,
     type: schemaTypes.Date,
-  },
-  UUID: {
+  }),
+  UUID: () => ({
     default: defaults.UUID,
     required: true,
     type: schemaTypes.UUID,
-  },
-};
+  }),
+});
 
 module.exports = {
   addDefaultValue,

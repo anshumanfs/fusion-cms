@@ -15,13 +15,13 @@ const {
 const model: any = conn.define(
   'cms_accessSchemas',
   {
-    _id: autoIncrement(primaryKey(Types.INTEGER)),
-    userName: Types.STRING,
-    appName: Types.STRING,
-    canCreate: Types.JSON,
-    canRead: Types.JSON,
-    canUpdate: Types.JSON,
-    canDelete: Types.JSON,
+    _id: autoIncrement(primaryKey(Types.INTEGER())),
+    userName: Types.STRING(),
+    appName: Types.STRING(),
+    canCreate: Types.JSON(),
+    canRead: Types.JSON(),
+    canUpdate: Types.JSON(),
+    canDelete: Types.JSON(),
   },
   {
     tableName: 'cms_accessSchemas',

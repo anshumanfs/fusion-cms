@@ -15,9 +15,9 @@ const {
 const model: any = conn.define(
   'cms_configs',
   {
-    _id: autoIncrement(primaryKey(Types.INTEGER)),
-    type: Types.STRING,
-    nextAvailablePort: Optional(Types.INTEGER),
+    _id: autoIncrement(primaryKey(Types.INTEGER())),
+    type: Types.STRING(),
+    nextAvailablePort: Optional(Types.INTEGER()),
   },
   {
     tableName: 'cms_configs',

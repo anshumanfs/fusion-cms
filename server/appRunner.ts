@@ -110,7 +110,7 @@ const runAsMicroService = async () => {
 };
 
 const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
-  return new Promise<void>((resolve, reject) => {
+  return new Promise<void>(async (resolve, reject) => {
     const monolithFunctions = async () => {
       if (work_env === 'development') {
         await buildAppsFromDB();
@@ -140,19 +140,10 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
     }
 
     if (cmsConfig.metadataDb.orm === 'sequelize') {
+      await conn.sync();
       conn.addHook('afterConnect', async () => {
-        conn
-          .sync({ alter: true })
-          .then(async () => {
-            await monolithFunctions();
-            resolve();
-          })
-          .catch((err: any) => {
-            reject(err);
-          });
-      });
-      conn.authenticate().catch((err: any) => {
-        reject(err);
+        await monolithFunctions();
+        resolve();
       });
     }
   });

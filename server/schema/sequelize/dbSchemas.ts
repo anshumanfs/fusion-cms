@@ -15,12 +15,12 @@ const {
 const model: any = conn.define(
   'cms_dbSchemas',
   {
-    _id: autoIncrement(primaryKey(Types.INTEGER)),
-    appName: Types.STRING,
-    singularCollectionName: Types.STRING,
-    originalCollectionName: Types.STRING,
-    pluralCollectionName: Types.STRING,
-    schema: Types.JSON,
+    _id: autoIncrement(primaryKey(Types.INTEGER())),
+    appName: Types.STRING(),
+    singularCollectionName: Types.STRING(),
+    originalCollectionName: Types.STRING(),
+    pluralCollectionName: Types.STRING(),
+    schema: Types.JSON(),
   },
   {
     tableName: 'cms_dbSchemas',

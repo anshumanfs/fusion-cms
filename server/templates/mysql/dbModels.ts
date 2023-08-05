@@ -23,9 +23,9 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
     }: MySQLSchemaFields = value;
 
     if (required) {
-      schemaPart = `Types['${type}']`;
+      schemaPart = `Types['${type}']()`;
     } else {
-      schemaPart = `Optional(Types['${type}'])`;
+      schemaPart = `Optional(Types['${type}']())`;
     }
 
     if (!['true', true].includes(isNullable)) {

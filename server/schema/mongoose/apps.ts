@@ -1,8 +1,8 @@
-import { Types, addEnums, unique } from '../../templates/mongo/utils/schemaHelper';
 import { Schema } from 'mongoose';
 import { conn } from '../../db';
 import mongooseQueryServices from '../services/mongoose';
 
+const { Types, addEnums, unique } = require('../../templates/mongo/utils/schemaHelper');
 const QuerySchema: any = new Schema(
   {
     _id: Types.ObjectId,
