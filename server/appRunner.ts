@@ -34,7 +34,17 @@ const appManagerApolloServer = async ({ app }: { app: any }) => {
     typeDefs: Schema,
   });
   await apollo.start();
-  app.use(`/appManager`, cors(), json(), customFileParser, expressMiddleware(apollo));
+  app.use(
+    `/appManager`,
+    cors(),
+    json(),
+    customFileParser,
+    expressMiddleware(apollo, {
+      context: async ({ req }: any) => {
+        return { req };
+      },
+    })
+  );
   console.log(`✔ appManager :- GraphQL running on /appManager`);
   return true;
 };

@@ -38,20 +38,20 @@ const Schema = gql`
 
   input createApp {
     appName: String!
-    mongo: mongoConnectionConfigs
-    mysql: mySQLConnectionConfigs
+    mongo: mongoConnection
+    mysql: mySQLConnection
     dbType: databaseTypes!
     env: environmentTypes!
   }
 
-  "MongoDB connection configs can be found at https://mongoosejs.com/docs/connections.html#options"
-  input mongoConnectionConfigs {
+  "MongoDB connection options can be found at https://mongoosejs.com/docs/connections.html#options"
+  input mongoConnection {
     uri: String!
     options: JSON
   }
 
-  "MySQL connection configs can be found at https://www.npmjs.com/package/mysql#connection-options"
-  input mySQLConnectionConfigs {
+  "MySQL connection options can be found at https://www.npmjs.com/package/mysql#connection-options"
+  input mySQLConnection {
     database: String!
     username: String!
     password: String!

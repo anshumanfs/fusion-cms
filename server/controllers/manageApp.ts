@@ -28,7 +28,7 @@ const buildAppsFromDB = async () => {
   };
   const promiseArr: any[] = [];
   const data = await dbModels.apps.find({});
-  const appsRelatedToCurrentEnv = (await dbModels.dbCreds.find({ env: QUERY_ENV })).map((e: any) => e.appName);
+  const appsRelatedToCurrentEnv = (await dbModels.dbCredentials.find({ env: QUERY_ENV })).map((e: any) => e.appName);
   const allApps = await dbModels.apps.find({ appName: { $in: appsRelatedToCurrentEnv } });
   const buildApp = async ({ appName, dbType }: { appName: string; dbType: string }) => {
     const appSchemas = await dbModels.dbSchemas.find({ appName });

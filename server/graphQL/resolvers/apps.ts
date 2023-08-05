@@ -24,7 +24,7 @@ const createApp = async (_: any, args: any, { req }: any) => {
   const { appName, dbType, env } = args.input;
   const findApp = await dbModels.apps.findOne({ appName });
   if (!findApp) {
-    const indexInput = { ...args.input[dbType], appName, dbType, env };
+    const indexInput = { credentials: args.input[dbType], appName, dbType, env };
     await templates[dbType as keyof typeof templates].createApp(indexInput, req.body.variables);
     return { message: 'App created successfully' };
   } else {
@@ -40,7 +40,7 @@ const updateApp = async (_: any, args: any, { req }: any) => {
   if (!findApp) {
     throw Errors.BAD_REQUEST('Application not found. Please create one application with provided appName');
   } else {
-    const indexInput = { ...args.input[dbType], appName, dbType, env };
+    const indexInput = { credentials: args.input[dbType], appName, dbType, env };
     await templates[dbType as keyof typeof templates].createApp(indexInput, req.body.variables);
     return { message: 'App updated successfully' };
   }

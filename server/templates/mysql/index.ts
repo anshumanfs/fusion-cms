@@ -28,20 +28,16 @@ const updateGlobalConfig = async (appName: string, running: boolean) => {
       throw Error('Could not update');
     }
     port = portConfigs.nextAvailablePort - 1;
-    await dbModels.apps.create({ appName, port, running, isAppCompleted: false, dbType: 'snowflake' });
+    await dbModels.apps.create({ appName, port, running, isAppCompleted: false, dbType: 'mysql' });
     // setting isAppCompleted to false since (0 -> Incomplete)
   }
   return port; // since default port set for this will start from 3500
 };
 
 const createApp = async (fields: any, files: any) => {
-  const { appName, env, username, password, accountName, dbName, dbSchemaName, dbWarehouseName, roleName } = fields;
+  const { appName, env, credentials } = fields;
   // add to db
-  await dbModels.dbCredentials.findOneAndUpdate(
-    { appName, env },
-    { username, password, accountName, dbName, dbSchemaName, dbWarehouseName, roleName },
-    { upsert: true }
-  );
+  await dbModels.dbCredentials.findOneAndUpdate({ appName, env }, { credentials }, { upsert: true });
   await updateGlobalConfig(appName, false); // by default apps will not be running so running = false
 };
 
