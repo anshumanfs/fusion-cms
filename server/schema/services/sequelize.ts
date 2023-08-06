@@ -19,31 +19,27 @@ export default function sequelizeQueryServices(model: any) {
     findOne: async (filter = {}, projection = {}, options = {}) => {
       return model.findOne({ where: filter, attributes: projection, ...options });
     },
-    findOneAndUpdate: async (filter: any, update = {}, options: any = {}) => {
+    findOneAndUpdate: async (filter: any, update: any = {}, options: any = {}) => {
       if (!filter) {
         throw new Error('Filter is required for findOneAndUpdate');
       }
-      // snippet to handle $inc coming inside update
-      const updateKeys = Object.keys(update);
-      const updateValues: any = Object.values(update);
-      const newUpdate: any = {};
-      updateKeys.forEach((key, index) => {
-        if (updateValues[index].$inc) {
-          newUpdate[key] = sequelize.literal(`${key} + ${updateValues[index].$inc}`);
-        } else {
-          newUpdate[key] = updateValues[index];
+      const existing = await model.findOne({ where: filter, ...options });
+      if (existing) {
+        if (update.$inc) {
+          for (const key in update.$inc) {
+            if (update.$inc.hasOwnProperty(key)) {
+              const value = update.$inc[key];
+              update[key] = existing[key] + value;
+            }
+          }
+          delete update.$inc;
         }
-      });
-
-      if (options.upsert === true) {
-        const existing = await model.findOne({ where: filter, ...options });
-        if (existing) {
-          return model.update(update, { where: filter, ...options });
-        } else {
+        return model.update(update, { where: filter, ...options });
+      } else {
+        if (options.upsert) {
           return model.create({ ...filter, ...update }, { ...options });
         }
-      } else {
-        return model.update(update, { where: filter, ...options });
+        throw new Error('No document found to update');
       }
     },
     findOneAndDelete: async (filter = {}, options = {}) => {

@@ -2,12 +2,12 @@ import { Schema } from 'mongoose';
 import { conn } from '../../db';
 import mongooseQueryServices from '../services/mongoose';
 
-const { Types, Optional } = require('../../templates/mongo/utils/schemaHelper');
+const { Types, Optional, addDefaultValue } = require('../../templates/mongo/utils/schemaHelper');
 const QuerySchema: any = new Schema(
   {
     _id: Types.ObjectId(),
     type: Types.String(),
-    nextAvailablePort: Optional(Types.Number()),
+    nextAvailablePort: addDefaultValue(Optional(Types.Number()), 0),
   },
   {
     timestamps: true,

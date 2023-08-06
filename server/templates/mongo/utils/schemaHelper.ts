@@ -57,6 +57,13 @@ const addEnums = (obj: any, enums: any) => {
   return Obj;
 };
 
+/**
+ * Generates a new object by adding a default value to a given object.
+ *
+ * @param {any} obj - The original object.
+ * @param {any} defaultValue - The default value to be added.
+ * @return {any} The new object with the default value added.
+ */
 const addDefaultValue = (obj: any, defaultValue: any) => {
   const Obj = lodash.cloneDeep(obj);
   switch (defaultValue) {
@@ -76,30 +83,62 @@ const addDefaultValue = (obj: any, defaultValue: any) => {
   return Obj;
 };
 
+/**
+ * Returns a new object with a unique property added to it.
+ *
+ * @param {any} obj - The object to be cloned and modified.
+ * @return {any} The modified object with the unique property.
+ */
 const unique = (obj: any) => {
   const Obj = lodash.cloneDeep(obj);
   Obj.unique = true;
   return Obj;
 };
 
+/**
+ * Returns a deep copy of the given object with an additional property "index" set to true.
+ *
+ * @param {any} obj - The object to be copied.
+ * @return {any} The copied object with the "index" property set to true.
+ */
 const index = (obj: any) => {
   const Obj = lodash.cloneDeep(obj);
   Obj.index = true;
   return Obj;
 };
 
+/**
+ * Returns an object with a sparse property set to true.
+ *
+ * @param {any} obj - The object to be made a sparse
+ * @return {any} Object with sparse properties set to true
+ */
 const sparse = (obj: any) => {
   const Obj = lodash.cloneDeep(obj);
   Obj.sparse = true;
   return Obj;
 };
 
+/**
+ * Creates a new object with the same properties as the input object, but with an added "required" property set to false.
+ *
+ * @param {any} obj - The input object.
+ * @return {any} The new object with the "required" property set to false.
+ */
 function Optional(obj: any) {
   const Obj = lodash.cloneDeep(obj);
   Obj.required = false;
   return Obj;
 }
 
+/**
+ * Adds a getter function to an object.
+ *
+ * @param {any} obj - The object to add the getter to.
+ * @param {any} getter - The getter function to add.
+ * @throws {Error} If the getter is not a function.
+ * @return {any} The object with the getter added.
+ */
 const addGetter = (obj: any, getter: any) => {
   if (typeof getter !== 'function') {
     throw new Error('Getter should be a function');
@@ -107,6 +146,14 @@ const addGetter = (obj: any, getter: any) => {
   return { ...obj, get: getter };
 };
 
+/**
+ * Adds a setter function to an object.
+ *
+ * @param {any} obj - The object to which the setter function will be added.
+ * @param {any} setter - The setter function to be added.
+ * @throws {Error} If the setter is not a function.
+ * @return {any} The object with the setter function added.
+ */
 const addSetter = (obj: any, setter: any) => {
   if (typeof setter !== 'function') {
     throw new Error('Setter should be a function');
