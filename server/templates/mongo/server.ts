@@ -9,8 +9,9 @@ const serverJSGenerator = (port: number | string, appName: string) => {
     const cors = require('cors'); 
     const { json } = require('body-parser'); 
     const http = require('http'); 
-    const work_env = ('NODE_ENV' in process.env) ? process.env.NODE_ENV.trim() : 'local'; 
-    const dev = work_env.trim() === 'local' app.use(cors({ origin: '*' })); 
+    const work_env = ('NODE_ENV' in process.env) ? process.env.NODE_ENV.trim() : 'development'; 
+    const dev = work_env.trim() === 'development';
+    app.use(cors({ origin: '*' })); 
     const server = http.createServer(app); 
     const startApolloServer = async (dev) => { 
         const apollo = new ApolloServer({ 
@@ -21,7 +22,6 @@ const serverJSGenerator = (port: number | string, appName: string) => {
         }); 
         await apollo.start(); 
         console.log('✓ API is running on: http://localhost:${port}'); 
-        apollo.applyMiddleware({ app, path: '/graphql/${appName}' }); 
         app.use('/graphql/${appName}', cors(), json(), expressMiddleware(apollo));
         console.log('✔ ${appName} :- GraphQL running on http://localhost:${port}/graphql/${appName}');
         server.listen(port); 

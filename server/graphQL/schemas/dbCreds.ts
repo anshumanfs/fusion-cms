@@ -1,4 +1,5 @@
 import { gql } from 'graphql-tag';
+
 const Schema = gql`
   extend type Query {
     getDbCredential(appName: String!, env: environmentTypes!): dbCred

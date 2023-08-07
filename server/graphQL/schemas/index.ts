@@ -1,5 +1,6 @@
-import AppSchema from './apps';
-import dbCredSchema from './dbCreds';
+import Apps from './apps';
+import dbCreds from './dbCreds';
+import AppSchemas from './appSchemas';
 const { typeDefs: scalarTypeDefs } = require('graphql-scalars');
 
 export const Schema = `#graphql 
@@ -7,4 +8,4 @@ export const Schema = `#graphql
   type Query, 
   type Mutation`;
 
-module.exports = [AppSchema, dbCredSchema, Schema];
+module.exports = [Apps, AppSchemas, dbCreds, Schema];
