@@ -4,15 +4,15 @@ const serverJSGenerator = (port: number | string, appName: string) => {
     const { ApolloServer } = require('@apollo/server'); 
     const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer'); const { expressMiddleware } = require('@apollo/server/express4'); 
     const resolver = require('./indexResolver'); 
-    const schema = require('./indexSchema'); 
-    const port = ${port}; 
-    const cors = require('cors'); 
-    const { json } = require('body-parser'); 
-    const http = require('http'); 
+    const schema = require('./indexSchema');
+    const port = ${port};
+    const cors = require('cors');
+    const { json } = require('body-parser');
+    const http = require('http');
     const work_env = ('NODE_ENV' in process.env) ? process.env.NODE_ENV.trim() : 'development'; 
     const dev = work_env.trim() === 'development';
-    app.use(cors({ origin: '*' })); 
-    const server = http.createServer(app); 
+    app.use(cors({ origin: '*' }));
+    const server = http.createServer(app);
     const startApolloServer = async (dev) => { 
         const apollo = new ApolloServer({ 
             introspection: dev, 
@@ -24,8 +24,8 @@ const serverJSGenerator = (port: number | string, appName: string) => {
         console.log('✓ API is running on: http://localhost:${port}'); 
         app.use('/graphql/${appName}', cors(), json(), expressMiddleware(apollo));
         console.log('✔ ${appName} :- GraphQL running on http://localhost:${port}/graphql/${appName}');
-        server.listen(port); 
-    } 
+        server.listen(port);
+    };
     startApolloServer(dev);`;
   return appJSString;
 };

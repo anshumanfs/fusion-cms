@@ -2,6 +2,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'production';
+      CMS_ENV: 'development' | 'testing' | 'production' | 'performance';
       APP_MODE: 'monolith' | 'microservice';
       PORT?: number | 3000;
       CIPHER_KEY: string;

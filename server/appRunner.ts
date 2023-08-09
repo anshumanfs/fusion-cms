@@ -10,7 +10,7 @@ import { customFileParser } from './libs/customFileParser';
 import cmsConfig from './config.json';
 
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
-const checkEnv = ['prod', 'perf'];
+const checkEnv = ['production', 'performance'];
 
 const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boolean; subfolder: string }) => {
   const Resolver = require(`./apps/${subfolder}/indexResolver`);
