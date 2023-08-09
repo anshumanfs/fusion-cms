@@ -60,7 +60,6 @@ const createDbModels = async (options: DbModelsInput) => {
     fs.ensureDirSync(appDir + e);
   });
   await Promise.allSettled(dirPromises);
-
   // update the schema to db
   await dbModels.dbSchemas.findOneAndUpdate(
     { appName, originalCollectionName },

@@ -1,10 +1,11 @@
-import { DataTypes } from 'sequelize';
+import { toJSON } from '../../libs/customLibs';
 import { conn } from '../../db';
 import sequelizeQueryServices from '../services/sequelize';
 const {
   addEnums,
   unique,
   addDefaultValue,
+  addGetter,
   primaryKey,
   ObjArray,
   Optional,
@@ -20,7 +21,7 @@ const model: any = conn.define(
     singularCollectionName: Types.STRING(),
     originalCollectionName: Types.STRING(),
     pluralCollectionName: Types.STRING(),
-    schema: Types.JSON(),
+    schema: addGetter(Types.JSON(), 'schema', toJSON),
   },
   {
     tableName: 'cms_dbSchemas',

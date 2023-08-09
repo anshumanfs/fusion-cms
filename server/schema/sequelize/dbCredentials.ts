@@ -1,4 +1,4 @@
-import { DataTypes } from 'sequelize';
+import { toJSON } from '../../libs/customLibs';
 import { conn } from '../../db';
 import { AES, enc } from 'crypto-js';
 import sequelizeQueryServices from '../services/sequelize';
@@ -43,7 +43,7 @@ const model: any = conn.define(
     _id: autoIncrement(primaryKey(Types.INTEGER())),
     appName: Types.STRING(),
     env: Types.STRING(),
-    credentials: Types.JSON(),
+    credentials: addGetter(Types.JSON(), 'schema', toJSON),
   },
   {
     tableName: 'cms_dbCredentials',

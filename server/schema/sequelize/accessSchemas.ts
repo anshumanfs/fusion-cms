@@ -1,8 +1,9 @@
-import { DataTypes } from 'sequelize';
+import { toJSON } from '../../libs/customLibs';
 import { conn } from '../../db';
 import sequelizeQueryServices from '../services/sequelize';
 const {
   addEnums,
+  addGetter,
   unique,
   addDefaultValue,
   primaryKey,
@@ -18,10 +19,10 @@ const model: any = conn.define(
     _id: autoIncrement(primaryKey(Types.INTEGER())),
     userName: Types.STRING(),
     appName: Types.STRING(),
-    canCreate: Types.JSON(),
-    canRead: Types.JSON(),
-    canUpdate: Types.JSON(),
-    canDelete: Types.JSON(),
+    canCreate: addGetter(Types.JSON(), 'schema', toJSON),
+    canRead: addGetter(Types.JSON(), 'schema', toJSON),
+    canUpdate: addGetter(Types.JSON(), 'schema', toJSON),
+    canDelete: addGetter(Types.JSON(), 'schema', toJSON),
   },
   {
     tableName: 'cms_accessSchemas',
