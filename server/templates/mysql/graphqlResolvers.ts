@@ -57,7 +57,7 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
           const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info); 
           const { attributes } = mapGqlFieldToSql(info);
           const { filters , options } = preMiddlewareResult.args; 
-          let result = await ${pluralCollectionName}.findAll({ where: filters, attributes, ...options });           
+          let result = await ${pluralCollectionName}.findAll({ where: filters || {}, attributes, ...options });           
           const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
           return postMiddlewareResult;
         }, 
@@ -74,8 +74,8 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
             const { attributes } = mapGqlFieldToSql(info); 
             const { filters } = preMiddlewareResult.args; 
             let result = await ${pluralCollectionName}.findOne({
-              where: filters,
-            }); 
+              where: filters || {},
+            });
             const postMiddlewareResult = await QueryPostMiddleware.${singularCollectionName}(result); 
             return postMiddlewareResult; 
           } 

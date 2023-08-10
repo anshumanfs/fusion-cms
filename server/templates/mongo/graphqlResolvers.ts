@@ -42,7 +42,7 @@ const generateResolver = (
         const projection = getProjections(info); 
         const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info); 
         const { filters, options , resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args;
-        let result = await ${pluralCollectionName}.find(filters,projection,options);
+        let result = await ${pluralCollectionName}.find(filters || {},projection,options);
         if(resolveDbRefs){
           result = await populate(result, dbRefPreserveFields); 
         }             
@@ -52,7 +52,7 @@ const generateResolver = (
       count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
         const preMiddlewareResult = await QueryPreMiddleware.count_${pluralCollectionName}(parent, args, contextValue, info); 
         const { filters, projection, options} = preMiddlewareResult.args; 
-        const result = await ${pluralCollectionName}.find(filters).count(); 
+        const result = await ${pluralCollectionName}.find(filters || {}).count(); 
         const postMiddlewareResult = await QueryPostMiddleware.count_${pluralCollectionName}(result); 
         return postMiddlewareResult; 
       },
@@ -72,7 +72,7 @@ const generateResolver = (
         const projection = getProjections(info); 
         const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info); 
         const { filters, resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args; 
-        let result = await ${pluralCollectionName}.findOne(filters,projection).toObject(); 
+        let result = await ${pluralCollectionName}.findOne(filters || {},projection).toObject(); 
         if(resolveDbRefs){ 
           result = await populate(result, dbRefPreserveFields); 
         } 
@@ -94,7 +94,7 @@ const generateResolver = (
         if(Object.keys(updates).length === 0 || Object.keys(filters).length === 0){
          throw Errors.default.BAD_REQUEST('Empty update or filter object');
         }
-        const result = await ${pluralCollectionName}.findOneAndUpdate(filters, updates, { new: true }); 
+        const result = await ${pluralCollectionName}.findOneAndUpdate(filters || {}, updates, { new: true }); 
         const postMiddlewareResult = await MutationPostMiddleware.update_${singularCollectionName}(result);
         return postMiddlewareResult; 
       }, 
@@ -104,7 +104,7 @@ const generateResolver = (
         if(Object.keys(filters).length === 0){
           throw Errors.default.BAD_REQUEST('Empty filter object');
         } 
-        const result = await ${pluralCollectionName}.findOneAndDelete(filters); 
+        const result = await ${pluralCollectionName}.findOneAndDelete(filters || {}); 
         const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(result); 
         return postMiddlewareResult;
       } 
