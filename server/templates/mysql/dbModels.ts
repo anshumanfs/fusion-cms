@@ -21,7 +21,6 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
       isUnique,
       autoIncrement,
     }: MySQLSchemaFields = value;
-
     if (required) {
       schemaPart = `Types['${type}']()`;
     } else {

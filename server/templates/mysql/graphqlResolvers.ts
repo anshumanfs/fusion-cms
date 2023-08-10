@@ -48,22 +48,23 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
   const resolverFileContent = `
     const ${pluralCollectionName} = require('../dbModels/${pluralCollectionName}.js'); 
     const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
-    const { mapGqlFieldToSql } = require('../utils/resolverUtils'); 
+    const { mapGqlFieldToSql } = require('../utils/resolverUtils');
+    const Errors = require('../../../utils/errors');
 
     const resolvers = { 
       Query: { 
         ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
           const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info); 
-          const { attributes } = mapGqlFieldToSql(info); 
+          const { attributes } = mapGqlFieldToSql(info);
           const { filters , options } = preMiddlewareResult.args; 
           let result = await ${pluralCollectionName}.findAll({ where: filters, attributes, ...options });           
           const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
-          return postMiddlewareResult; 
+          return postMiddlewareResult;
         }, 
         count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
           const preMiddlewareResult = await QueryPreMiddleware.count_${pluralCollectionName}(parent, args, contextValue, info); 
-          const { options } = preMiddlewareResult.args; 
-          const result = await ${pluralCollectionName}.count(); 
+          const { filters } = preMiddlewareResult.args; 
+          const result = await ${pluralCollectionName}.count({where: filters || {}}); 
           const postMiddlewareResult = await QueryPostMiddleware.count_${pluralCollectionName}(result); 
           return postMiddlewareResult; 
         },
@@ -71,8 +72,10 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
         ${singularCollectionName}: async (parent, args, contextValue, info) =>{  
             const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info); 
             const { attributes } = mapGqlFieldToSql(info); 
-            const { id } = preMiddlewareResult.args; 
-            let result = await ${pluralCollectionName}.findByPk(id); 
+            const { filters } = preMiddlewareResult.args; 
+            let result = await ${pluralCollectionName}.findOne({
+              where: filters,
+            }); 
             const postMiddlewareResult = await QueryPostMiddleware.${singularCollectionName}(result); 
             return postMiddlewareResult; 
           } 
@@ -86,7 +89,10 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
           }, 
           update_${singularCollectionName}: async (parent, args, contextValue, info) => { 
             const preMiddlewareResult = await MutationPreMiddleware.update_${singularCollectionName}(parent, args, contextValue, info);  
-            const { filters, updates } = preMiddlewareResult.args; 
+            const { filters, updates } = preMiddlewareResult.args;
+            if(Object.keys(updates).length === 0 || Object.keys(filters).length ===0){
+              throw new Errors.default.BAD_REQUEST('No updates or filters provided');
+            }            
             const result = await ${pluralCollectionName}.update(updates , { 
               where: filters 
             }); 
@@ -96,6 +102,9 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
           delete_${singularCollectionName}: async (parent, args, contextValue, info) => { 
             const preMiddlewareResult = await MutationPreMiddleware.delete_${singularCollectionName}(parent, args, contextValue, info); 
             const { filters } =  preMiddlewareResult.args; 
+            if(Object.keys(updates).length === 0 || Object.keys(filters).length ===0){
+              throw new Errors.default.BAD_REQUEST('No updates or filters provided');
+            } 
             const result = await ${pluralCollectionName}.destroy({ 
               where: filters 
             }); 

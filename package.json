@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"npx tsc --watch --project tsconfig.server.json\" \"nodemon -q .build/app.js\"",
+    "dev:next": "next dev",
     "build:next": "next build",
     "build:sever": "tsc --project tsconfig.server.json",
     "build": "npm run build:next && npm run build:sever",
-    "start": "tsc  --project tsconfig.server.json && node .build/app.js",
+    "start": "node .build/app.js",
     "lint": "next lint",
     "format-fix": "prettier --write ."
   },
@@ -60,6 +61,8 @@
     "typescript": "5.1.6"
   },
   "devDependencies": {
-    "chai": "^4.3.7"
+    "chai": "^4.3.7",
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.0.1"
   }
 }

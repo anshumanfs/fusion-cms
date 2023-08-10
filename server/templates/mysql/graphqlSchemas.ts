@@ -42,9 +42,9 @@ const generateGqlSchema = (
           
           ${singularCollectionName}(filter:JSONObject): ${singularCollectionName} 
           
-          count_${pluralCollectionName} : Int 
+          count_${pluralCollectionName}(filter:JSONObject) : Int 
         }
-        extend type Mutation { 
+        extend type Mutation {
           create_${singularCollectionName}(input:${singularCollectionName}Input): ${singularCollectionName} 
          
           update_${singularCollectionName}(filter:JSONObject!, updates:${singularCollectionName}Input): ${singularCollectionName} 

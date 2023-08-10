@@ -41,9 +41,9 @@ const generateResolver = (
       ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
         const projection = getProjections(info); 
         const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info); 
-        const { filter, options , resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args; 
-        let result = await ${pluralCollectionName}.find(filter,projection,options); 
-        if(resolveDbRefs){ 
+        const { filters, options , resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args;
+        let result = await ${pluralCollectionName}.find(filters,projection,options);
+        if(resolveDbRefs){
           result = await populate(result, dbRefPreserveFields); 
         }             
         const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
@@ -51,28 +51,28 @@ const generateResolver = (
       }, 
       count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
         const preMiddlewareResult = await QueryPreMiddleware.count_${pluralCollectionName}(parent, args, contextValue, info); 
-        const { filter, projection, options} = preMiddlewareResult.args; 
-        const result = await ${pluralCollectionName}.find({}).count(); 
+        const { filters, projection, options} = preMiddlewareResult.args; 
+        const result = await ${pluralCollectionName}.find(filters).count(); 
         const postMiddlewareResult = await QueryPostMiddleware.count_${pluralCollectionName}(result); 
         return postMiddlewareResult; 
       },
       aggregation_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
-        try { 
-        const preMiddlewareResult = await QueryPreMiddleware.aggregation_${pluralCollectionName}(parent, args, contextValue, info); 
-        let { pipeline } = preMiddlewareResult.args; 
-        pipeline = validateAggregatePipeline(pipeline); 
-        const result = await ${pluralCollectionName}.aggregate(pipeline).allowDiskUse(true); 
-        const postMiddlewareResult = await QueryPostMiddleware.aggregation_${pluralCollectionName}(result); 
-        return postMiddlewareResult; 
+        try {
+          const preMiddlewareResult = await QueryPreMiddleware.aggregation_${pluralCollectionName}(parent, args, contextValue, info); 
+          let { pipeline } = preMiddlewareResult.args; 
+          pipeline = validateAggregatePipeline(pipeline); 
+          const result = await ${pluralCollectionName}.aggregate(pipeline).allowDiskUse(true); 
+          const postMiddlewareResult = await QueryPostMiddleware.aggregation_${pluralCollectionName}(result); 
+          return postMiddlewareResult;
         } catch (error) { 
-          throw Errors.default.INVALID_AGGREGATE_PIPELINE(error) 
+          throw Errors.default.BAD_REQUEST(error) 
         }  
       }, 
       ${singularCollectionName}: async (parent, args, contextValue, info) =>{ 
         const projection = getProjections(info); 
         const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info); 
-        const { _id, resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args; 
-        let result = await ${pluralCollectionName}.findById(_id); 
+        const { filters, resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args; 
+        let result = await ${pluralCollectionName}.findOne(filters,projection).toObject(); 
         if(resolveDbRefs){ 
           result = await populate(result, dbRefPreserveFields); 
         } 
@@ -90,15 +90,21 @@ const generateResolver = (
       }, 
       update_${singularCollectionName}: async (parent, args, contextValue, info) => { 
         const preMiddlewareResult = await MutationPreMiddleware.update_${singularCollectionName}(parent, args, contextValue, info);
-        const { _id, ...rest } = preMiddlewareResult.args; 
-        const result = await ${pluralCollectionName}.findByIdAndUpdate(_id, rest, { new: true }); 
+        const { filters, updates } = preMiddlewareResult.args; 
+        if(Object.keys(updates).length === 0 || Object.keys(filters).length === 0){
+         throw Errors.default.BAD_REQUEST('Empty update or filter object');
+        }
+        const result = await ${pluralCollectionName}.findOneAndUpdate(filters, updates, { new: true }); 
         const postMiddlewareResult = await MutationPostMiddleware.update_${singularCollectionName}(result);
         return postMiddlewareResult; 
       }, 
       delete_${singularCollectionName}: async (parent, args, contextValue, info) => { 
         const preMiddlewareResult = await MutationPreMiddleware.delete_${singularCollectionName}(parent, args, contextValue, info);
-        const { _id } =  preMiddlewareResult.args; 
-        const result = await ${pluralCollectionName}.findByIdAndDelete(_id); 
+        const { filters } =  preMiddlewareResult.args;
+        if(Object.keys(filters).length === 0){
+          throw Errors.default.BAD_REQUEST('Empty filter object');
+        } 
+        const result = await ${pluralCollectionName}.findOneAndDelete(filters); 
         const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(result); 
         return postMiddlewareResult;
       } 

@@ -35,7 +35,7 @@ const jsonGraphqlMapper = (schema: MongoSchemaInput) => {
         value.type = 'Date';
         break;
       case 'ObjectId':
-        value.type = 'ID';
+        value.type = 'ObjectId';
         break;
       case 'Time':
         value.type = 'Time';
@@ -139,16 +139,16 @@ const generateGraphqlSchema = (
   const graphqlSchema = `
         const Schema = \`#graphql
             extend type Query {
-                ${singularCollectionName}(_id: ${idType}): ${singularCollectionName}
-                ${pluralCollectionName}(filters:JSON, options:QueryOptions): [${singularCollectionName}]
-                count_${pluralCollectionName}(filters:JSON): Int
-                aggregate_${pluralCollectionName}(pipeline:[JSON!]!): JSON
+              ${singularCollectionName}(filters:JSONObject): ${singularCollectionName}
+              ${pluralCollectionName}(filters:JSONObject, options:QueryOptions): [${singularCollectionName}]
+              count_${pluralCollectionName}(filters:JSONObject): Int
+              aggregate_${pluralCollectionName}(pipeline:[JSON!]!): JSON
             }
 
             extend type Mutation {
-                create_${singularCollectionName}(input: ${singularCollectionName}Input): ${singularCollectionName}
-                update_${singularCollectionName}(_id: ${idType}, input: ${singularCollectionName}Input): ${singularCollectionName}
-                delete_${singularCollectionName}(_id: ${idType}): ${singularCollectionName}
+              create_${singularCollectionName}(input:${singularCollectionName}Input): ${singularCollectionName}
+              update_${singularCollectionName}(filters:JSONObject, updates: ${singularCollectionName}Input): ${singularCollectionName}
+              delete_${singularCollectionName}(filters:JSONObject): ${singularCollectionName}
             }
 
             input ${singularCollectionName}Input {
@@ -161,10 +161,10 @@ const generateGraphqlSchema = (
 
             input QueryOptions {
                 allowDiskUse: Boolean
-                batchSize: BigInt
+                batchSize: Int
                 comment: String
                 hint: JSON
-                limit: BigInt
+                limit: Int!
                 projection: JSONObject
                 readPreference: String
                 skip: Int
