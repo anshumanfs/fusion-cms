@@ -6,8 +6,8 @@
     "dev": "concurrently \"npx tsc --watch --project tsconfig.server.json\" \"nodemon -q .build/app.js\"",
     "dev:next": "next dev",
     "build:next": "next build",
-    "build:sever": "tsc --project tsconfig.server.json",
-    "build": "npm run build:next && npm run build:sever",
+    "build:server": "tsc --project tsconfig.server.json",
+    "build": "npm run build:next && npm run build:server",
     "start": "node .build/app.js",
     "lint": "next lint",
     "format-fix": "prettier --write ."
