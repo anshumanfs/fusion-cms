@@ -5,7 +5,7 @@ const keys: any = Object.keys(Op) || [];
 
 const sequelizeOperatorsMap: any = {};
 for (const key of keys) {
-  sequelizeOperatorsMap[`Op.${key}`] = [Op[key as keyof typeof Op]];
+  sequelizeOperatorsMap[`Op.${key}`] = Op[key as keyof typeof Op];
 }
 
 /**
@@ -42,15 +42,15 @@ const translateWhereToSequelize = (where: any, sequelize: any) => {
     }
     return where;
   }
-  const newWhere: any = new Map();
+  const newWhere: Record<symbol | string, any> = {};
   for (const key in where) {
     const value = where[key];
     if (lodash.isPlainObject(value)) {
-      newWhere.set(key, translateWhereToSequelize(value, sequelize));
+      newWhere[key] = translateWhereToSequelize(value, sequelize);
     } else if (sequelizeOperatorsMap.hasOwnProperty(key)) {
-      newWhere.set(sequelizeOperatorsMap[key], value);
+      newWhere[sequelizeOperatorsMap[key]] = value;
     } else {
-      newWhere.set(key, value);
+      newWhere[key] = value;
     }
   }
   return newWhere;

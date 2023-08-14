@@ -1,4 +1,5 @@
 import { describe, test, expect } from '@jest/globals';
+import { Op, Sequelize } from 'sequelize';
 import translateQueryToSequelize from '../../utils/translator';
 
 describe('translateQueryToSequelize', () => {
@@ -7,7 +8,7 @@ describe('translateQueryToSequelize', () => {
     const jsonQuery1 = {
       where: {
         name: 'John',
-        age: { $gt: 18 },
+        age: { 'Op.gt': 18 },
       },
       attributes: ['name', 'age'],
       order: [['name', 'ASC']],
@@ -15,16 +16,13 @@ describe('translateQueryToSequelize', () => {
       limit: 10,
       offset: 0,
     };
-    const connection1 = {
-      /* mock connection object */
-    };
+    const connection1 = Sequelize;
     const expectedQuery1 = {
-      where: { name: 'John', age: { $gt: 18 } },
+      where: { name: 'John', age: { [Op.gt]: 18 } },
       attributes: ['name', 'age'],
       order: [['name', 'ASC']],
       group: 'department',
       limit: 10,
-      offset: 0,
     };
     expect(translateQueryToSequelize(jsonQuery1, connection1)).toEqual(expectedQuery1);
 

@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "outDir": "./.build",
-    "types": ["node","jest"],
     "typeRoots": ["@types/*"],
     "target": "es2016",
     "module": "commonjs",
