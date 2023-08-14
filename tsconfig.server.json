@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "./.build",
+    "types": ["node","jest"],
     "typeRoots": ["@types/*"],
     "target": "es2016",
     "module": "commonjs",
@@ -20,5 +21,5 @@
     "server/**/*.json",
     "@types/**/*.ts"
   ],
-  "exclude": [".build", "node_modules"]
+  "exclude": [".build", "node_modules", ".next", "**/*.test.*", "**/__mocks__/*", "**/__tests__/*"]
 }
