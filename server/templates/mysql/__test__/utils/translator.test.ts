@@ -69,7 +69,7 @@ describe('translate Query To Sequelize', () => {
     const connection5 = Sequelize;
     const output5 = {
       where: Sequelize.where(Sequelize.fn('char_length', Sequelize.col('content')), 7),
-      limit: 0,
+      limit: 20,
     };
     expect(translateQueryToSequelize(input5, connection5)).toEqual(output5);
   });
