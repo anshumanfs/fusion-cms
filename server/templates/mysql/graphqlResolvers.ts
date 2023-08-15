@@ -49,6 +49,7 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
     const ${pluralCollectionName} = require('../dbModels/${pluralCollectionName}.js'); 
     const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
     const { mapGqlFieldToSql } = require('../utils/resolverUtils');
+    const { translateQueryToSequelize, translateWhereToSequelize } = require('../utils/translator');
     const Errors = require('../../../utils/errors');
 
     const resolvers = { 
@@ -56,8 +57,9 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
         ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
           const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info); 
           const { attributes } = mapGqlFieldToSql(info);
-          const { filters , options } = preMiddlewareResult.args; 
-          let result = await ${pluralCollectionName}.findAll({ where: filters || {}, attributes, ...options });           
+          const { where , order, group, limit, offset } = preMiddlewareResult.args;
+          const query = translateQueryToSequelize({ where, attributes, order, group, limit, offset },${pluralCollectionName});
+          let result = await ${pluralCollectionName}.findAll(query);       
           const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
           return postMiddlewareResult;
         }, 
@@ -72,10 +74,9 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
         ${singularCollectionName}: async (parent, args, contextValue, info) =>{  
             const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info); 
             const { attributes } = mapGqlFieldToSql(info); 
-            const { filters } = preMiddlewareResult.args; 
-            let result = await ${pluralCollectionName}.findOne({
-              where: filters || {},
-            });
+            const { where , order, group, limit, offset } = preMiddlewareResult.args; 
+            const query = translateQueryToSequelize({ where, attributes, order, group, limit, offset },${pluralCollectionName});
+            let result = await ${pluralCollectionName}.findOne(query);
             const postMiddlewareResult = await QueryPostMiddleware.${singularCollectionName}(result); 
             return postMiddlewareResult; 
           } 
@@ -89,24 +90,26 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
           }, 
           update_${singularCollectionName}: async (parent, args, contextValue, info) => { 
             const preMiddlewareResult = await MutationPreMiddleware.update_${singularCollectionName}(parent, args, contextValue, info);  
-            const { filters, updates } = preMiddlewareResult.args;
-            if(Object.keys(updates).length === 0 || Object.keys(filters).length ===0){
-              throw new Errors.default.BAD_REQUEST('No updates or filters provided');
-            }            
+            let { where, updates } = preMiddlewareResult.args;
+            if(Object.keys(where).length === 0 || Object.keys(where).length ===0){
+              throw new Errors.default.BAD_REQUEST('No updates or where condition provided');
+            }
+            where = translateWhereToSequelize(where,${pluralCollectionName});
             const result = await ${pluralCollectionName}.update(updates , { 
-              where: filters 
+              where
             }); 
-            const postMiddlewareResult = await MutationPostMiddleware.update_${singularCollectionName}(result); 
+            const postMiddlewareResult = await MutationPostMiddleware.update_${singularCollectionName}(result);
             return postMiddlewareResult; 
           }, 
           delete_${singularCollectionName}: async (parent, args, contextValue, info) => { 
             const preMiddlewareResult = await MutationPreMiddleware.delete_${singularCollectionName}(parent, args, contextValue, info); 
-            const { filters } =  preMiddlewareResult.args; 
-            if(Object.keys(updates).length === 0 || Object.keys(filters).length ===0){
-              throw new Errors.default.BAD_REQUEST('No updates or filters provided');
+            let { where } =  preMiddlewareResult.args; 
+            if(Object.keys(where).length ===0){
+              throw new Errors.default.BAD_REQUEST('No where conditions provided');
             } 
+            where = translateWhereToSequelize(where,${pluralCollectionName});
             const result = await ${pluralCollectionName}.destroy({ 
-              where: filters 
+              where
             }); 
             const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(result); 
             return postMiddlewareResult; 

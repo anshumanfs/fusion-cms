@@ -154,4 +154,9 @@ const translateQueryToSequelize = (jsonQuery: any, connection: any) => {
 //   )
 // );
 
-export default translateQueryToSequelize;
+export {
+  translateWhereToSequelize,
+  translateAttributesToSequelize,
+  translateOrderToSequelize,
+  translateQueryToSequelize,
+};

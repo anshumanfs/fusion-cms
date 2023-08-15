@@ -38,30 +38,22 @@ const generateGqlSchema = (
   const graphqlSchemaString = `  
       const Schema = \`#graphql 
         extend type Query { 
-          ${pluralCollectionName}(filter:JSONObject, options:QueryOptions ): [${singularCollectionName}] 
+          ${pluralCollectionName}(where:JSON, order:JSON, group:String, limit:Int, offset:Int): [${singularCollectionName}]
           
-          ${singularCollectionName}(filter:JSONObject): ${singularCollectionName} 
+          ${singularCollectionName}(where:JSON, order:JSON, group:String): ${singularCollectionName} 
           
-          count_${pluralCollectionName}(filter:JSONObject) : Int 
+          count_${pluralCollectionName}(where:JSON) : Int
         }
         extend type Mutation {
           create_${singularCollectionName}(input:${singularCollectionName}Input): ${singularCollectionName} 
          
-          update_${singularCollectionName}(filter:JSONObject!, updates:${singularCollectionName}Input): ${singularCollectionName} 
+          update_${singularCollectionName}(where:JSON!, updates:${singularCollectionName}Input): ${singularCollectionName} 
          
-          delete_${singularCollectionName}(filter:JSONObject!): ${singularCollectionName} 
+          delete_${singularCollectionName}(where:JSON!): ${singularCollectionName} 
         }
         
         ${queryType}
-        ${mutationType}
-        input QueryOptions { 
-          distinct: Boolean 
-          group: Any 
-          limit: Int 
-          offset: Int 
-          order: [Any] 
-          subQuery: Boolean 
-        }\`; 
+        ${mutationType}\`; 
       module.exports = Schema;`;
   return graphqlSchemaString;
 };
