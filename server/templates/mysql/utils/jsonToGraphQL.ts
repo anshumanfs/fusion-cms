@@ -1,5 +1,10 @@
 import lodash from 'lodash';
 
+const replaceAllParenthesis = (text: string, replacement: string) => {
+  const pattern = /\([\w\W]*?\)/g;
+  return text.replace(pattern, replacement);
+};
+
 /**
  * Converts a JSON object to a GraphQL query type.
  *
@@ -23,6 +28,7 @@ const jsonToQueryType = (json: any, name: string) => {
     if (object[field].isArray) {
       object[field].type = `[${object[field].type}]`;
     }
+    object[field].type = replaceAllParenthesis(object[field].type, '');
     return `${field}: ${object[field].type}`;
   });
   const queryType: string = `
@@ -60,6 +66,7 @@ const jsonToMutationType = (json: any, name: string) => {
     if (object[field].isRequired) {
       object[field].type = `${object[field].type}!`;
     }
+    object[field].type = replaceAllParenthesis(object[field].type, '');
     return `${field}: ${object[field].type}`;
   });
   const mutationType: string = `

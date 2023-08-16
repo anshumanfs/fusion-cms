@@ -2,9 +2,10 @@ const generateDbConFile = (appName: string) => {
   const dbConString = `  
       const { Sequelize } = require('sequelize'); 
       const path = require('path'); 
-      const { database, username, password, options } = require('./app.json').dbCreds; 
+      const { database, username, password, options } = require('./app.json').dbCredentials; 
       const conn = new Sequelize(database, username, password, { 
-          dialect: 'mysql', 
+          dialect: 'mysql',
+          logging: false, 
           dialectOptions: options
       }); 
       conn.authenticate().then(() => { 

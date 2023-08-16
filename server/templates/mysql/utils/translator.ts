@@ -142,17 +142,6 @@ const translateQueryToSequelize = (jsonQuery: any, connection: any) => {
   }
   return finalQuery;
 };
-// const { Sequelize } = require('sequelize');
-// console.log(translateAttributesToSequelize(['foo', ["$fn('COUNT', $col('hats'))", 'n_hats'], 'bar'], {}));
-// console.log(translateWhereToSequelize("$where($fn('char_length', $col('content')), 7)"));
-// console.log(
-//   translateQueryToSequelize(
-//     {
-//       where: "$where($fn('char_length', $col('content')), 7)",
-//     },
-//     Sequelize
-//   )
-// );
 
 export {
   translateWhereToSequelize,

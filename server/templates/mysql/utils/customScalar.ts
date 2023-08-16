@@ -4,27 +4,37 @@ import { DataTypes } from 'sequelize';
 
 const { BAD_REQUEST, GRAPHQL_PARSE_FAILED } = Errors;
 const ARRAY: any = new DataTypes.ARRAY();
+const BIGINT: any = new DataTypes.BIGINT();
+const BOOLEAN: any = new DataTypes.BOOLEAN();
 const CHAR: any = new DataTypes.CHAR();
 const CIDR: any = new DataTypes.CIDR();
 const CITEXT: any = new DataTypes.CITEXT();
+const DATE: any = new DataTypes.DATE();
 const DATEONLY: any = new DataTypes.DATEONLY();
 const DECIMAL: any = new DataTypes.DECIMAL();
 const DOUBLE: any = new DataTypes.DOUBLE();
 const ENUM: any = new DataTypes.ENUM();
+const FLOAT: any = new DataTypes.FLOAT();
 const GEOGRAPHY: any = new DataTypes.GEOGRAPHY();
 const GEOMETRY: any = new DataTypes.GEOMETRY();
 const HSTORE: any = new DataTypes.HSTORE();
 const INET: any = new DataTypes.INET();
+const INTEGER: any = new DataTypes.INTEGER();
 const JSONB: any = new DataTypes.JSONB();
+const JSON: any = new DataTypes.JSON();
 const MACADDR: any = new DataTypes.MACADDR();
 const MEDIUMINT: any = new DataTypes.MEDIUMINT();
+const NOW: any = new DataTypes.NOW();
 const NUMBER: any = new DataTypes.NUMBER();
 const RANGE: any = new DataTypes.RANGE();
 const REAL: any = new DataTypes.REAL();
 const SMALLINT: any = new DataTypes.SMALLINT();
+const STRING: any = new DataTypes.STRING();
 const TEXT: any = new DataTypes.TEXT();
+const TIME: any = new DataTypes.TIME();
 const TINYINT: any = new DataTypes.TINYINT();
 const TSVECTOR: any = new DataTypes.TSVECTOR();
+const UUID: any = new DataTypes.UUID();
 const UUIDV1: any = new DataTypes.UUIDV1();
 const UUIDV4: any = new DataTypes.UUIDV4();
 const VIRTUAL: any = new DataTypes.VIRTUAL();
@@ -32,7 +42,7 @@ const VIRTUAL: any = new DataTypes.VIRTUAL();
 const customScalarResolvers = {
   ARRAY: new GraphQLScalarType({
     name: 'ARRAY',
-    description: 'Scalar Representing SnowFlake data type ARRAY',
+    description: 'Scalar Representing MySQL data type ARRAY',
     serialize(value: any) {
       try {
         if (ARRAY.validate(value)) {
@@ -56,9 +66,61 @@ const customScalarResolvers = {
       }
     },
   }),
+  BIGINT: new GraphQLScalarType({
+    name: 'BIGINT',
+    description: 'Scalar Representing MySQL data type BIGINT',
+    serialize(value: any) {
+      try {
+        if (BIGINT.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type BIGINT');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type BIGINT');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (BIGINT.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type BIGINT');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type BIGINT');
+      }
+    },
+  }),
+  BOOLEAN: new GraphQLScalarType({
+    name: 'BOOLEAN',
+    description: 'Scalar Representing MySQL data type BOOLEAN',
+    serialize(value: any) {
+      try {
+        if (BOOLEAN.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type BOOLEAN');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type BOOLEAN');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (BOOLEAN.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type BOOLEAN');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type BOOLEAN');
+      }
+    },
+  }),
   CHAR: new GraphQLScalarType({
     name: 'CHAR',
-    description: 'Scalar Representing SnowFlake data type CHAR',
+    description: 'Scalar Representing MySQL data type CHAR',
     serialize(value: any) {
       try {
         if (CHAR.validate(value)) {
@@ -84,7 +146,7 @@ const customScalarResolvers = {
   }),
   CIDR: new GraphQLScalarType({
     name: 'CIDR',
-    description: 'Scalar Representing SnowFlake data type CIDR',
+    description: 'Scalar Representing MySQL data type CIDR',
     serialize(value: any) {
       try {
         if (CIDR.validate(value)) {
@@ -110,7 +172,7 @@ const customScalarResolvers = {
   }),
   CITEXT: new GraphQLScalarType({
     name: 'CITEXT',
-    description: 'Scalar Representing SnowFlake data type CITEXT',
+    description: 'Scalar Representing MySQL data type CITEXT',
     serialize(value: any) {
       try {
         if (CITEXT.validate(value)) {
@@ -134,9 +196,35 @@ const customScalarResolvers = {
       }
     },
   }),
+  DATE: new GraphQLScalarType({
+    name: 'DATE',
+    description: 'Scalar Representing MySQL data type DATE',
+    serialize(value: any) {
+      try {
+        if (DATE.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type DATE');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type DATE');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (DATE.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type DATE');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type DATE');
+      }
+    },
+  }),
   DATEONLY: new GraphQLScalarType({
     name: 'DATEONLY',
-    description: 'Scalar Representing SnowFlake data type DATEONLY',
+    description: 'Scalar Representing MySQL data type DATEONLY',
     serialize(value: any) {
       try {
         if (DATEONLY.validate(value)) {
@@ -162,7 +250,7 @@ const customScalarResolvers = {
   }),
   DECIMAL: new GraphQLScalarType({
     name: 'DECIMAL',
-    description: 'Scalar Representing SnowFlake data type DECIMAL',
+    description: 'Scalar Representing MySQL data type DECIMAL',
     serialize(value: any) {
       try {
         if (DECIMAL.validate(value)) {
@@ -188,7 +276,7 @@ const customScalarResolvers = {
   }),
   DOUBLE: new GraphQLScalarType({
     name: 'DOUBLE',
-    description: 'Scalar Representing SnowFlake data type DOUBLE',
+    description: 'Scalar Representing MySQL data type DOUBLE',
     serialize(value: any) {
       try {
         if (DOUBLE.validate(value)) {
@@ -214,7 +302,7 @@ const customScalarResolvers = {
   }),
   ENUM: new GraphQLScalarType({
     name: 'ENUM',
-    description: 'Scalar Representing SnowFlake data type ENUM',
+    description: 'Scalar Representing MySQL data type ENUM',
     serialize(value: any) {
       try {
         if (ENUM.validate(value)) {
@@ -238,9 +326,35 @@ const customScalarResolvers = {
       }
     },
   }),
+  FLOAT: new GraphQLScalarType({
+    name: 'FLOAT',
+    description: 'Scalar Representing MySQL data type FLOAT',
+    serialize(value: any) {
+      try {
+        if (FLOAT.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type FLOAT');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type FLOAT');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (FLOAT.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type FLOAT');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type FLOAT');
+      }
+    },
+  }),
   GEOGRAPHY: new GraphQLScalarType({
     name: 'GEOGRAPHY',
-    description: 'Scalar Representing SnowFlake data type GEOGRAPHY',
+    description: 'Scalar Representing MySQL data type GEOGRAPHY',
     serialize(value: any) {
       try {
         if (GEOGRAPHY.validate(value)) {
@@ -266,7 +380,7 @@ const customScalarResolvers = {
   }),
   GEOMETRY: new GraphQLScalarType({
     name: 'GEOMETRY',
-    description: 'Scalar Representing SnowFlake data type GEOMETRY',
+    description: 'Scalar Representing MySQL data type GEOMETRY',
     serialize(value: any) {
       try {
         if (GEOMETRY.validate(value)) {
@@ -292,7 +406,7 @@ const customScalarResolvers = {
   }),
   HSTORE: new GraphQLScalarType({
     name: 'HSTORE',
-    description: 'Scalar Representing SnowFlake data type HSTORE',
+    description: 'Scalar Representing MySQL data type HSTORE',
     serialize(value: any) {
       try {
         if (HSTORE.validate(value)) {
@@ -318,7 +432,7 @@ const customScalarResolvers = {
   }),
   INET: new GraphQLScalarType({
     name: 'INET',
-    description: 'Scalar Representing SnowFlake data type INET',
+    description: 'Scalar Representing MySQL data type INET',
     serialize(value: any) {
       try {
         if (INET.validate(value)) {
@@ -342,9 +456,61 @@ const customScalarResolvers = {
       }
     },
   }),
+  INTEGER: new GraphQLScalarType({
+    name: 'INTEGER',
+    description: 'Scalar Representing MySQL data type INTEGER',
+    serialize(value: any) {
+      try {
+        if (INTEGER.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type INTEGER');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type INTEGER');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (INTEGER.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type INTEGER');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type INTEGER');
+      }
+    },
+  }),
+  JSON: new GraphQLScalarType({
+    name: 'JSON',
+    description: 'Scalar Representing MySQL data type JSON',
+    serialize(value: any) {
+      try {
+        if (JSON.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type JSON');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type JSON');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (JSON.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type JSON');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type JSON');
+      }
+    },
+  }),
   JSONB: new GraphQLScalarType({
     name: 'JSONB',
-    description: 'Scalar Representing SnowFlake data type JSONB',
+    description: 'Scalar Representing MySQL data type JSONB',
     serialize(value: any) {
       try {
         if (JSONB.validate(value)) {
@@ -370,7 +536,7 @@ const customScalarResolvers = {
   }),
   MACADDR: new GraphQLScalarType({
     name: 'MACADDR',
-    description: 'Scalar Representing SnowFlake data type MACADDR',
+    description: 'Scalar Representing MySQL data type MACADDR',
     serialize(value: any) {
       try {
         if (MACADDR.validate(value)) {
@@ -396,7 +562,7 @@ const customScalarResolvers = {
   }),
   MEDIUMINT: new GraphQLScalarType({
     name: 'MEDIUMINT',
-    description: 'Scalar Representing SnowFlake data type MEDIUMINT',
+    description: 'Scalar Representing MySQL data type MEDIUMINT',
     serialize(value: any) {
       try {
         if (MEDIUMINT.validate(value)) {
@@ -420,9 +586,35 @@ const customScalarResolvers = {
       }
     },
   }),
+  NOW: new GraphQLScalarType({
+    name: 'NOW',
+    description: 'Scalar Representing MySQL data type NOW',
+    serialize(value: any) {
+      try {
+        if (NOW.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type NOW');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type NOW');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (NOW.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type NOW');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type NOW');
+      }
+    },
+  }),
   NUMBER: new GraphQLScalarType({
     name: 'NUMBER',
-    description: 'Scalar Representing SnowFlake data type NUMBER',
+    description: 'Scalar Representing MySQL data type NUMBER',
     serialize(value: any) {
       try {
         if (NUMBER.validate(value)) {
@@ -448,7 +640,7 @@ const customScalarResolvers = {
   }),
   RANGE: new GraphQLScalarType({
     name: 'RANGE',
-    description: 'Scalar Representing SnowFlake data type RANGE',
+    description: 'Scalar Representing MySQL data type RANGE',
     serialize(value: any) {
       try {
         if (RANGE.validate(value)) {
@@ -474,7 +666,7 @@ const customScalarResolvers = {
   }),
   REAL: new GraphQLScalarType({
     name: 'REAL',
-    description: 'Scalar Representing SnowFlake data type REAL',
+    description: 'Scalar Representing MySQL data type REAL',
     serialize(value: any) {
       try {
         if (REAL.validate(value)) {
@@ -500,7 +692,7 @@ const customScalarResolvers = {
   }),
   SMALLINT: new GraphQLScalarType({
     name: 'SMALLINT',
-    description: 'Scalar Representing SnowFlake data type SMALLINT',
+    description: 'Scalar Representing MySQL data type SMALLINT',
     serialize(value: any) {
       try {
         if (SMALLINT.validate(value)) {
@@ -524,9 +716,35 @@ const customScalarResolvers = {
       }
     },
   }),
+  STRING: new GraphQLScalarType({
+    name: 'STRING',
+    description: 'Scalar Representing MySQL data type STRING',
+    serialize(value: any) {
+      try {
+        if (STRING.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type STRING');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type STRING');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (STRING.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type STRING');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type STRING');
+      }
+    },
+  }),
   TEXT: new GraphQLScalarType({
     name: 'TEXT',
-    description: 'Scalar Representing SnowFlake data type TEXT',
+    description: 'Scalar Representing MySQL data type TEXT',
     serialize(value: any) {
       try {
         if (TEXT.validate(value)) {
@@ -550,9 +768,35 @@ const customScalarResolvers = {
       }
     },
   }),
+  TIME: new GraphQLScalarType({
+    name: 'TIME',
+    description: 'Scalar Representing MySQL data type TIME',
+    serialize(value: any) {
+      try {
+        if (TIME.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type TIME');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type TIME');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (TIME.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type TIME');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type TIME');
+      }
+    },
+  }),
   TINYINT: new GraphQLScalarType({
     name: 'TINYINT',
-    description: 'Scalar Representing SnowFlake data type TINYINT',
+    description: 'Scalar Representing MySQL data type TINYINT',
     serialize(value: any) {
       try {
         if (TINYINT.validate(value)) {
@@ -578,7 +822,7 @@ const customScalarResolvers = {
   }),
   TSVECTOR: new GraphQLScalarType({
     name: 'TSVECTOR',
-    description: 'Scalar Representing SnowFlake data type TSVECTOR',
+    description: 'Scalar Representing MySQL data type TSVECTOR',
     serialize(value: any) {
       try {
         if (TSVECTOR.validate(value)) {
@@ -602,9 +846,35 @@ const customScalarResolvers = {
       }
     },
   }),
+  UUID: new GraphQLScalarType({
+    name: 'UUID',
+    description: 'Scalar Representing MySQL data type UUID',
+    serialize(value: any) {
+      try {
+        if (UUID.validate(value)) {
+          return value;
+        } else {
+          throw GRAPHQL_PARSE_FAILED('Must be of type UUID');
+        }
+      } catch (error) {
+        throw GRAPHQL_PARSE_FAILED('Must be of type UUID');
+      }
+    },
+    parseValue(value: any) {
+      try {
+        if (UUID.validate(value)) {
+          return value;
+        } else {
+          throw BAD_REQUEST('Must be of type UUID');
+        }
+      } catch (error) {
+        throw BAD_REQUEST('Must be of type UUID');
+      }
+    },
+  }),
   UUIDV1: new GraphQLScalarType({
     name: 'UUIDV1',
-    description: 'Custom Scalar Representing SnowFlake data type UUIDV1',
+    description: 'Custom Scalar Representing MySQL data type UUIDV1',
     serialize(value: any) {
       try {
         if (UUIDV1.validate(value)) {
@@ -630,7 +900,7 @@ const customScalarResolvers = {
   }),
   UUIDV4: new GraphQLScalarType({
     name: 'UUIDV4',
-    description: 'Scalar Representing SnowFlake data type UUIDV4',
+    description: 'Scalar Representing MySQL data type UUIDV4',
     serialize(value: any) {
       try {
         if (UUIDV4.validate(value)) {
@@ -656,7 +926,7 @@ const customScalarResolvers = {
   }),
   VIRTUAL: new GraphQLScalarType({
     name: 'VIRTUAL',
-    description: 'Scalar Representing SnowFlake data type VIRTUAL',
+    description: 'Scalar Representing MySQL data type VIRTUAL',
     serialize(value: any) {
       try {
         if (VIRTUAL.validate(value)) {

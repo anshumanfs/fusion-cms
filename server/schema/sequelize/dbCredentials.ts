@@ -43,7 +43,7 @@ const model: any = conn.define(
     _id: autoIncrement(primaryKey(Types.INTEGER())),
     appName: Types.STRING(),
     env: Types.STRING(),
-    credentials: addGetter(Types.JSON(), 'schema', toJSON),
+    credentials: addGetter(Types.JSON(), 'credentials', toJSON),
   },
   {
     tableName: 'cms_dbCredentials',

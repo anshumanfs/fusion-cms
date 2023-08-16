@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npx tsc --watch --project tsconfig.server.json\" \"nodemon -q .build/app.js\"",
+    "dev": "npx tsc --project tsconfig.server.json && node .build/app.js ",
     "dev:next": "next dev",
     "build:next": "next build",
     "build:server": "tsc --project tsconfig.server.json",

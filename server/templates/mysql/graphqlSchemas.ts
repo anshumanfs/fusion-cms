@@ -4,9 +4,8 @@ const createIndexSchema = () => {
   const indexSchemaContent = `  
       const fs = require('fs-extra'); 
       const path = require('path'); 
-      const directory = path.resolve(__dirname,'./graphQlSchemas'); 
-      const { typeDefs: scalarTypeDefs } = require('graphql-scalars'); 
-      const { customScalarTypeDefs } = require('./utils/customScalars'); 
+      const directory = path.resolve(__dirname,'./graphQlSchemas');
+      const { customScalarTypeDefs } = require('./utils/customScalar'); 
       const importedModules = []; 
       fs.readdirSync(directory) 
         .filter((file) => file.endsWith('.js')) 
@@ -14,8 +13,7 @@ const createIndexSchema = () => {
           const moduleName = file.substring(0, file.length - 3); 
           importedModules.push(require(path.join(directory, file))); 
         }); 
-      const Schema = \`#graphql 
-        \${scalarTypeDefs} 
+      const Schema = \`#graphql
         \${customScalarTypeDefs} 
         scalar Any 
         type Query 

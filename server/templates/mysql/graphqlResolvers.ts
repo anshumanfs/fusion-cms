@@ -11,8 +11,7 @@ const createIndexResolver = (appName: string) => {
         const directory = path.resolve(__dirname,'./resolvers'); 
         const conn = require('./db'); 
         const { QueryTypes } = require('sequelize'); 
-        const { customScalarResolvers } = require('./utils/customScalars'); 
-        const { resolvers: scalarResolvers } = require('graphql-scalars'); 
+        const { customScalarResolvers } = require('./utils/customScalar');
         const { rawSQLMiddleware } = require('../../../data/files/middleware/${appName}/rawSQL.js'); 
         let Query = { 
           RAW_SQL : async (parent, args, contextValue, info) => { 
@@ -32,7 +31,7 @@ const createIndexResolver = (appName: string) => {
           Query = { ...Query, ...ref.Query } 
           Mutation = { ...Mutation, ...ref.Mutation } 
         }); 
-        module.exports = { ...customScalarResolvers , ...scalarResolvers, Query , Mutation};`;
+        module.exports = { ...customScalarResolvers , Query , Mutation};`;
   return indexResolverContent;
 };
 
@@ -50,7 +49,7 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
     const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
     const { mapGqlFieldToSql } = require('../utils/resolverUtils');
     const { translateQueryToSequelize, translateWhereToSequelize } = require('../utils/translator');
-    const Errors = require('../../../utils/errors');
+    const Errors = require('../../../libs/errors');
 
     const resolvers = { 
       Query: { 

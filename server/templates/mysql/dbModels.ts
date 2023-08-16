@@ -22,9 +22,13 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
       autoIncrement,
     }: MySQLSchemaFields = value;
     if (required) {
-      schemaPart = `Types['${type}']()`;
+      schemaPart = `{
+        type: DataTypes.${type},
+      }`;
     } else {
-      schemaPart = `Optional(Types['${type}']())`;
+      schemaPart = `Optional({
+        type: DataTypes.${type}
+      })`;
     }
 
     if (!['true', true].includes(isNullable)) {
@@ -92,7 +96,7 @@ const generateMySqlSchema = (
       Optional 
     } = require('../utils/schemaHelper') 
  
-    const ${pluralCollectionName}Schema = sequelize.define(\${pluralCollectionName}\, 
+    const ${pluralCollectionName}Schema = sequelize.define('${pluralCollectionName}', 
         ${schemaString}, 
       { 
         tableName : '${originalCollectionName}' 
