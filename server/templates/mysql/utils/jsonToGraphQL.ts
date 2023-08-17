@@ -47,7 +47,7 @@ const jsonToQueryType = (json: any, name: string) => {
  * @param {string} name - The name of the mutation type.
  * @return {string} The generated mutation type.
  */
-const jsonToMutationType = (json: any, name: string) => {
+const jsonToCreateType = (json: any, name: string) => {
   let object: any;
   if (typeof json === 'string') {
     object = JSON.parse(json);
@@ -57,13 +57,13 @@ const jsonToMutationType = (json: any, name: string) => {
   let subMutationString = ``;
   const mutationFields = Object.keys(object).map((field) => {
     if (lodash.isPlainObject(object[field].type)) {
-      subMutationString += jsonToMutationType(object[field].type, field);
+      subMutationString += jsonToCreateType(object[field].type, field);
       object[field].type = `${field}Input`;
     }
     if (object[field].isArray) {
       object[field].type = `[${object[field].type}]`;
     }
-    if (object[field].isRequired) {
+    if (object[field].required) {
       object[field].type = `${object[field].type}!`;
     }
     object[field].type = replaceAllParenthesis(object[field].type, '');
@@ -71,11 +71,39 @@ const jsonToMutationType = (json: any, name: string) => {
   });
   const mutationType: string = `
         ${subMutationString}
-        input ${name}Input {
+        input ${name}Create {
             ${mutationFields.join('\n  ')}
         }
     `;
   return mutationType;
 };
 
-export { jsonToQueryType, jsonToMutationType };
+const jsonToUpdateType = (json: any, name: string) => {
+  let object: any;
+  if (typeof json === 'string') {
+    object = JSON.parse(json);
+  } else {
+    object = lodash.cloneDeep(json);
+  }
+  let subMutationString = ``;
+  const mutationFields = Object.keys(object).map((field) => {
+    if (lodash.isPlainObject(object[field].type)) {
+      subMutationString += jsonToUpdateType(object[field].type, field);
+      object[field].type = `${field}Input`;
+    }
+    if (object[field].isArray) {
+      object[field].type = `[${object[field].type}]`;
+    }
+    object[field].type = replaceAllParenthesis(object[field].type, '');
+    return `${field}: ${object[field].type}`;
+  });
+  const mutationType: string = `
+        ${subMutationString}
+        input ${name}Update {
+            ${mutationFields.join('\n  ')}
+        }
+    `;
+  return mutationType;
+};
+
+export { jsonToQueryType, jsonToCreateType, jsonToUpdateType };

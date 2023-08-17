@@ -99,9 +99,10 @@ const generateMySqlSchema = (
     const ${pluralCollectionName}Schema = sequelize.define('${pluralCollectionName}', 
         ${schemaString}, 
       { 
-        tableName : '${originalCollectionName}' 
-      }); 
- 
+        tableName : '${originalCollectionName}',
+        timestamps: false
+      });
+
     module.exports =  ${pluralCollectionName}Schema;`;
   return schemaContentToWrite;
 };

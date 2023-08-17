@@ -1,4 +1,4 @@
-import { jsonToQueryType, jsonToMutationType } from './utils/jsonToGraphQL';
+import { jsonToQueryType, jsonToCreateType, jsonToUpdateType } from './utils/jsonToGraphQL';
 
 const createIndexSchema = () => {
   const indexSchemaContent = `  
@@ -32,7 +32,8 @@ const generateGqlSchema = (
   pluralCollectionName: string
 ) => {
   const queryType = jsonToQueryType(jsonSchema, singularCollectionName);
-  const mutationType = jsonToMutationType(jsonSchema, singularCollectionName);
+  const createType = jsonToCreateType(jsonSchema, singularCollectionName);
+  const updateType = jsonToUpdateType(jsonSchema, singularCollectionName);
   const graphqlSchemaString = `  
       const Schema = \`#graphql 
         extend type Query { 
@@ -43,15 +44,16 @@ const generateGqlSchema = (
           count_${pluralCollectionName}(where:JSON) : Int
         }
         extend type Mutation {
-          create_${singularCollectionName}(input:${singularCollectionName}Input): ${singularCollectionName} 
+          create_${singularCollectionName}(input:${singularCollectionName}Create!): ${singularCollectionName} 
          
-          update_${singularCollectionName}(where:JSON!, updates:${singularCollectionName}Input): ${singularCollectionName} 
+          update_${singularCollectionName}(where:JSON!, updates:${singularCollectionName}Update!): ${singularCollectionName} 
          
           delete_${singularCollectionName}(where:JSON!): ${singularCollectionName} 
         }
         
         ${queryType}
-        ${mutationType}\`; 
+        ${createType}
+        ${updateType}\`; 
       module.exports = Schema;`;
   return graphqlSchemaString;
 };

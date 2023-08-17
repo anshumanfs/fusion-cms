@@ -91,12 +91,17 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
             const preMiddlewareResult = await MutationPreMiddleware.update_${singularCollectionName}(parent, args, contextValue, info);  
             let { where, updates } = preMiddlewareResult.args;
             if(Object.keys(where).length === 0 || Object.keys(where).length ===0){
-              throw new Errors.default.BAD_REQUEST('No updates or where condition provided');
+              throw Errors.default.BAD_REQUEST('No updates or where condition provided');
             }
             where = translateWhereToSequelize(where,${pluralCollectionName});
-            const result = await ${pluralCollectionName}.update(updates , { 
+            let result = await ${pluralCollectionName}.update(updates , { 
               where
             }); 
+            if(result[0] === 0){
+              throw Errors.default.BAD_REQUEST('Nothing to update');
+            }else if(result[0] === 1){
+              result = await ${pluralCollectionName}.findOne({where});
+            }
             const postMiddlewareResult = await MutationPostMiddleware.update_${singularCollectionName}(result);
             return postMiddlewareResult; 
           }, 
@@ -104,13 +109,17 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
             const preMiddlewareResult = await MutationPreMiddleware.delete_${singularCollectionName}(parent, args, contextValue, info); 
             let { where } =  preMiddlewareResult.args; 
             if(Object.keys(where).length ===0){
-              throw new Errors.default.BAD_REQUEST('No where conditions provided');
+              throw Errors.default.BAD_REQUEST('No where conditions provided');
             } 
             where = translateWhereToSequelize(where,${pluralCollectionName});
+            const findResult = await ${pluralCollectionName}.findOne({where});
             const result = await ${pluralCollectionName}.destroy({ 
               where
-            }); 
-            const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(result); 
+            });
+            if(result === 0){
+              throw Errors.default.BAD_REQUEST('Nothing to delete');
+            }
+            const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(findResult); 
             return postMiddlewareResult; 
           } 
         } 
