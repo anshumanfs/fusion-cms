@@ -3,9 +3,9 @@ const fs = require('fs-extra');
 const beautify = require('js-beautify').js;
 const path = require('path');
 const { dbModels } = require('../../db');
-const { generateMongooseSchema } = require('./dbModels');
-const { createIndexSchema, generateGqlSchema } = require('./graphqlSchemas');
-const { createIndexResolver, generateResolver } = require('./graphqlResolvers');
+const { generateModelFileContent } = require('./dbModels');
+const { createIndexSchema, generateGraphqlSchema } = require('./graphqlSchemas');
+const { generateIndexResolver, generateResolver } = require('./graphqlResolvers');
 const { generateDbFile } = require('./db');
 const { serverJSGenerator } = require('./server');
 const { generateAppJsonFile } = require('./appJson');
@@ -47,7 +47,7 @@ const createDbModels = async (options: DbModelsInput) => {
   const appJson = appDir + '/app.json';
   const dbModelsDir = path.resolve(__dirname, '../../apps/' + appName + '/dbModels');
   const graphQlSchemaDir = path.resolve(__dirname, '../../apps/' + appName + '/graphQlSchemas');
-  const resolverDir = path.resolve(__dirname, '../../apps/' + appName + '/resolvers');
+  const resolverDir = path.resolve(__dirname, '../../apps/' + appName + '/graphqlResolvers');
   const middlewareFile = path.resolve(
     __dirname,
     `../../../data/files/middleware/${appName}/${pluralCollectionName}.js`
@@ -70,14 +70,14 @@ const createDbModels = async (options: DbModelsInput) => {
   fs.ensureFileSync(`${dbModelsDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
     `${dbModelsDir}/${pluralCollectionName}.js`,
-    beautify(generateMongooseSchema(originalCollectionName, schema, pluralCollectionName), beautifyOption)
+    beautify(generateModelFileContent(originalCollectionName, pluralCollectionName, schema), beautifyOption)
   );
 
   // for graphql schema
   fs.ensureFileSync(`${graphQlSchemaDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
     `${graphQlSchemaDir}/${pluralCollectionName}.js`,
-    beautify(generateGqlSchema(schema, singularCollectionName, pluralCollectionName), beautifyOption)
+    beautify(generateGraphqlSchema(schema, singularCollectionName, pluralCollectionName), beautifyOption)
   );
 
   //create index Schema
@@ -104,7 +104,7 @@ const createDbModels = async (options: DbModelsInput) => {
 
   //create index Resolver
   fs.ensureFileSync(`${appDir}/indexResolver.js`);
-  fs.writeFileSync(`${appDir}/indexResolver.js`, beautify(createIndexResolver(), beautifyOption));
+  fs.writeFileSync(`${appDir}/indexResolver.js`, beautify(generateIndexResolver(), beautifyOption));
 
   // write app json file
   fs.ensureFileSync(appJson);

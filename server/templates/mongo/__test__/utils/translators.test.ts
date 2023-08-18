@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import { filterTranslator } from '../../utils/translators';
+import { translateFilter } from '../../utils/translators';
 
 const { ObjectId, DBRef } = mongoose.mongo;
 
-describe('filterTranslator', () => {
+describe('translateFilter', () => {
   it('should translate string values starting with "ObjectId(" to ObjectId values', () => {
     const filter = {
       name: 'ObjectId(64df11660f6498cd0a019a12)',
@@ -20,7 +20,7 @@ describe('filterTranslator', () => {
       },
     };
 
-    const result = filterTranslator(filter);
+    const result = translateFilter(filter);
 
     expect(result).toEqual(expected);
   });
@@ -41,7 +41,7 @@ describe('filterTranslator', () => {
       },
     };
 
-    const result = filterTranslator(filter);
+    const result = translateFilter(filter);
 
     expect(result).toEqual(expected);
   });
@@ -55,7 +55,7 @@ describe('filterTranslator', () => {
       },
     };
 
-    const result = filterTranslator(filter);
+    const result = translateFilter(filter);
 
     expect(result).toEqual(filter);
   });
@@ -65,7 +65,7 @@ describe('filterTranslator', () => {
       array: [],
     };
 
-    const result = filterTranslator(filter);
+    const result = translateFilter(filter);
 
     expect(result).toEqual(filter);
   });
@@ -75,7 +75,7 @@ describe('filterTranslator', () => {
       array: [1, 2, 3],
     };
 
-    const result = filterTranslator(filter);
+    const result = translateFilter(filter);
 
     expect(result).toEqual(filter);
   });
@@ -85,7 +85,7 @@ describe('filterTranslator', () => {
       array: ['John', 'Doe'],
     };
 
-    const result = filterTranslator(filter);
+    const result = translateFilter(filter);
 
     expect(result).toEqual(filter);
   });
@@ -93,7 +93,7 @@ describe('filterTranslator', () => {
   it('should handle empty objects', () => {
     const filter = {};
 
-    const result = filterTranslator(filter);
+    const result = translateFilter(filter);
 
     expect(result).toEqual(filter);
   });
@@ -106,7 +106,7 @@ describe('filterTranslator', () => {
         city: 'New York',
       },
     };
-    const result = filterTranslator(filter);
+    const result = translateFilter(filter);
     expect(result).toEqual(filter);
   });
 
@@ -119,7 +119,7 @@ describe('filterTranslator', () => {
       },
     };
 
-    const result = filterTranslator(filter);
+    const result = translateFilter(filter);
 
     expect(result).toEqual(filter);
   });

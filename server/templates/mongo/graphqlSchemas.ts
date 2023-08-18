@@ -11,7 +11,7 @@ const createIndexSchema = () => {
         const path = require('path');
         const directory = path.join(__dirname, './graphqlSchemas');
         const { typeDefs: scalarTypeDefs } = require('graphql-scalars');
-        const { customScalarTypeDefs } = require('./libs/customScalars');
+        const { customScalarTypeDefs } = require('./utils/customScalar');
         const importedModules = [];
         fs.readdirSync(directory)
             .filter((file) => file.endsWith('.js'))

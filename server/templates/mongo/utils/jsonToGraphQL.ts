@@ -5,6 +5,25 @@ const replaceAllParenthesis = (text: string, replacement: string) => {
   return text.replace(pattern, replacement);
 };
 
+// KEY: Mongo type, VALUE: GraphQL type
+const mongoToGraphQLMapper: any = {
+  Boolean: 'Boolean',
+  Buffer: 'Buffer',
+  Date: 'Date',
+  DateTime: 'DateTime',
+  DbRef: 'DbRef',
+  Decimal128: 'Decimal128',
+  Map: 'Map',
+  Mixed: 'Mixed',
+  NegativeNumber: 'NegativeNumber',
+  Number: 'Number',
+  ObjectId: 'ObjectID',
+  PositiveNumber: 'PositiveNumber',
+  String: 'String',
+  Time: 'Time',
+  UUID: 'UUID',
+};
+
 /**
  * Converts a JSON object to a GraphQL query type.
  *
@@ -25,6 +44,7 @@ const jsonToQueryType = (json: any, name: string) => {
       subQueryString += jsonToQueryType(object[field].type, field);
       object[field].type = `${field}`;
     }
+    object[field].type = mongoToGraphQLMapper[object[field].type];
     if (object[field].isArray) {
       object[field].type = `[${object[field].type}]`;
     }
@@ -60,6 +80,7 @@ const jsonToCreateType = (json: any, name: string) => {
       subMutationString += jsonToCreateType(object[field].type, field);
       object[field].type = `${field}Input`;
     }
+    object[field].type = mongoToGraphQLMapper[object[field].type];
     if (object[field].isArray) {
       object[field].type = `[${object[field].type}]`;
     }
@@ -91,6 +112,7 @@ const jsonToUpdateType = (json: any, name: string) => {
       subMutationString += jsonToUpdateType(object[field].type, field);
       object[field].type = `${field}Input`;
     }
+    object[field].type = mongoToGraphQLMapper[object[field].type];
     if (object[field].isArray) {
       object[field].type = `[${object[field].type}]`;
     }

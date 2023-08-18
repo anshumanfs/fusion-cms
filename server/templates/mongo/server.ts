@@ -14,15 +14,15 @@ const serverJSGenerator = (port: number | string, appName: string) => {
     const dev = work_env.trim() === 'development';
     app.use(cors({ origin: '*' }));
     const server = http.createServer(app);
-    const startApolloServer = async (dev) => { 
+    const startApolloServer = async (dev) => {
         const apollo = new ApolloServer({ 
             introspection: dev, 
-            resolvers: resolver, 
-            typeDefs: schema, 
+            resolvers: resolver,
+            typeDefs: schema,
             plugins: [ApolloServerPluginDrainHttpServer({ httpServer: server })] 
         }); 
-        await apollo.start(); 
-        console.log('✓ API is running on: http://localhost:${port}'); 
+        await apollo.start();
+        console.log('✔ API is running on: http://localhost:${port}'); 
         app.use('/graphql/${appName}', cors(), json(), expressMiddleware(apollo));
         console.log('✔ ${appName} :- GraphQL running on http://localhost:${port}/graphql/${appName}');
         server.listen(port);

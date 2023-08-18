@@ -259,7 +259,7 @@ function ObjArray(Obj: any) {
   schema.default = [];
   return schema;
 }
-const Types = Object.freeze({
+const Types = {
   Array: () => ({
     required: true,
     set: setters.Array,
@@ -338,7 +338,7 @@ const Types = Object.freeze({
     required: true,
     type: schemaTypes.UUID,
   }),
-});
+};
 
 module.exports = {
   addDefaultValue,

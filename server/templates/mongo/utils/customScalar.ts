@@ -145,6 +145,20 @@ const customScalarResolvers = {
       return ast.value;
     },
   }),
+  Number: new GraphQLScalarType({
+    name: 'Number',
+    description: 'A scalar type representing Mongo Type Number',
+    serialize: defaultSerialize,
+    parseValue(value: any) {
+      if (isNaN(value)) {
+        throw GRAPHQL_VALIDATION_FAILED('Invalid value');
+      }
+      return value;
+    },
+    parseLiteral(ast: any) {
+      return ast.value;
+    },
+  }),
 };
 const customScalarTypeDefs = Object.keys(customScalarResolvers)
   .map((e) => `scalar ${e}`)

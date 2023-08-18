@@ -1,6 +1,6 @@
 const generateMiddleware = (pluralCollectionName: string, singularCollectionName: string) => {
   const fileContent = `
-        const QueryPreMiddleware = async ( root, args, context, info) => {
+        const QueryPreMiddleware = {
             ${pluralCollectionName} : async (root, args, context, info) => {
                 // please write your code here
                 return {root, args, context, info};
@@ -18,7 +18,7 @@ const generateMiddleware = (pluralCollectionName: string, singularCollectionName
                 return {root, args, context, info};
             }
         };
-        const QueryPostMiddleware = async ( root, args, context, info) => {
+        const QueryPostMiddleware = {
             ${pluralCollectionName} : async (root, args, context, info) => {
                 // please write your code here
                 return {root, args, context, info};
@@ -36,7 +36,7 @@ const generateMiddleware = (pluralCollectionName: string, singularCollectionName
                 return {root, args, context, info};
             }
         };
-        const MutationPreMiddleware = async ( root, args, context, info) => {
+        const MutationPreMiddleware = {
             create_${singularCollectionName} : async (root, args, context, info) => {
                 // please write your code here
                 return {root, args, context, info};
@@ -51,7 +51,7 @@ const generateMiddleware = (pluralCollectionName: string, singularCollectionName
             }
         };
 
-        const MutationPostMiddleware = async ( root, args, context, info) => {
+        const MutationPostMiddleware = {
             create_${singularCollectionName} : async (root, args, context, info) => {
                 // please write your code here
                 return {root, args, context, info};

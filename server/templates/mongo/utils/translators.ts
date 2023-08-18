@@ -9,7 +9,7 @@ import mongoose from 'mongoose';
  * @param {any} filter - The filter object to be translated.
  * @returns {any} - The translated filter object.
  */
-const filterTranslator = (filter: any): any => {
+const translateFilter = (filter: any = {}): any => {
   const translateValue = (value: any): any => {
     if (lodash.isString(value) && value.startsWith('ObjectId(')) {
       return new mongoose.mongo.ObjectId(value.replace('ObjectId(', '').replace(')', ''));
@@ -67,4 +67,4 @@ const filterTranslator = (filter: any): any => {
   return translate(translatedFilter);
 };
 
-export { filterTranslator };
+export { translateFilter };

@@ -73,7 +73,7 @@ const generateModelFileContent = (
   const modelFileContent = `
         const conn = require('../db');
         const mongoose = require('mongoose');
-        const {addEnums, addDefaultValue, index, unique, sparse, ObjArray, Nullable, Types } = require('../utils/schemaHelper');
+        const {addEnums, addDefaultValue, index, unique, sparse, ObjArray, Nullable, Types, Optional } = require('../utils/schemaHelper');
         const ${pluralCollectionName}Schema = new mongoose.Schema(
             ${dbSchemaString},
             {
