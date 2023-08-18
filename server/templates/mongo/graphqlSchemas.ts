@@ -1,76 +1,4 @@
-import lodash from 'lodash';
-
-/**
- * Transforms a JSON schema to a GraphQL schema.
- *
- * @param {MongoSchemaInput} schema - The JSON schema to be transformed.
- * @return {MongoSchemaInput} - The transformed GraphQL schema.
- */
-const jsonGraphqlMapper = (schema: MongoSchemaInput) => {
-  const jsonData: MongoSchemaInput = lodash.cloneDeep(schema);
-  for (const [key, value] of Object.entries(jsonData)) {
-    switch (value.type) {
-      case 'String':
-        value.type = 'String';
-        break;
-      case 'BigInt':
-        value.type = 'BigInt';
-        break;
-      case 'Number':
-        value.type = 'Int';
-        break;
-      case 'PositiveNumber':
-        value.type = 'PositiveInt';
-        break;
-      case 'NegativeNumber':
-        value.type = 'NegativeInt';
-        break;
-      case 'Boolean':
-        value.type = 'Boolean';
-        break;
-      case 'Buffer':
-        value.type = 'Buffer';
-        break;
-      case 'Date':
-        value.type = 'Date';
-        break;
-      case 'ObjectId':
-        value.type = 'ObjectId';
-        break;
-      case 'Time':
-        value.type = 'Time';
-        break;
-      case 'DateTime':
-        value.type = 'DateTime';
-        break;
-      case 'Decimal128':
-        value.type = 'Decimal128';
-        break;
-      case 'DbRef':
-        value.type = 'DbRef';
-        break;
-      case 'JSON':
-        value.type = 'JSON';
-        break;
-      case 'Mixed':
-        value.type = 'Mixed';
-        break;
-      case 'Map':
-        value.type = 'Map';
-        break;
-      case 'UUID':
-        value.type = 'UUID';
-        break;
-      default:
-        value.type = 'Any';
-        break;
-    }
-    if (value.isArray) {
-      value.type = `[${value.type}]`;
-    }
-  }
-  return jsonData;
-};
+import { jsonToQueryType, jsonToCreateType, jsonToUpdateType } from './utils/jsonToGraphQL';
 
 /**
  * Generates the index schema for the GraphQL API.
@@ -116,25 +44,9 @@ const generateGraphqlSchema = (
   singularCollectionName: string,
   pluralCollectionName: string
 ) => {
-  const jsonSchemaWithGraphqlTypes = jsonGraphqlMapper(jsonSchema);
-  let idType = 'ID!';
-  // Generating graphql schema
-  const queryFields = Object.keys(jsonSchemaWithGraphqlTypes).map((field) => {
-    if (field === '_id') {
-      idType = jsonSchemaWithGraphqlTypes[field].type + '!';
-    }
-    return `${field}: ${jsonSchemaWithGraphqlTypes[field].type}`;
-  });
-
-  const inputFields = Object.keys(jsonSchemaWithGraphqlTypes).map((field) => {
-    let type = jsonSchemaWithGraphqlTypes[field].hasOwnProperty('ref')
-      ? 'JSON'
-      : jsonSchemaWithGraphqlTypes[field].type;
-    if (jsonSchemaWithGraphqlTypes[field].required) {
-      type = type + '!';
-    }
-    return `${field}: ${type}`;
-  });
+  const queryType = jsonToQueryType(jsonSchema, singularCollectionName);
+  const createType = jsonToCreateType(jsonSchema, singularCollectionName);
+  const updateType = jsonToUpdateType(jsonSchema, singularCollectionName);
 
   const graphqlSchema = `
         const Schema = \`#graphql
@@ -146,30 +58,26 @@ const generateGraphqlSchema = (
             }
 
             extend type Mutation {
-              create_${singularCollectionName}(input:${singularCollectionName}Input): ${singularCollectionName}
-              update_${singularCollectionName}(filters:JSONObject, updates: ${singularCollectionName}Input): ${singularCollectionName}
-              delete_${singularCollectionName}(filters:JSONObject): ${singularCollectionName}
-            }
-
-            input ${singularCollectionName}Input {
-                ${inputFields.join('\n')}
-            }
-
-            type ${singularCollectionName} {
-                ${queryFields.join('\n')}
+              create_${singularCollectionName}(input: ${singularCollectionName}Create!): ${singularCollectionName}
+              update_${singularCollectionName}(filters: JSONObject!, updates: ${singularCollectionName}Update!): ${singularCollectionName}
+              delete_${singularCollectionName}(filters: JSONObject!): ${singularCollectionName}
             }
 
             input QueryOptions {
-                allowDiskUse: Boolean
-                batchSize: Int
-                comment: String
-                hint: JSON
-                limit: Int!
-                projection: JSONObject
-                readPreference: String
-                skip: Int
-                sort: JSONObject
-            }\`;
+              batchSize: Int
+              comment: String
+              hint: JSON
+              limit: Int!
+              projection: JSONObject
+              readPreference: String
+              skip: Int
+              sort: JSONObject
+            }
+            
+            ${queryType}
+            ${createType}
+            ${updateType}
+            \`;
         module.exports = Schema;
     `;
   return graphqlSchema;

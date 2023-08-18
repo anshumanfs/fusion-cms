@@ -48,7 +48,7 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
     const ${pluralCollectionName} = require('../dbModels/${pluralCollectionName}.js'); 
     const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
     const { mapGqlFieldToSql } = require('../utils/resolverUtils');
-    const { translateQueryToSequelize, translateWhereToSequelize } = require('../utils/translator');
+    const { translateQueryToSequelize, translateWhereToSequelize } = require('../utils/translators');
     const Errors = require('../../../libs/errors');
 
     const resolvers = { 

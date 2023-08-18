@@ -76,6 +76,8 @@ const addDefaultValue = (obj: any, defaultValue: any) => {
     case 'CurrentTime':
       Obj.default = defaults.Time;
       break;
+    case 'ObjectId':
+      Obj.default = defaults.ObjectId;
     default:
       Obj.default = defaultValue;
       break;

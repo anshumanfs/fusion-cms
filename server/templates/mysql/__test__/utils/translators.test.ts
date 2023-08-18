@@ -4,7 +4,7 @@ import {
   translateQueryToSequelize,
   translateAttributesToSequelize,
   translateWhereToSequelize,
-} from '../../utils/translator';
+} from '../../utils/translators';
 
 describe('translate Query To Sequelize', () => {
   test('should return the translated Sequelize query object', () => {

@@ -61,8 +61,8 @@ const createDbModels = async (options: DbModelsInput) => {
 
   // update the schema to db
   await dbModels.dbSchemas.findOneAndUpdate(
-    { appName, originalCollectionName },
-    { singularCollectionName, pluralCollectionName, schema },
+    { appName, originalCollectionName, singularCollectionName, pluralCollectionName },
+    { schema },
     { upsert: true }
   );
 

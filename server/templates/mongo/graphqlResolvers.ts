@@ -40,18 +40,18 @@ const generateResolver = (
     Query: { 
       ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
         const projection = getProjections(info); 
-        const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info); 
+        const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info);
         const { filters, options , resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args;
-        let result = await ${pluralCollectionName}.find(filters || {},projection,options);
+        let result = await ${pluralCollectionName}.find(filters || {},projection,{...options, allowDiskUse: true});
         if(resolveDbRefs){
           result = await populate(result, dbRefPreserveFields); 
-        }             
+        }
         const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
         return postMiddlewareResult;
       }, 
       count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
         const preMiddlewareResult = await QueryPreMiddleware.count_${pluralCollectionName}(parent, args, contextValue, info); 
-        const { filters, projection, options} = preMiddlewareResult.args; 
+        const { filters } = preMiddlewareResult.args; 
         const result = await ${pluralCollectionName}.find(filters || {}).count(); 
         const postMiddlewareResult = await QueryPostMiddleware.count_${pluralCollectionName}(result); 
         return postMiddlewareResult; 
@@ -62,7 +62,7 @@ const generateResolver = (
           let { pipeline } = preMiddlewareResult.args; 
           pipeline = validateAggregatePipeline(pipeline); 
           const result = await ${pluralCollectionName}.aggregate(pipeline).allowDiskUse(true); 
-          const postMiddlewareResult = await QueryPostMiddleware.aggregation_${pluralCollectionName}(result); 
+          const postMiddlewareResult = await QueryPostMiddleware.aggregation_${pluralCollectionName}(result);
           return postMiddlewareResult;
         } catch (error) { 
           throw Errors.default.BAD_REQUEST(error) 
@@ -73,7 +73,7 @@ const generateResolver = (
         const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info); 
         const { filters, resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args; 
         let result = await ${pluralCollectionName}.findOne(filters || {},projection).toObject(); 
-        if(resolveDbRefs){ 
+        if(resolveDbRefs){
           result = await populate(result, dbRefPreserveFields); 
         } 
         const postMiddlewareResult = await QueryPostMiddleware.${singularCollectionName}(result); 

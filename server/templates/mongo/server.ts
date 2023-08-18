@@ -2,7 +2,8 @@ const serverJSGenerator = (port: number | string, appName: string) => {
   const appJSString = `
     const app = require('express')(); 
     const { ApolloServer } = require('@apollo/server'); 
-    const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer'); const { expressMiddleware } = require('@apollo/server/express4'); 
+    const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer'); 
+    const { expressMiddleware } = require('@apollo/server/express4'); 
     const resolver = require('./indexResolver'); 
     const schema = require('./indexSchema');
     const port = ${port};
