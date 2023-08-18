@@ -1,6 +1,25 @@
 import lodash from 'lodash';
 import mongoose from 'mongoose';
 
+const options = {
+  find: [
+    'limit',
+    'skip',
+    'batchSize',
+    'readPreference',
+    'hint',
+    'comment',
+    'lean',
+    'populate',
+    'useBigInt64',
+    'maxTimeMs',
+    'sort',
+  ],
+  findOne: ['lean', 'populate'],
+  findOneAndUpdate: ['lean', 'populate', 'upsert', 'timestamps', 'sort', 'useBigInt64'],
+  findOneAndDelete: ['lean', 'populate', 'sort', 'useBigInt64'],
+};
+
 /**
  * Translates the given filter object by replacing any string values that start with 'ObjectId('
  * with the corresponding mongoose.mongo.ObjectId value. Recursively translates any nested
@@ -65,6 +84,10 @@ const translateFilter = (filter: any = {}): any => {
 
   const translatedFilter = lodash.cloneDeep(filter);
   return translate(translatedFilter);
+};
+
+const translateOptions = (options: any = {}): any => {
+  const { batchSize, batch, limit, skip, comment } = options;
 };
 
 export { translateFilter };

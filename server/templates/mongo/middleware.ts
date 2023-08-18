@@ -19,21 +19,21 @@ const generateMiddleware = (pluralCollectionName: string, singularCollectionName
             }
         };
         const QueryPostMiddleware = {
-            ${pluralCollectionName} : async (root, args, context, info) => {
+            ${pluralCollectionName} : async (result) => {
                 // please write your code here
-                return {root, args, context, info};
+                return result;
             },
-            count_${pluralCollectionName} : async (root, args, context, info) => {
+            count_${pluralCollectionName} : async (result) => {
                 // please write your code here
-                return {root, args, context, info};
+                return result;
             },
-            ${singularCollectionName} : async (root, args, context, info) => {
+            ${singularCollectionName} : async (result) => {
                 // please write your code here
-                return {root, args, context, info};
+                return result;
             },
-            aggregate_${pluralCollectionName} : async (root, args, context, info) => {
+            aggregate_${pluralCollectionName} : async (result) => {
                 // please write your code here
-                return {root, args, context, info};
+                return result;
             }
         };
         const MutationPreMiddleware = {
@@ -52,17 +52,17 @@ const generateMiddleware = (pluralCollectionName: string, singularCollectionName
         };
 
         const MutationPostMiddleware = {
-            create_${singularCollectionName} : async (root, args, context, info) => {
+            create_${singularCollectionName} : async (result) => {
                 // please write your code here
-                return {root, args, context, info};
+                return result;
             },
-            update_${singularCollectionName} : async (root, args, context, info) => {
+            update_${singularCollectionName} : async (result) => {
                 // please write your code here
-                return {root, args, context, info};
+                return result;
             },
-            delete_${singularCollectionName} : async (root, args, context, info) => {
+            delete_${singularCollectionName} : async (result) => {
                 // please write your code here
-                return {root, args, context, info};
+                return result;
             }
         };
 

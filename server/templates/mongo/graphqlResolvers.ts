@@ -45,10 +45,11 @@ const generateResolver = (
         let { filters, options , resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args;
         filters = translateFilter(filters);
         let result = await ${pluralCollectionName}.find(filters, projection, {...options, allowDiskUse: true});
+        console.log(result);
         if(resolveDbRefs){
           result = await populate(result, dbRefPreserveFields); 
         }
-        const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
+        const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result);
         return postMiddlewareResult;
       }, 
       count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
@@ -110,7 +111,7 @@ const generateResolver = (
         if(Object.keys(filters).length === 0){
           throw Errors.default.BAD_REQUEST('Empty filter object');
         } 
-        const result = await ${pluralCollectionName}.findOneAndDelete(filters || {}); 
+        const result = await ${pluralCollectionName}.findOneAndDelete(filters); 
         const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(result); 
         return postMiddlewareResult;
       } 

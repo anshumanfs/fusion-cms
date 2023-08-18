@@ -37,41 +37,21 @@ const QueryPreMiddleware = {
     }
 };
 const QueryPostMiddleware = {
-    comments: async (root, args, context, info) => {
+    comments: async (result) => {
         // please write your code here
-        return {
-            root,
-            args,
-            context,
-            info
-        };
+        return result;
     },
-    count_comments: async (root, args, context, info) => {
+    count_comments: async (result) => {
         // please write your code here
-        return {
-            root,
-            args,
-            context,
-            info
-        };
+        return result;
     },
-    comment: async (root, args, context, info) => {
+    comment: async (result) => {
         // please write your code here
-        return {
-            root,
-            args,
-            context,
-            info
-        };
+        return result;
     },
-    aggregate_comments: async (root, args, context, info) => {
+    aggregate_comments: async (result) => {
         // please write your code here
-        return {
-            root,
-            args,
-            context,
-            info
-        };
+        return result;
     }
 };
 const MutationPreMiddleware = {
@@ -105,32 +85,17 @@ const MutationPreMiddleware = {
 };
 
 const MutationPostMiddleware = {
-    create_comment: async (root, args, context, info) => {
+    create_comment: async (result) => {
         // please write your code here
-        return {
-            root,
-            args,
-            context,
-            info
-        };
+        return result;
     },
-    update_comment: async (root, args, context, info) => {
+    update_comment: async (result) => {
         // please write your code here
-        return {
-            root,
-            args,
-            context,
-            info
-        };
+        return result;
     },
-    delete_comment: async (root, args, context, info) => {
+    delete_comment: async (result) => {
         // please write your code here
-        return {
-            root,
-            args,
-            context,
-            info
-        };
+        return result;
     }
 };
 
