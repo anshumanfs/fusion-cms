@@ -1,20 +1,6 @@
 import mongoose from 'mongoose';
 import { translateFilter, translateOptions } from '../../utils/translators';
 
-const defaultOptionValues: Record<string, any> = {
-  limit: 20,
-  skip: 0,
-  hint: null,
-  comment: null,
-  lean: true,
-  populate: null,
-  useBigInt64: false,
-  maxTimeMs: null,
-  sort: null,
-  upsert: false,
-  timestamps: false,
-};
-
 const { ObjectId, DBRef } = mongoose.mongo;
 
 describe('translateFilter', () => {
@@ -147,6 +133,7 @@ describe('translateOptions', () => {
     };
     const operation = 'find';
     const expectedOutput = {
+      allowDiskUse: true,
       limit: 50,
       skip: 10,
       lean: true,
@@ -165,6 +152,7 @@ describe('translateOptions', () => {
 
     const translatedOptions = translateOptions(options, operation);
     const expectedOutput = {
+      allowDiskUse: true,
       limit: 20,
       skip: 0,
       lean: true,
