@@ -1,4 +1,4 @@
-import { jsonToQueryType, jsonToCreateType, jsonToUpdateType } from './utils/jsonToGraphQL';
+import { jsonToQueryType, jsonToCreateType, jsonToUpdateType, optionsTypes } from './utils/jsonToGraphQL';
 
 /**
  * Generates the index schema for the GraphQL API.
@@ -51,32 +51,22 @@ const generateGraphqlSchema = (
   const graphqlSchema = `
         const Schema = \`#graphql
             extend type Query {
-              ${singularCollectionName}(filters:JSONObject): ${singularCollectionName}
-              ${pluralCollectionName}(filters:JSONObject, options:QueryOptions): [${singularCollectionName}]
+              ${singularCollectionName}(filters:JSONObject, options:findOneOptions): ${singularCollectionName}
+              ${pluralCollectionName}(filters:JSONObject, options:findOptions): [${singularCollectionName}]
               count_${pluralCollectionName}(filters:JSONObject): Int
               aggregate_${pluralCollectionName}(pipeline:[JSON!]!): JSON
             }
 
             extend type Mutation {
               create_${singularCollectionName}(input: ${singularCollectionName}Create!): ${singularCollectionName}
-              update_${singularCollectionName}(filters: JSONObject!, updates: ${singularCollectionName}Update!): ${singularCollectionName}
-              delete_${singularCollectionName}(filters: JSONObject!): ${singularCollectionName}
+              update_${singularCollectionName}(filters: JSONObject!, updates: ${singularCollectionName}Update!, options:updateOptions): ${singularCollectionName}
+              delete_${singularCollectionName}(filters: JSONObject!, options:deleteOptions): ${singularCollectionName}
             }
 
-            input QueryOptions {
-              batchSize: Int
-              comment: String
-              hint: JSON
-              limit: Int!
-              projection: JSONObject
-              readPreference: String
-              skip: Int
-              sort: JSONObject
-            }
-            
             ${queryType}
             ${createType}
             ${updateType}
+            ${optionsTypes}
             \`;
         module.exports = Schema;
     `;

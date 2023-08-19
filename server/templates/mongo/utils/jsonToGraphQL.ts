@@ -128,4 +128,39 @@ const jsonToUpdateType = (json: any, name: string) => {
   return mutationType;
 };
 
-export { jsonToQueryType, jsonToCreateType, jsonToUpdateType };
+const optionsTypes = `
+    input findOptions {
+        limit: Int
+        skip: Int
+        hint: JSON
+        comment: String
+        lean: Boolean
+        populate: JSON
+        useBigInt64: Boolean
+        maxTimeMs: Int
+        sort: JSON
+    }
+    
+    input findOneOptions {
+      lean: Boolean
+      populate: JSON
+    }
+
+    input updateOptions {
+        lean: Boolean
+        populate: JSON
+        upsert: Boolean
+        timestamps: Boolean
+        sort: JSON
+        useBigInt64: Boolean
+    }
+
+    input deleteOptions {
+        lean: Boolean
+        populate: JSON
+        sort: JSON
+        useBigInt64: Boolean
+    }
+`;
+
+export { jsonToQueryType, jsonToCreateType, jsonToUpdateType, optionsTypes };

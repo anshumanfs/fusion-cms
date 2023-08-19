@@ -1,5 +1,19 @@
 import mongoose from 'mongoose';
-import { translateFilter } from '../../utils/translators';
+import { translateFilter, translateOptions } from '../../utils/translators';
+
+const defaultOptionValues: Record<string, any> = {
+  limit: 20,
+  skip: 0,
+  hint: null,
+  comment: null,
+  lean: true,
+  populate: null,
+  useBigInt64: false,
+  maxTimeMs: null,
+  sort: null,
+  upsert: false,
+  timestamps: false,
+};
 
 const { ObjectId, DBRef } = mongoose.mongo;
 
@@ -122,5 +136,40 @@ describe('translateFilter', () => {
     const result = translateFilter(filter);
 
     expect(result).toEqual(filter);
+  });
+});
+
+describe('translateOptions', () => {
+  it('should translate the options object for the specified operation', () => {
+    const options = {
+      limit: 50,
+      skip: 10,
+    };
+    const operation = 'find';
+    const expectedOutput = {
+      limit: 50,
+      skip: 10,
+      lean: true,
+      useBigInt64: false,
+    };
+
+    const translatedOptions = translateOptions(options, operation);
+
+    expect(translatedOptions).toEqual(expectedOutput);
+  });
+
+  it('should set missing options to their default values', () => {
+    const options = {};
+
+    const operation = 'find';
+
+    const translatedOptions = translateOptions(options, operation);
+    const expectedOutput = {
+      limit: 20,
+      skip: 0,
+      lean: true,
+      useBigInt64: false,
+    };
+    expect(translatedOptions).toEqual(expectedOutput);
   });
 });

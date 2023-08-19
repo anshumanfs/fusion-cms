@@ -1,23 +1,26 @@
 import lodash from 'lodash';
 import mongoose from 'mongoose';
 
-const options = {
-  find: [
-    'limit',
-    'skip',
-    'batchSize',
-    'readPreference',
-    'hint',
-    'comment',
-    'lean',
-    'populate',
-    'useBigInt64',
-    'maxTimeMs',
-    'sort',
-  ],
+const operationOptions: Record<string, any> = {
+  find: ['allowDiskUse', 'limit', 'skip', 'hint', 'comment', 'lean', 'populate', 'useBigInt64', 'maxTimeMs', 'sort'],
   findOne: ['lean', 'populate'],
   findOneAndUpdate: ['lean', 'populate', 'upsert', 'timestamps', 'sort', 'useBigInt64'],
   findOneAndDelete: ['lean', 'populate', 'sort', 'useBigInt64'],
+};
+
+const defaultOptionValues: Record<string, any> = {
+  allowDiskUse: true,
+  limit: 20,
+  skip: 0,
+  hint: null,
+  comment: null,
+  lean: true,
+  populate: null,
+  useBigInt64: false,
+  maxTimeMs: null,
+  sort: null,
+  upsert: false,
+  timestamps: false,
 };
 
 /**
@@ -86,8 +89,31 @@ const translateFilter = (filter: any = {}): any => {
   return translate(translatedFilter);
 };
 
-const translateOptions = (options: any = {}): any => {
-  const { batchSize, batch, limit, skip, comment } = options;
+/**
+ * Translates the given options object into a new object that only contains
+ * the valid options for the specified operation. If an option is missing from
+ * the given options object, it will be set to the default value.
+ *
+ * @param {Record<string, any>} options - The options object to translate.
+ * @param {string} operation - The operation for which to translate the options.
+ * @returns {Record<string, any>} The translated options object.
+ */
+const translateOptions = (options: Record<string, any> = {}, operation: string): Record<string, any> => {
+  const translatedOptions: Record<string, any> = {};
+
+  const validOptions: string[] = operationOptions[operation];
+
+  validOptions.forEach((option) => {
+    if (options.hasOwnProperty(option)) {
+      translatedOptions[option] = options[option];
+    } else {
+      let defaultValue = defaultOptionValues[option];
+      if (![null, undefined].includes(defaultValue)) {
+        translatedOptions[option] = defaultValue;
+      }
+    }
+  });
+  return translatedOptions;
 };
 
-export { translateFilter };
+export { translateFilter, translateOptions };

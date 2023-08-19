@@ -34,87 +34,92 @@ const generateResolver = (
   const { populate } = require('../utils/populate'); 
   const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
   const { getProjections } = require('../utils/resolverUtils'); 
-  const { translateFilter } = require('../utils/translators');
+  const { translateFilter, translateOptions } = require('../utils/translators');
   const Errors = require('../../../libs/errors');
 
   const resolvers = { 
     Query: { 
       ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
-        const projection = getProjections(info); 
+        const projection = getProjections(info);
         const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info);
         let { filters, options , resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args;
         filters = translateFilter(filters);
-        let result = await ${pluralCollectionName}.find(filters, projection, {...options, allowDiskUse: true});
-        console.log(result);
+        options = translateOptions(options, 'find');
+        let result = await ${pluralCollectionName}.find(filters, projection, options);
         if(resolveDbRefs){
-          result = await populate(result, dbRefPreserveFields); 
+          result = await populate(result, dbRefPreserveFields);
         }
+        console.log(result)
         const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result);
         return postMiddlewareResult;
       }, 
       count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
-        const preMiddlewareResult = await QueryPreMiddleware.count_${pluralCollectionName}(parent, args, contextValue, info); 
+        const preMiddlewareResult = await QueryPreMiddleware.count_${pluralCollectionName}(parent, args, contextValue, info);
         let { filters } = preMiddlewareResult.args;
-        filters = translateFilter(filters); 
-        const result = await ${pluralCollectionName}.find(filters).count(); 
-        const postMiddlewareResult = await QueryPostMiddleware.count_${pluralCollectionName}(result); 
-        return postMiddlewareResult; 
+        filters = translateFilter(filters);
+        const result = await ${pluralCollectionName}.find(filters).count();
+        const postMiddlewareResult = await QueryPostMiddleware.count_${pluralCollectionName}(result);
+        return postMiddlewareResult;
       },
       aggregate_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
         try {
-          const preMiddlewareResult = await QueryPreMiddleware.aggregation_${pluralCollectionName}(parent, args, contextValue, info); 
-          let { pipeline } = preMiddlewareResult.args; 
+          const preMiddlewareResult = await QueryPreMiddleware.aggregation_${pluralCollectionName}(parent, args, contextValue, info);
+          let { pipeline } = preMiddlewareResult.args;
           pipeline = validateAggregatePipeline(pipeline);
-          const result = await ${pluralCollectionName}.aggregate(pipeline).allowDiskUse(true); 
+          const result = await ${pluralCollectionName}.aggregate(pipeline).allowDiskUse(true);
           const postMiddlewareResult = await QueryPostMiddleware.aggregation_${pluralCollectionName}(result);
           return postMiddlewareResult;
         } catch (error) { 
-          throw Errors.default.BAD_REQUEST(error) 
+          throw Errors.default.BAD_REQUEST(error);
         }  
       }, 
       ${singularCollectionName}: async (parent, args, contextValue, info) =>{ 
-        const projection = getProjections(info); 
-        const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info); 
-        let { filters, resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args; 
-        filters = translateFilter(filters); 
-        let result = await ${pluralCollectionName}.findOne(filters, projection).toObject(); 
+        const projection = getProjections(info);
+        const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info);
+        let { filters, options, resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args;
+        filters = translateFilter(filters);
+        options = translateOptions(options, 'findOne');
+        let result = await ${pluralCollectionName}.findOne(filters, projection, options).toObject();
         if(resolveDbRefs){
-          result = await populate(result, dbRefPreserveFields); 
-        } 
-        const postMiddlewareResult = await QueryPostMiddleware.${singularCollectionName}(result); 
+          result = await populate(result, dbRefPreserveFields);
+        }
+        const postMiddlewareResult = await QueryPostMiddleware.${singularCollectionName}(result);
         return postMiddlewareResult;
       }
     }, 
     Mutation: { 
       create_${singularCollectionName}: async (parent, args, contextValue, info) => { 
         const preMiddlewareResult = await MutationPreMiddleware.create_${singularCollectionName}(parent, args, contextValue, info);
-        const model = new ${pluralCollectionName}(preMiddlewareResult.args.input); 
-        const result = await model.save(); 
-        const postMiddlewareResult = await MutationPostMiddleware.create_${singularCollectionName}(result); 
-        return postMiddlewareResult; 
+        const model = new ${pluralCollectionName}(preMiddlewareResult.args.input);
+        const result = await model.save();
+        const postMiddlewareResult = await MutationPostMiddleware.create_${singularCollectionName}(result);
+        return postMiddlewareResult;
       }, 
       update_${singularCollectionName}: async (parent, args, contextValue, info) => { 
         const preMiddlewareResult = await MutationPreMiddleware.update_${singularCollectionName}(parent, args, contextValue, info);
-        let { filters, updates } = preMiddlewareResult.args;
-        filters = translateFilter(filters);  
+        let { filters, updates, options } = preMiddlewareResult.args;
+        filters = translateFilter(filters);
         if(Object.keys(updates).length === 0 || Object.keys(filters).length === 0){
          throw Errors.default.BAD_REQUEST('Empty update or filter object');
         }
-        const result = await ${pluralCollectionName}.findOneAndUpdate(filters, updates, { new: true }); 
+        options = translateOptions(options, 'findOneAndUpdate');
+        options = { ...options, new: true };
+        const result = await ${pluralCollectionName}.findOneAndUpdate(filters, updates, options);
         const postMiddlewareResult = await MutationPostMiddleware.update_${singularCollectionName}(result);
-        return postMiddlewareResult; 
+        return postMiddlewareResult;
       }, 
       delete_${singularCollectionName}: async (parent, args, contextValue, info) => { 
         const preMiddlewareResult = await MutationPreMiddleware.delete_${singularCollectionName}(parent, args, contextValue, info);
-        let { filters } =  preMiddlewareResult.args;
-        filters = translateFilter(filters); 
+        let { filters, options } =  preMiddlewareResult.args;
+        filters = translateFilter(filters);
         if(Object.keys(filters).length === 0){
           throw Errors.default.BAD_REQUEST('Empty filter object');
-        } 
-        const result = await ${pluralCollectionName}.findOneAndDelete(filters); 
-        const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(result); 
+        }
+        options = translateOptions(options, 'findOneAndDelete');
+        const result = await ${pluralCollectionName}.findOneAndDelete(filters, options);
+        const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(result);
         return postMiddlewareResult;
-      } 
+      }
     } 
   }; 
   module.exports = resolvers;`;
