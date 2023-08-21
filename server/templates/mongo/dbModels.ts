@@ -6,17 +6,29 @@ import lodash from 'lodash';
  * @param {MongoSchemaInput} schema - The JSON schema to convert.
  * @returns {string} - The generated Mongoose schema string.
  */
-const jsonToMongooseSchema = (schema: MongoSchemaInput) => {
+const jsonToMongooseSchema = (schema: MongoSchemaInput, pluralCollectionName: string) => {
   const jsonSchema = lodash.cloneDeep(schema);
+  const virtualTypes: any = {};
   let dbSchemaString = '{';
   for (const [key, value] of Object.entries(jsonSchema)) {
     let schemaPart = ``;
-    let { isNullable, required, isArray, type, enums, defaultValue, ref, isIndex, isUnique, isSparse } = value;
+    let { isNullable, required, isArray, type, enums, defaultValue, ref, isIndex, isUnique, isSparse, foreignField } =
+      value;
+
     type = type === 'DbRef' ? `DbRef('${ref}')` : `${type}()`;
+
     if (required) {
       schemaPart = `Types.${type}`;
     } else {
       schemaPart = `Optional(Types.${type})`;
+    }
+
+    if (type !== 'DbRef' && lodash.isString(ref)) {
+      virtualTypes[`${key}_virtual`] = {
+        ref,
+        localField: key,
+        foreignField: foreignField || '_id',
+      };
     }
 
     if (!['true', true].includes(isNullable)) {
@@ -53,7 +65,38 @@ const jsonToMongooseSchema = (schema: MongoSchemaInput) => {
     dbSchemaString += `${key}: ${schemaPart},`;
   }
   dbSchemaString += '}';
-  return dbSchemaString;
+  let virtualTypeString = '';
+  Object.keys(virtualTypes).forEach((key) => {
+    virtualTypeString += `${pluralCollectionName}Schema.virtual('${key}',${JSON.stringify(virtualTypes[key])})\n`;
+  });
+
+  return { dbSchemaString, virtualTypeString, virtualTypes };
+};
+
+const postHookGenerator = (operationName: any = 'find', virtuals: any = [], pluralCollectionName: string) => {
+  let postHookString = ``;
+  Object.keys(virtuals).forEach((virtual: any) => {
+    postHookString += `
+      ${pluralCollectionName}Schema.post("${operationName}", async function (docs,next) {
+        if (lodash.isArray(docs)) {
+          docs.forEach((doc) => {
+            if (doc.hasOwnProperty("${virtual}")) {
+
+              doc.${virtuals[virtual].localField} = doc.${virtual}.length > 1 ? doc.${virtual} : doc.${virtual}[0] || {};
+              delete doc.${virtual};
+            }
+          });
+        }
+        if(lodash.isObject(docs)){
+          if (docs.hasOwnProperty("${virtual}")) {
+            docs.${virtuals[virtual].localField} = docs.${virtual}[0] || {};
+            delete docs.${virtual};
+          }
+        }
+      })
+    `;
+  });
+  return postHookString;
 };
 
 /**
@@ -69,11 +112,14 @@ const generateModelFileContent = (
   pluralCollectionName: string,
   schema: MongoSchemaInput
 ) => {
-  const dbSchemaString = jsonToMongooseSchema(schema);
+  const { dbSchemaString, virtualTypeString, virtualTypes } = jsonToMongooseSchema(schema, pluralCollectionName);
+  const postHookFindString = postHookGenerator('find', virtualTypes, pluralCollectionName);
+  const postHookFindOneString = postHookGenerator('findOne', virtualTypes, pluralCollectionName);
   const modelFileContent = `
         const conn = require('../db');
+        const lodash = require('lodash');
         const mongoose = require('mongoose');
-        const {addEnums, addDefaultValue, index, unique, sparse, ObjArray, Nullable, Types, Optional } = require('../utils/schemaHelper');
+        const {addEnums, addDefaultValue, addRef, index, unique, sparse, ObjArray, Nullable, Types, Optional } = require('../utils/schemaHelper');
         const ${pluralCollectionName}Schema = new mongoose.Schema(
             ${dbSchemaString},
             {
@@ -85,6 +131,9 @@ const generateModelFileContent = (
                 }
             }
         );
+        ${virtualTypeString}
+        ${postHookFindString}
+        ${postHookFindOneString}
         module.exports = conn.model('${originalCollectionName}', ${pluralCollectionName}Schema, '${originalCollectionName}');
     `;
   return modelFileContent;

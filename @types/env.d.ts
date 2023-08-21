@@ -29,6 +29,7 @@ declare global {
     isIndex: boolean | false;
     isUnique: boolean | false;
     isSparse: boolean | false;
+    foreignField: string | undefined;
   };
 
   type MySQLSchemaFields = {

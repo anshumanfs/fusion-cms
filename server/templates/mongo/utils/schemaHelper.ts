@@ -58,6 +58,19 @@ const addEnums = (obj: any, enums: any) => {
 };
 
 /**
+ * Adds a mongoose reference to the given object.
+ *
+ * @param {any} obj - The object to add a reference to.
+ * @param {string} ref - The reference to add.
+ * @return {any} The modified object with the added reference.
+ */
+const addRef = (obj: any, ref: string) => {
+  const Obj = lodash.cloneDeep(obj);
+  Obj.ref = ref;
+  return Obj;
+};
+
+/**
  * Generates a new object by adding a default value to a given object.
  *
  * @param {any} obj - The original object.
@@ -344,6 +357,7 @@ module.exports = {
   addDefaultValue,
   addEnums,
   addGetter,
+  addRef,
   addSetter,
   Nullable,
   ObjArray,

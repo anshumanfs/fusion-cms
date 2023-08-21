@@ -89,6 +89,34 @@ const translateFilter = (filter: any = {}): any => {
   return translate(translatedFilter);
 };
 
+const translatePopulate = (populate: any = {}): any => {
+  if (lodash.isString(populate)) {
+    return populate + '_virtual';
+  }
+  if (lodash.isArray(populate)) {
+    return populate.map((pop: any) => {
+      if (lodash.isString(pop)) {
+        return pop + '_virtual';
+      }
+      return pop;
+    });
+  }
+  if (lodash.isPlainObject(populate)) {
+    if (lodash.isString(populate.path)) {
+      populate.path = populate.path + '_virtual';
+    }
+    if (lodash.isArray(populate.path)) {
+      populate.path = populate.path.map((pop: any) => {
+        if (lodash.isString(pop)) {
+          return pop + '_virtual';
+        }
+        return pop;
+      });
+    }
+    return populate;
+  }
+};
+
 /**
  * Translates the given options object into a new object that only contains
  * the valid options for the specified operation. If an option is missing from
@@ -113,6 +141,10 @@ const translateOptions = (options: Record<string, any> = {}, operation: string):
       }
     }
   });
+  if (translatedOptions.hasOwnProperty('populate')) {
+    translatedOptions.populate = translatePopulate(translatedOptions.populate);
+  }
+
   return translatedOptions;
 };
 

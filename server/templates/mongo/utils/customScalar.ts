@@ -31,15 +31,6 @@ function validateDBRef(value: any) {
 
   return value;
 }
-function validateDomainId(value: any) {
-  if (!value || typeof value !== 'string') {
-    throw GRAPHQL_VALIDATION_FAILED('Invalid DomainId');
-  }
-  if (value.length < 7) {
-    throw GRAPHQL_VALIDATION_FAILED('Invalid DomainId');
-  }
-  return value;
-}
 
 function validateMap(value: any) {
   try {
@@ -119,16 +110,6 @@ const customScalarResolvers = {
     },
     parseLiteral(ast: any) {
       return ast.value;
-    },
-  }),
-  DomainId: new GraphQLScalarType({
-    name: 'DomainId',
-    description: 'A scalar type representing a DomainId, which should be alphaNumeric and of minimum length 7',
-    serialize: defaultSerialize,
-    parseValue: validateDomainId,
-    parseLiteral(ast: any) {
-      const value = ast.value;
-      return value.toString();
     },
   }),
   DbRef: new GraphQLScalarType({

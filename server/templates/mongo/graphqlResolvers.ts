@@ -49,7 +49,6 @@ const generateResolver = (
         if(resolveDbRefs){
           result = await populate(result, dbRefPreserveFields);
         }
-        console.log(result)
         const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result);
         return postMiddlewareResult;
       }, 
@@ -79,7 +78,7 @@ const generateResolver = (
         let { filters, options, resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args;
         filters = translateFilter(filters);
         options = translateOptions(options, 'findOne');
-        let result = await ${pluralCollectionName}.findOne(filters, projection, options).toObject();
+        let result = await ${pluralCollectionName}.findOne(filters, projection, options);
         if(resolveDbRefs){
           result = await populate(result, dbRefPreserveFields);
         }
