@@ -59,6 +59,10 @@ const createDbModels = async (options: DbModelsInput) => {
   });
   await Promise.allSettled(dirPromises);
 
+  // write app json file
+  fs.ensureFileSync(appJson);
+  fs.writeJsonSync(appJson, await generateAppJsonFile(appName), { spaces: '\t' });
+
   // update the schema to db
   await dbModels.dbSchemas.findOneAndUpdate(
     { appName, originalCollectionName, singularCollectionName, pluralCollectionName },
@@ -77,7 +81,7 @@ const createDbModels = async (options: DbModelsInput) => {
   fs.ensureFileSync(`${graphQlSchemaDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
     `${graphQlSchemaDir}/${pluralCollectionName}.js`,
-    beautify(generateGraphqlSchema(schema, singularCollectionName, pluralCollectionName), beautifyOption)
+    beautify(generateGraphqlSchema(schema, singularCollectionName, pluralCollectionName, appName), beautifyOption)
   );
 
   //create index Schema
@@ -105,10 +109,6 @@ const createDbModels = async (options: DbModelsInput) => {
   //create index Resolver
   fs.ensureFileSync(`${appDir}/indexResolver.js`);
   fs.writeFileSync(`${appDir}/indexResolver.js`, beautify(generateIndexResolver(), beautifyOption));
-
-  // write app json file
-  fs.ensureFileSync(appJson);
-  fs.writeJsonSync(appJson, await generateAppJsonFile(appName), { spaces: '\t' });
 
   // copy utils
   fs.copySync(path.resolve(__dirname, './utils'), appDir + '/utils', { overwrite: true });

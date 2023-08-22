@@ -42,9 +42,10 @@ const createIndexSchema = () => {
 const generateGraphqlSchema = (
   jsonSchema: MongoSchemaInput,
   singularCollectionName: string,
-  pluralCollectionName: string
+  pluralCollectionName: string,
+  appName: string
 ) => {
-  const queryType = jsonToQueryType(jsonSchema, singularCollectionName);
+  const queryType = jsonToQueryType(jsonSchema, singularCollectionName, appName);
   const createType = jsonToCreateType(jsonSchema, singularCollectionName);
   const updateType = jsonToUpdateType(jsonSchema, singularCollectionName);
 

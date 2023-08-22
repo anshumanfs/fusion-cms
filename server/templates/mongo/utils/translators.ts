@@ -93,14 +93,7 @@ const translatePopulate = (populate: any = {}): any => {
   if (lodash.isString(populate)) {
     return populate + '_virtual';
   }
-  if (lodash.isArray(populate)) {
-    return populate.map((pop: any) => {
-      if (lodash.isString(pop)) {
-        return pop + '_virtual';
-      }
-      return pop;
-    });
-  }
+
   if (lodash.isPlainObject(populate)) {
     if (lodash.isString(populate.path)) {
       populate.path = populate.path + '_virtual';
@@ -113,7 +106,15 @@ const translatePopulate = (populate: any = {}): any => {
         return pop;
       });
     }
+    if (lodash.has(populate, 'populate')) {
+      populate.populate = translatePopulate(populate.populate);
+    }
     return populate;
+  }
+  if (lodash.isArray(populate)) {
+    return populate.map((pop: any) => {
+      return translatePopulate(pop);
+    });
   }
 };
 

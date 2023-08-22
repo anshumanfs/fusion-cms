@@ -67,7 +67,7 @@ const jsonToMongooseSchema = (schema: MongoSchemaInput, pluralCollectionName: st
   dbSchemaString += '}';
   let virtualTypeString = '';
   Object.keys(virtualTypes).forEach((key) => {
-    virtualTypeString += `${pluralCollectionName}Schema.virtual('${key}',${JSON.stringify(virtualTypes[key])})\n`;
+    virtualTypeString += `${pluralCollectionName}Schema.virtual('${key}',${JSON.stringify(virtualTypes[key])});\n`;
   });
 
   return { dbSchemaString, virtualTypeString, virtualTypes };
@@ -93,7 +93,7 @@ const postHookGenerator = (operationName: any = 'find', virtuals: any = [], plur
             delete docs.${virtual};
           }
         }
-      })
+      });
     `;
   });
   return postHookString;

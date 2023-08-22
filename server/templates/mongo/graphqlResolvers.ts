@@ -33,7 +33,7 @@ const generateResolver = (
   const ${pluralCollectionName} = require('../dbModels/${pluralCollectionName}.js'); 
   const { populate } = require('../utils/populate'); 
   const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
-  const { getProjections } = require('../utils/resolverUtils'); 
+  const { getProjections, getPopulateOptions } = require('../utils/resolverUtils'); 
   const { translateFilter, translateOptions } = require('../utils/translators');
   const Errors = require('../../../libs/errors');
 
@@ -41,9 +41,11 @@ const generateResolver = (
     Query: { 
       ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
         const projection = getProjections(info);
+        const populate = getPopulateOptions(info);
         const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info);
         let { filters, options , resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args;
         filters = translateFilter(filters);
+        options = { ...options, populate };
         options = translateOptions(options, 'find');
         let result = await ${pluralCollectionName}.find(filters, projection, options);
         if(resolveDbRefs){
@@ -74,9 +76,11 @@ const generateResolver = (
       }, 
       ${singularCollectionName}: async (parent, args, contextValue, info) =>{ 
         const projection = getProjections(info);
+        const populate = getPopulateOptions(info);
         const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info);
         let { filters, options, resolveDbRefs, dbRefPreserveFields } = preMiddlewareResult.args;
         filters = translateFilter(filters);
+        options = { ...options, populate };
         options = translateOptions(options, 'findOne');
         let result = await ${pluralCollectionName}.findOne(filters, projection, options);
         if(resolveDbRefs){

@@ -14,4 +14,21 @@ const getProjections = (info: any) => {
   return projection;
 };
 
-module.exports = { getProjections };
+const getPopulateOptions = (info: any) => {
+  function populateOptionsHelper(fieldsArr: any) {
+    const populateOptions: any = [];
+    fieldsArr.forEach((e: any) => {
+      if (e.selectionSet) {
+        let populateObj: any = {};
+        populateObj.path = e.name.value;
+        populateObj.populate = populateOptionsHelper(e.selectionSet.selections);
+        populateOptions.push(populateObj);
+      }
+    });
+    return populateOptions;
+  }
+  const result = populateOptionsHelper(info.fieldNodes[0].selectionSet.selections);
+  return result;
+};
+
+module.exports = { getProjections, getPopulateOptions };

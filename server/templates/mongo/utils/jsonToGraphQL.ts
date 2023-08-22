@@ -15,10 +15,10 @@ const mongoToGraphQLMapper: any = {
   Decimal128: 'Decimal128',
   Map: 'Map',
   Mixed: 'Mixed',
-  NegativeNumber: 'NegativeNumber',
+  NegativeNumber: 'NegativeInt',
   Number: 'Number',
   ObjectId: 'ObjectID',
-  PositiveNumber: 'PositiveNumber',
+  PositiveNumber: 'PositiveInt',
   String: 'String',
   Time: 'Time',
   UUID: 'UUID',
@@ -31,7 +31,8 @@ const mongoToGraphQLMapper: any = {
  * @param {string} name - The name of the query type.
  * @return {string} The GraphQL query type.
  */
-const jsonToQueryType = (json: any, name: string) => {
+const jsonToQueryType = (json: any, singularCollectionName: string, appName: string) => {
+  const appJSON = require('../../../apps/' + appName + '/app.json');
   let object: any;
   if (typeof json === 'string') {
     object = JSON.parse(json);
@@ -41,19 +42,28 @@ const jsonToQueryType = (json: any, name: string) => {
   let subQueryString = ``;
   const queryFields = Object.keys(object).map((field) => {
     if (lodash.isPlainObject(object[field].type)) {
-      subQueryString += jsonToQueryType(object[field].type, field);
+      subQueryString += jsonToQueryType(object[field].type, field, appName);
       object[field].type = `${field}`;
     }
     object[field].type = mongoToGraphQLMapper[object[field].type];
     if (object[field].isArray) {
       object[field].type = `[${object[field].type}]`;
     }
+    if (object[field].hasOwnProperty('ref') && lodash.isString(object[field].ref)) {
+      let refGraphQLType = appJSON.collections.find(
+        (e: any) => e.originalCollectionName === object[field].ref
+      ).singularCollectionName;
+      if (object[field].isArray) {
+        object[field].type = `[${refGraphQLType}]`;
+      }
+      object[field].type = `${refGraphQLType}`;
+    }
     object[field].type = replaceAllParenthesis(object[field].type, '');
     return `${field}: ${object[field].type}`;
   });
   const queryType: string = `
     ${subQueryString}
-    type ${name} {
+    type ${singularCollectionName} {
         ${queryFields.join('\n  ')}
     }
   `;
@@ -87,6 +97,7 @@ const jsonToCreateType = (json: any, name: string) => {
     if (object[field].required) {
       object[field].type = `${object[field].type}!`;
     }
+
     object[field].type = replaceAllParenthesis(object[field].type, '');
     return `${field}: ${object[field].type}`;
   });
@@ -135,7 +146,6 @@ const optionsTypes = `
         hint: JSON
         comment: String
         lean: Boolean
-        populate: JSON
         useBigInt64: Boolean
         maxTimeMs: Int
         sort: JSON
@@ -143,7 +153,6 @@ const optionsTypes = `
     
     input findOneOptions {
       lean: Boolean
-      populate: JSON
     }
 
     input updateOptions {

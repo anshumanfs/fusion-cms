@@ -67,6 +67,20 @@ function defaultSerialize(value: any) {
 }
 
 const customScalarResolvers = {
+  Boolean: new GraphQLScalarType({
+    name: 'Boolean',
+    description: 'A scalar type representing boolean values',
+    serialize: defaultSerialize,
+    parseValue(value: any) {
+      if (typeof value !== 'boolean') {
+        throw GRAPHQL_VALIDATION_FAILED('Invalid value');
+      }
+      return value;
+    },
+    parseLiteral(ast: any) {
+      return ast.value;
+    },
+  }),
   Buffer: new GraphQLScalarType({
     name: 'Buffer',
     description: 'A scalar type representing a binary string',
@@ -78,6 +92,34 @@ const customScalarResolvers = {
       } else {
         throw GRAPHQL_VALIDATION_FAILED('Expected a string literal');
       }
+    },
+  }),
+  Date: new GraphQLScalarType({
+    name: 'Date',
+    description: 'A scalar type representing date values',
+    serialize: defaultSerialize,
+    parseValue(value: any) {
+      if (!lodash.isDate(value)) {
+        throw GRAPHQL_VALIDATION_FAILED('Invalid Date');
+      }
+      return new Date(value);
+    },
+    parseLiteral(ast: any) {
+      return new Date(ast.value);
+    },
+  }),
+  DateTime: new GraphQLScalarType({
+    name: 'DateTime',
+    description: 'A scalar type representing date values',
+    serialize: defaultSerialize,
+    parseValue(value: any) {
+      if (!lodash.isDate(value)) {
+        throw GRAPHQL_VALIDATION_FAILED('Invalid Date Time');
+      }
+      return new Date(value);
+    },
+    parseLiteral(ast: any) {
+      return new Date(ast.value);
     },
   }),
   Decimal128: new GraphQLScalarType({
