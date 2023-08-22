@@ -67,6 +67,10 @@ const createDbModels = async (options: DbModelsInput) => {
     { upsert: true }
   );
 
+  // write app json file
+  fs.ensureFileSync(appJson);
+  fs.writeJsonSync(appJson, await generateAppJsonFile(appName), { spaces: '\t' });
+
   // for mongoose schema
   fs.ensureFileSync(`${dbModelsDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
@@ -118,10 +122,6 @@ const createDbModels = async (options: DbModelsInput) => {
   //create index Resolver
   fs.ensureFileSync(`${appDir}/indexResolver.js`);
   fs.writeFileSync(`${appDir}/indexResolver.js`, beautify(createIndexResolver(appName), beautifyOption));
-
-  // write app json file
-  fs.ensureFileSync(appJson);
-  fs.writeJsonSync(appJson, await generateAppJsonFile(appName), { spaces: '\t' });
 
   // copy utils
   fs.copySync(path.resolve(__dirname, './utils'), appDir + '/utils', { overwrite: true });

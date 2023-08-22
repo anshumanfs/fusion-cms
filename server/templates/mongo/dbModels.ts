@@ -99,6 +99,23 @@ const postHookGenerator = (operationName: any = 'find', virtuals: any = [], plur
   return postHookString;
 };
 
+const createPostHookString = (pluralCollectionName: string) => {
+  return `
+    ${pluralCollectionName}Schema.post("save", async function (docs,next) {
+      const virtualArr = Object.keys(${pluralCollectionName}Schema.virtuals); 
+      docs = await docs.populate(virtualArr);
+    });
+  `;
+};
+
+const updatePostHookString = (pluralCollectionName: string) => {
+  return `
+    ${pluralCollectionName}Schema.post("findOneAndUpdate", async function (docs,next) {
+      const virtualArr = Object.keys(${pluralCollectionName}Schema.virtuals); 
+      docs = await docs.populate(virtualArr);
+    });`;
+};
+
 /**
  * Generates the content of a model file based on the provided parameters.
  *
@@ -134,6 +151,8 @@ const generateModelFileContent = (
         ${virtualTypeString}
         ${postHookFindString}
         ${postHookFindOneString}
+        ${createPostHookString(pluralCollectionName)}
+        ${updatePostHookString(pluralCollectionName)}
         module.exports = conn.model('${originalCollectionName}', ${pluralCollectionName}Schema, '${originalCollectionName}');
     `;
   return modelFileContent;

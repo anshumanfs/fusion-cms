@@ -44,6 +44,7 @@ declare global {
     isSparse: boolean | false;
     isPrimaryKey: boolean | false;
     autoIncrement: boolean | false;
+    foreignKey: string | undefined;
   };
 
   type MySQLSchemaInput = {
