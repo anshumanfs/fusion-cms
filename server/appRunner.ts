@@ -1,5 +1,8 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
+import { useSofa } from 'sofa-api';
+import { makeExecutableSchema } from '@graphql-tools/schema';
 import path from 'path';
 import { conn, dbModels } from './db';
 import pm2 from 'pm2';
@@ -12,6 +15,26 @@ import cmsConfig from './config.json';
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
 const checkEnv = ['production', 'performance'];
 
+const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; appName: string }) => {
+  return useSofa({
+    schema: makeExecutableSchema({
+      resolvers: Resolver,
+      typeDefs: Schema,
+    }),
+    basePath: `/rest/${appName}`,
+    openAPI: {
+      info: {
+        title: `${appName} APIs`,
+        version: '3.0.0',
+      },
+      endpoint: '/openapi.json',
+    },
+    swaggerUI: {
+      path: '/docs',
+    },
+  });
+};
+
 const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boolean; subfolder: string }) => {
   const Resolver = require(`./apps/${subfolder}/indexResolver`);
   const Schema = require(`./apps/${subfolder}/indexSchema`);
@@ -22,6 +45,7 @@ const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boole
   });
   await apollo.start();
   app.use(`/graphql/${subfolder}`, cors(), json(), expressMiddleware(apollo));
+  app.use(`/rest/${subfolder}`, getSofa({ Schema, Resolver, appName: subfolder }));
   console.log(`✔ ${subfolder} :- GraphQL running on /graphql/${subfolder}`);
   return true;
 };
@@ -45,6 +69,7 @@ const appManagerApolloServer = async ({ app }: { app: any }) => {
       },
     })
   );
+  app.use(`/rest/appManager`, getSofa({ Schema, Resolver, appName: 'appManager' }));
   console.log(`✔ appManager :- GraphQL running on /appManager`);
   return true;
 };
