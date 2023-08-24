@@ -13,6 +13,7 @@ const mongoToGraphQLMapper: any = {
   DateTime: 'DateTime',
   DbRef: 'DbRef',
   Decimal128: 'Decimal128',
+  Email: 'EmailAddress',
   Map: 'Map',
   Mixed: 'Mixed',
   NegativeNumber: 'NegativeInt',

@@ -309,6 +309,11 @@ const Types = {
     required: true,
     type: schemaTypes.Decimal128,
   }),
+  Email: () => ({
+    required: true,
+    type: schemaTypes.String,
+    match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+  }),
   Map: () => ({
     required: true,
     type: schemaTypes.Map,
