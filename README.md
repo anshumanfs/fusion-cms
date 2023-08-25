@@ -1,6 +1,6 @@
-# Graph CMS
+# Fusion CMS
 
-GraphCMS is an open source initiative to improve the development speed of backend APIs
+Fusion CMS is an open source initiative to improve the development speed of backend APIs
 
 ## Features
 
