@@ -1,4 +1,4 @@
-# Fusion CMS
+![Alt text](./public/logo/dark/icons8-react-native-128.svg 'Fusion CMS')
 
 Fusion CMS is an open source initiative to improve the development speed of backend APIs
 

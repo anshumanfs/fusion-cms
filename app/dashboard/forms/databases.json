@@ -1,0 +1,48 @@
+[
+  {
+    "name": "MongoDb",
+    "value": "mongo",
+    "image": "/icons/mongodb-icon.svg",
+    "inputs": {
+      "basicOptions": {
+        "uri": {
+          "type": "text",
+          "label": "Connection URI",
+          "placeholder": "mongodb://localhost:27017"
+        }
+      },
+      "advancedOptions": {
+        "port": {
+          "type": "number",
+          "label": "Port",
+          "placeholder": 27017
+        },
+        "username": {
+          "type": "text",
+          "label": "Username",
+          "placeholder": "admin"
+        },
+        "password": {
+          "type": "password",
+          "label": "Password",
+          "placeholder": "admin"
+        },
+        "dbName": {
+          "type": "text",
+          "label": "Database Name",
+          "placeholder": "admin"
+        }
+      }
+    }
+  },
+  {
+    "name": "PostgreSQL",
+    "value": "postgres",
+    "image": "/icons/icons8-postgresql.svg"
+  },
+  {
+    "name": "MySQL",
+    "value": "mysql",
+    "image": "/icons/icons8-mysql.svg"
+  }
+]
