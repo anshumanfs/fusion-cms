@@ -9,11 +9,18 @@ import { Label } from '@/components/ui/label';
 import { Sidebar } from './sidenav';
 import { playlists } from './playlist';
 import { ModeToggle } from '@/components/themeToggle';
-
+import DemoPage from './databases/page';
 export default function Dashboard() {
   return (
     <>
-      <Sidebar playlists={playlists} className="w-[20%]" />
+      <div className="grid grid-cols-12 gap-2">
+        <div className="col-span-3">
+          <Sidebar playlists={playlists} />
+        </div>
+        <div className="col-span-9 mt-[10%]">
+          <DemoPage />
+        </div>
+      </div>
     </>
   );
 }

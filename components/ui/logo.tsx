@@ -7,7 +7,7 @@ export default function Logo(props: { width: number; height: number }) {
   return (
     <>
       <Image
-        src={`/logo/${theme || 'dark'}/icons8-react-native-256.svg`}
+        src={`/logo/${theme || 'light'}/icons8-react-native-256.svg`}
         alt="fusion"
         width={`${props.width}`}
         height={`${props.height}`}

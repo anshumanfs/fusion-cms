@@ -26,6 +26,7 @@
     "@radix-ui/react-scroll-area": "^1.0.4",
     "@radix-ui/react-select": "^1.2.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "@tanstack/react-table": "^8.9.3",
     "@types/cors": "^2.8.13",
     "@types/crypto-js": "^4.1.1",
     "@types/express": "^4.17.17",
