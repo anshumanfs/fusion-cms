@@ -10,10 +10,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Switch } from '@/components/ui/switch';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 import databases from './databases.json';
 
@@ -24,16 +25,11 @@ export function AddDatabase(props: {
 }) {
   const mongoObj = databases.find((database) => database.value === 'mongo');
   const [options, setOptions]: [any, any] = React.useState(mongoObj?.inputs);
-  const [advancedOptionToggle, setAdvancedOptionToggle]: [boolean, any] = React.useState(false);
 
   const handleDbTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedDb = event.target.value;
     const selectedDbObj = databases.find((database) => database.value === selectedDb);
     setOptions(selectedDbObj?.inputs);
-  };
-
-  const handleAdvancedOptionToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAdvancedOptionToggle(event.target.checked);
   };
 
   return (
@@ -43,13 +39,17 @@ export function AddDatabase(props: {
           {props.children}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-half">
+      <DialogContent className="max-w-[60%]">
         <DialogHeader>
           <DialogTitle>Add Database</DialogTitle>
           <DialogDescription>Please add the details below to onboard a new database.</DialogDescription>
         </DialogHeader>
+
         <div>
-          <RadioGroup defaultValue="mongo" className="grid grid-cols-3 gap-4">
+          <Label htmlFor="dbType" className="text-normal">
+            Select Database
+          </Label>
+          <RadioGroup defaultValue="mongo" className="grid grid-cols-3 gap-4 pt-1" id="dbType">
             {databases.map((database, index) => {
               return (
                 <div key={`${index}_available_db`}>
@@ -70,51 +70,55 @@ export function AddDatabase(props: {
             })}
           </RadioGroup>
         </div>
-        <div className="flex items-center space-x-2">
-          <Label htmlFor="airplane-mode">More Options</Label>
-          <Switch id="airplane-mode" onChange={setAdvancedOptionToggle} />
-        </div>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input id="name" placeholder="Mongo" className="col-span-3" />
+        <div className="grid pt-4">
+          <div className="grid grid-cols-4 items-center gap-2">
+            <Label htmlFor="name">Endpoint Name</Label>
+            <Input id="name" placeholder="Mongo" className="col-span-4" />
           </div>
-          {Object.keys(options?.basicOptions).map((option, index) => {
-            return (
-              <div key={`${index}_basic_options`} className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor={option} className="text-right">
-                  {options.basicOptions[option].label}
-                </Label>
-                <Input
-                  id={option}
-                  type={options.basicOptions[option].type}
-                  placeholder={options?.basicOptions[option].placeholder}
-                  className="col-span-3"
-                />
-              </div>
-            );
-          })}
-          {advancedOptionToggle ? (
-            Object.keys(options?.advancedOptions).map((option, index) => {
-              return (
-                <div key={`${index}_basic_options`} className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor={option} className="text-right">
-                    {options.advancedOptions[option].label}
-                  </Label>
-                  <Input
-                    id={option}
-                    type={options.advancedOptions[option].type}
-                    placeholder={options?.advancedOptions[option].placeholder}
-                    className="col-span-3"
-                  />
+        </div>
+        <div>
+          <Tabs defaultValue="basic" className="w-full">
+            <TabsList className="float-right py-4">
+              <TabsTrigger value="basic">Basic</TabsTrigger>
+              <TabsTrigger value="advanced">Advanced</TabsTrigger>
+            </TabsList>
+            <br />
+            <br />
+            <ScrollArea className="h-[100px]">
+              <TabsContent value="basic">
+                {Object.keys(options?.basicOptions).map((option, index) => {
+                  return (
+                    <div key={`${index}_basic_options`} className="grid grid-cols-4 gap-2">
+                      <Label htmlFor={option}>{options.basicOptions[option].label}</Label>
+                      <Input
+                        id={option}
+                        type={options.basicOptions[option].type}
+                        placeholder={options?.basicOptions[option].placeholder}
+                        className="col-span-4"
+                      />
+                    </div>
+                  );
+                })}
+              </TabsContent>
+              <TabsContent value="advanced">
+                <div className="grid grid-cols-4 gap-2">
+                  {Object.keys(options?.advancedOptions).map((option, index) => {
+                    return (
+                      <div key={`${index}_basic_options`} className="grid gap-2">
+                        <Label htmlFor={option}>{options.advancedOptions[option].label}</Label>
+                        <Input
+                          id={option}
+                          type={options.advancedOptions[option].type}
+                          placeholder={options?.advancedOptions[option].placeholder}
+                          className="col-span-3"
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })
-          ) : (
-            <></>
-          )}
+              </TabsContent>
+            </ScrollArea>
+          </Tabs>
         </div>
 
         <DialogFooter>

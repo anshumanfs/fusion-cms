@@ -6,7 +6,7 @@
     "inputs": {
       "basicOptions": {
         "uri": {
-          "type": "text",
+          "type": "textarea",
           "label": "Connection URI",
           "placeholder": "mongodb://localhost:27017"
         }
@@ -29,8 +29,13 @@
         },
         "dbName": {
           "type": "text",
-          "label": "Database Name",
+          "label": "Database",
           "placeholder": "admin"
+        },
+        "sslFile": {
+          "type": "file",
+          "label": "SSL File",
+          "placeholder": "Select SSL Certificate"
         }
       }
     }
