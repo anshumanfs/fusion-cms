@@ -1,7 +1,6 @@
 import { Payment, columns } from './columns';
 import { DataTable } from './data-table';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { AddDatabase } from '../forms/addDatabase';
 
 function getData(): Payment[] {
@@ -16,11 +15,10 @@ function getData(): Payment[] {
       status: 'pending',
       email: 'm@example.com',
     },
-    // ...
   ];
 }
 
-export default async function DemoPage() {
+export default function DatabasePage() {
   const data = getData();
   return (
     <>

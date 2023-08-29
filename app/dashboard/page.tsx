@@ -1,26 +1,33 @@
-'use client';
-import React from 'react';
-
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Sidebar } from './sidenav';
+'use client'
+import React, { useContext, useState } from 'react';
+import { SideBar } from './sideBar';
 import { playlists } from './playlist';
-import { ModeToggle } from '@/components/themeToggle';
-import DemoPage from './databases/page';
+import DatabasePage from './databases/page';
+import SwitchContext from './switchContext';
+
 export default function Dashboard() {
+  const [dashBoardContext, setDashBoardContext] = useState(<DatabasePage />);
   return (
     <>
-      <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-3">
-          <Sidebar playlists={playlists} />
+      <SwitchContext.Provider value={[dashBoardContext, setDashBoardContext]}>
+        <div className="grid grid-cols-12 gap-2">
+          <div className="col-span-3">
+            <SideBar playlists={playlists} />
+          </div>
+          <div className="col-span-9 mt-[10%]">
+            <DashBoardContent />
+          </div>
         </div>
-        <div className="col-span-9 mt-[10%]">
-          <DemoPage />
-        </div>
-      </div>
+      </SwitchContext.Provider>
     </>
   );
 }
+
+function DashBoardContent() {
+  const [dashBoardContext, setDashBoardContext] = useContext(SwitchContext);
+  return (<>
+    {dashBoardContext}
+  </>)
+}
+
+export { SwitchContext }
