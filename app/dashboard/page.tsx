@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useContext, useState } from 'react';
 import { SideBar } from './sideBar';
 import { playlists } from './playlist';
@@ -25,9 +25,7 @@ export default function Dashboard() {
 
 function DashBoardContent() {
   const [dashBoardContext, setDashBoardContext] = useContext(SwitchContext);
-  return (<>
-    {dashBoardContext}
-  </>)
+  return <>{dashBoardContext}</>;
 }
 
-export { SwitchContext }
+export { SwitchContext };
