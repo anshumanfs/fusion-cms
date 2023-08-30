@@ -7,9 +7,7 @@ export default function Schemas() {
       <div className="container mx-auto">
         <Label className="semi-bold text-xl">Schemas</Label>
       </div>
-      <div>
-
-      </div>
+      <div></div>
     </>
   );
 }
