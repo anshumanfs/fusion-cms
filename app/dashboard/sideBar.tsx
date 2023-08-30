@@ -8,10 +8,12 @@ import { Playlist } from './playlist';
 import Logo from '@/components/ui/logo';
 import { AddDatabase } from './forms/addDatabase';
 import DatabasePage from './databases/page';
+import SchemaPage from './schemas/page';
 import SwitchContext from './switchContext';
 
 const pages: any = {
   databases: <DatabasePage />,
+  schemas: <SchemaPage />,
 };
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -50,7 +52,7 @@ export function SideBar({ className, playlists }: SidebarProps) {
               </svg>
               Databases
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button variant="ghost" className="w-full justify-start" value="schemas" onClick={switchHandler}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
