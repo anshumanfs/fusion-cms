@@ -16,7 +16,7 @@ export default function Dashboard() {
             <SideBar playlists={playlists} />
           </div>
           <div className="col-span-9">
-            <div className="h-[10%]">
+            <div className="h-[8%]">
               <div className="float-right mr-2 mt-2">
                 <ModeToggle />
               </div>

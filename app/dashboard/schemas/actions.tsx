@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
-import { DotsVerticalIcon } from '@radix-ui/react-icons';
+import { DotsHorizontalIcon } from '@radix-ui/react-icons';
 import { ConfirmDelete } from '../forms/confirmDelete';
 
 export function Actions() {
@@ -21,7 +21,7 @@ export function Actions() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon">
-          <DotsVerticalIcon className="h-4 w-4" />
+          <DotsHorizontalIcon className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
@@ -29,37 +29,21 @@ export function Actions() {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem>
-            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="mr-2 w-5 h-5" viewBox="0 0 48 48">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-5 h-5 mr-2"
+            >
               <path
-                fill="#ff4081"
-                d="M24.5,45.161L7,34.82V14.18L24.5,3.839L42,14.18V34.82L24.5,45.161z M9,33.68l15.5,9.159L40,33.68 V15.32L24.5,6.161L9,15.32V33.68z"
-              ></path>
-              <circle cx="24.5" cy="5.5" r="3.5" fill="#ff4081"></circle>
-              <circle cx="24.5" cy="43.5" r="3.5" fill="#ff4081"></circle>
-              <circle cx="8.5" cy="33.5" r="3.5" fill="#ff4081"></circle>
-              <circle cx="40.5" cy="33.5" r="3.5" fill="#ff4081"></circle>
-              <circle cx="8.5" cy="15.5" r="3.5" fill="#ff4081"></circle>
-              <circle cx="40.5" cy="15.5" r="3.5" fill="#ff4081"></circle>
-              <path fill="#ff4081" d="M42.72,35H6.28L24.5,2.978L42.72,35z M9.72,33H39.28L24.5,7.022L9.72,33z"></path>
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+              />
             </svg>
-            GraphQL Playground
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="mr-2 w-5 h-5" viewBox="0 0 48 48">
-              <circle cx="24" cy="24" r="20" fill="#ffca28"></circle>
-              <polygon
-                fill="#fff"
-                points="30.4,32.7 28.6,30.3 32,27.75 32,20.25 28.6,17.7 30.4,15.3 35,18.75 35,29.25"
-              ></polygon>
-              <polygon
-                fill="#fff"
-                points="17.6,32.7 13,29.25 13,18.75 17.6,15.3 19.4,17.7 16,20.25 16,27.75 19.4,30.3"
-              ></polygon>
-              <circle cx="19.5" cy="23.5" r="1.5" fill="#fff"></circle>
-              <circle cx="24" cy="23.5" r="1.5" fill="#fff"></circle>
-              <circle cx="28.5" cy="23.5" r="1.5" fill="#fff"></circle>
-            </svg>
-            Swagger Docs
+            Edit Schema
           </DropdownMenuItem>
           <DropdownMenuItem>
             <svg
