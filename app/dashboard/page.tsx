@@ -4,6 +4,7 @@ import { SideBar } from './sideBar';
 import { playlists } from './playlist';
 import DatabasePage from './databases/page';
 import SwitchContext from './switchContext';
+import { ModeToggle } from '@/components/themeToggle';
 
 export default function Dashboard() {
   const [dashBoardContext, setDashBoardContext] = useState(<DatabasePage />);
@@ -14,7 +15,12 @@ export default function Dashboard() {
           <div className="col-span-3">
             <SideBar playlists={playlists} />
           </div>
-          <div className="col-span-9 mt-[10%]">
+          <div className="col-span-9">
+            <div className="h-[10%]">
+              <div className="float-right mr-2 mt-2">
+                <ModeToggle />
+              </div>
+            </div>
             <DashBoardContent />
           </div>
         </div>

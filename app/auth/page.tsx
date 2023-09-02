@@ -16,7 +16,7 @@ export default function Login() {
         <br />
         <span>The Most Advanced and Generic Headless-CMS</span>
       </div>
-      <Card className="w-[480px] m-auto">
+      <Card className="w-[480px] m-auto ">
         <CardHeader>
           <CardTitle>Create User</CardTitle>
           <CardDescription>Start by creating the admin user for your project</CardDescription>
