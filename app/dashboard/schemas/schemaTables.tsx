@@ -32,7 +32,8 @@ import {
 import { Actions } from './actions';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import data from './data.json';
+import { AddSchema } from './addSchema';
+import data from './data/data.json';
 
 export type SchemaDisplay = {
   id: string;
@@ -196,10 +197,10 @@ export function SchemaTable() {
             })}
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button variant="outline" className="mr-0 ml-auto">
+        <AddSchema buttonClassName="mr-0 ml-auto" buttonVariant="outline">
           <PlusCircledIcon className="mr-2" />
           Add Schema
-        </Button>
+        </AddSchema>
       </div>
       <div className="rounded-md border">
         <Table>

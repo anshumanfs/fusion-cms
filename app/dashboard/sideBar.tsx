@@ -125,7 +125,7 @@ export function SideBar({ className, playlists }: SidebarProps) {
         </div>
       </div>
       <div className="px-3 py-2">
-        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">Databases</h2>
+        <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">Settings</h2>
         <div className="space-y-1">
           <AddDatabase buttonVariant="ghost" buttonClassName="w-full justify-start">
             <svg
