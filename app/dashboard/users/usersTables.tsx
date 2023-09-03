@@ -34,31 +34,33 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import data from './data.json';
 
-export type SchemaDisplay = {
+export type UsersDisplay = {
   id: string;
-  schemaName: string;
+  name: string;
+  email: string;
+  apiKey: string;
+  role: string;
   active: true | false;
-  databaseName: string;
-  databaseType: string;
   createdAt: string;
 };
 
 const accessorKeyMap: any = {
   id: 'id',
-  schemaName: 'Name',
+  name: 'Name',
+  email: 'Email',
+  apiKey: 'API Key',
+  role: 'Role',
   active: 'Status',
-  databaseName: 'DB Name',
-  databaseType: 'DB Type',
   createdAt: 'Created',
 };
 
-export const columns: ColumnDef<SchemaDisplay>[] = [
+export const columns: ColumnDef<UsersDisplay>[] = [
   {
     accessorKey: 'id',
     header: '',
   },
   {
-    accessorKey: 'schemaName',
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
         <div
@@ -70,7 +72,7 @@ export const columns: ColumnDef<SchemaDisplay>[] = [
         </div>
       );
     },
-    cell: ({ row }) => <div>{row.getValue('schemaName')}</div>,
+    cell: ({ row }) => <div>{row.getValue('name')}</div>,
   },
   {
     accessorKey: 'active',
@@ -85,14 +87,14 @@ export const columns: ColumnDef<SchemaDisplay>[] = [
     },
   },
   {
-    accessorKey: 'databaseName',
-    header: () => <div>DB Name</div>,
-    cell: ({ row }) => <div>{row.getValue('databaseName')}</div>,
+    accessorKey: 'email',
+    header: () => <div>Email</div>,
+    cell: ({ row }) => <div>{row.getValue('email')}</div>,
   },
   {
-    accessorKey: 'databaseType',
-    header: () => <div>DB Type</div>,
-    cell: ({ row }) => <div>{row.getValue('databaseType')}</div>,
+    accessorKey: 'role',
+    header: () => <div>Role</div>,
+    cell: ({ row }) => <div>{row.getValue('role')}</div>,
   },
   {
     accessorKey: 'createdAt',
@@ -119,10 +121,10 @@ export const columns: ColumnDef<SchemaDisplay>[] = [
   },
 ];
 
-export function SchemaTable() {
+export function UsersTable() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [filterBy, setFilterBy] = React.useState('schemaName');
+  const [filterBy, setFilterBy] = React.useState('name');
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
@@ -149,7 +151,7 @@ export function SchemaTable() {
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter Schemas..."
+          placeholder="Filter Users..."
           value={(table.getColumn(filterBy)?.getFilterValue() as string) ?? ''}
           onChange={(event) => table.getColumn(filterBy)?.setFilterValue(event.target.value)}
           className="w-[250px] mr-2"
@@ -198,7 +200,7 @@ export function SchemaTable() {
         </DropdownMenu>
         <Button variant="outline" className="mr-0 ml-auto">
           <PlusCircledIcon className="mr-2" />
-          Add Schema
+          Add User
         </Button>
       </div>
       <div className="rounded-md border">
