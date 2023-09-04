@@ -47,7 +47,7 @@ export function SideBar({ className }: SidebarProps) {
       }
     });
     setElementStates(elementStatesCopy);
-  }
+  };
 
   const switchHandler = (component: any) => {
     const elementStatesCopy = _.cloneDeep(elementStates);
