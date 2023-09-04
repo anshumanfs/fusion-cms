@@ -1,54 +1,66 @@
-import React, { useContext, useState } from 'react';
-import dynamic from 'next/dynamic';
+'use client';
+import React, { useCallback, useEffect, useState } from 'react';
+import _ from 'lodash';
+import { useRouter, usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Label } from '@/components/ui/label';
 import { AvatarIcon, LockClosedIcon } from '@radix-ui/react-icons';
-import { Playlist } from './playlist';
 import Logo from '@/components/ui/logo';
 import { AddDatabase } from './forms/addDatabase';
-import DatabasePage from './databases/page';
-import SchemaPage from './schemas/page';
-import UsersPage from './users/page';
-import SwitchContext from './switchContext';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  playlists: Playlist[];
+  className?: string;
 }
 
 const elementStatesInitial: any = {
   databases: {
     variant: 'secondary',
-    associatedComponent: <DatabasePage />,
+    route: '/databases',
   },
   schemas: {
     variant: 'ghost',
-    associatedComponent: <SchemaPage />,
+    route: '/schemas',
   },
   users: {
     variant: 'ghost',
-    associatedComponent: <UsersPage />,
+    route: '/users',
   },
   accesses: {
     variant: 'ghost',
-    associatedComponent: <UsersPage />,
+    route: '/users',
   },
 };
 
-export function SideBar({ className, playlists }: SidebarProps) {
-  const [dashBoardContent, setDashBoardContent] = useContext(SwitchContext);
+export function SideBar({ className }: SidebarProps) {
   const [elementStates, setElementStates] = useState(elementStatesInitial);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const detectRoute = () => {
+    const elementStatesCopy = _.cloneDeep(elementStates);
+    const url = window.location.href;
+    Object.keys(elementStatesCopy).forEach((key) => {
+      elementStatesCopy[key].variant = 'ghost';
+      if (url.includes(elementStatesCopy[key].route)) {
+        elementStatesCopy[key].variant = 'secondary';
+      }
+    });
+    setElementStates(elementStatesCopy);
+  }
 
   const switchHandler = (component: any) => {
-    const elementStatesCopy = { ...elementStates };
+    const elementStatesCopy = _.cloneDeep(elementStates);
     Object.keys(elementStatesCopy).forEach((key) => {
       elementStatesCopy[key].variant = 'ghost';
     });
     elementStatesCopy[component.target.value].variant = 'secondary';
     setElementStates(elementStatesCopy);
-    setDashBoardContent(elementStatesInitial[component.target.value].associatedComponent);
+    router.push(`/dashboard/${component.target.value}`);
   };
+  useEffect(() => {
+    detectRoute();
+  }, [pathname]);
 
   return (
     <div className={cn('pb-12', className)}>

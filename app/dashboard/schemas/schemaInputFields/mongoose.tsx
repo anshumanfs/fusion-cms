@@ -1,10 +1,8 @@
 'use client';
 import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { DownloadIcon } from '@radix-ui/react-icons';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
@@ -29,7 +27,7 @@ export default function MongoSchemaFields() {
           <Input type="text" placeholder="Enums" />
           <Input type="text" placeholder="Foreign Field" />
           <div className="flex items-center space-x-2">
-            <Switch id="airplane-mode" />
+            <Checkbox id="isRequired" />
             <Label htmlFor="airplane-mode">Required</Label>
           </div>
         </div>

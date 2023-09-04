@@ -1,3 +1,4 @@
+'use client';
 import { Payment, columns } from './columns';
 import { DataTable } from './data-table';
 import { Label } from '@/components/ui/label';
