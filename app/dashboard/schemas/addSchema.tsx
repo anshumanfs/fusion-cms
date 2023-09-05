@@ -19,7 +19,7 @@ import { DownloadIcon, RadarIcon, PlusCircleIcon, CheckIcon } from 'lucide-react
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const schemaFieldsMap: any = {
-  mongo: (id: string) => <MongoSchemaFields id={id} />,
+  mongo: (id: string) => <MongoSchemaFields id={id} key={`${id}_mongo`} />,
 };
 
 export function AddSchema(props: {
