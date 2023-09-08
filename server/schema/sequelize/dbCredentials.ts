@@ -17,7 +17,7 @@ const {
 } = require('../../templates/mysql/utils/schemaHelper');
 
 require('dotenv').config();
-const CIPHER_KEY = process.env.CIPHER_KEY;
+const CIPHER_KEY: string = process.env.CIPHER_KEY || '';
 
 const deCipherGetter = (value: string) => {
   if (!['null', 'undefined', null, undefined].includes(value)) {

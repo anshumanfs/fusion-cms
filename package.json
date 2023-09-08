@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npx tsc --project tsconfig.server.json && node .build/app.js ",
+    "dev": "nodemon",
     "dev:next": "next dev",
     "build:next": "next build",
     "build:server": "tsc --project tsconfig.server.json",

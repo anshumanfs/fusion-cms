@@ -3,11 +3,14 @@ import next from 'next';
 import path from 'path';
 import { runAsMicroService, runAsMonolith } from './appRunner';
 
-require('dotenv').config();
-const port = process.env.PORT || 3000;
+require('dotenv').config({
+  path: '../.env',
+});
+
+const port = parseInt(process.env.PORT || '3000');
 const host = 'localhost';
-const node_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
-const app_mode = 'APP_MODE' in process.env ? process.env.APP_MODE.trim() : 'monolith';
+const node_env = process?.env?.NODE_ENV?.trim() || 'development';
+const app_mode = process?.env?.APP_MODE?.trim() || 'monolith';
 const dev = node_env === 'development';
 const childProcess = require('child_process');
 const app: Express.Application = Express();
@@ -30,12 +33,6 @@ const startExpressApp = async () => {
   // App:
   app.get('/ping', (_req, res) => {
     res.status(200).json({ status: 'Working fine ! Inside Ping' });
-  });
-  app.get('/configprops', (_req, res) => {
-    res.status(200).json({ status: 'Working fine ! Inside Config-Props' });
-  });
-  app.get('/aaa', (_req, res) => {
-    res.status(200).json({ status: 'AAA - 12' });
   });
 };
 

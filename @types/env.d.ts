@@ -4,7 +4,7 @@ declare global {
       NODE_ENV: 'development' | 'production';
       CMS_ENV: 'development' | 'testing' | 'production' | 'performance';
       APP_MODE: 'monolith' | 'microservice';
-      PORT?: number | 3000;
+      PORT: string;
       CIPHER_KEY: string;
     }
   }
