@@ -16,16 +16,20 @@ interface MySQLConnectionOptions {
  * @return {Sequelize} The Sequelize connection object.
  */
 function connector(appName: string, config: MySQLConnectionOptions) {
-  const conn = new Sequelize(config.database, config.username, config.password, {
-    host: config.host,
-    port: config.port,
-    dialect: 'mysql',
-    logging: false,
-  });
-  conn.addHook('afterConnect', (connection: any) => {
-    console.log(`✓ ${appName} MySQL connected`);
-  });
-  return conn;
+  try {
+    const conn = new Sequelize(config.database, config.username, config.password, {
+      host: config.host,
+      port: config.port,
+      dialect: 'mysql',
+      logging: false,
+    });
+    conn.addHook('afterConnect', (connection: any) => {
+      console.log(`✓ ${appName} MySQL connected`);
+    });
+    return conn;
+  } catch (error) {
+    throw new Error(`${appName} MySQL connection error: ${error}`);
+  }
 }
 
 export { connector };

@@ -23,7 +23,7 @@ const startExpressApp = async () => {
   app.use(Express.json());
 
   app.listen(port);
-  console.log(`\n✓ API is running on: http://${host}:${port}`);
+  console.log(`\n✓ API is running on:`, `http://${host}:${port}`);
 
   if (app_mode === 'monolith') {
     await runAsMonolith({ app, dev });

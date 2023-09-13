@@ -66,6 +66,25 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
   return dbSchemaString;
 };
 
+const relationshipParts = (pluralCollectionName: string, schema: MySQLSchemaInput) => {
+  const jsonSchema = lodash.cloneDeep(schema);
+  const relationshipRequires = new Set();
+  let requireString = '';
+  let relationshipString = '';
+  for (const [key, value] of Object.entries(jsonSchema)) {
+    const { ref } = value;
+    const { to, type, options } = ref;
+    if (ref) {
+      relationshipRequires.add(to);
+      relationshipString += `${pluralCollectionName}Schema.${type}(${to}, ${options});\n`;
+    }
+  }
+  relationshipRequires.forEach((requirement) => {
+    requireString += `const ${requirement} = require('${requirement}');\n`;
+  });
+  return { requireString, relationshipString };
+};
+
 /**
  * Generates a Snowflake schema for a given collection.
  *
@@ -80,6 +99,7 @@ const generateMySqlSchema = (
   schema: MySQLSchemaInput
 ) => {
   const schemaString = jsonToSequelizeSchema(schema);
+  const { requireString, relationshipString } = relationshipParts(pluralCollectionName, schema);
   const schemaContentToWrite = ` 
     const conn = require('../db.js'); 
     const { DataTypes } = require('sequelize'); 
@@ -94,7 +114,8 @@ const generateMySqlSchema = (
       Nullable, 
       Types, 
       Optional 
-    } = require('../utils/schemaHelper') 
+    } = require('../utils/schemaHelper');
+    ${requireString}
  
     const ${pluralCollectionName}Schema = sequelize.define('${pluralCollectionName}', 
         ${schemaString}, 
@@ -102,7 +123,7 @@ const generateMySqlSchema = (
         tableName : '${originalCollectionName}',
         timestamps: false
       });
-
+    ${relationshipString}
     module.exports =  ${pluralCollectionName}Schema;`;
   return schemaContentToWrite;
 };
