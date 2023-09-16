@@ -4,6 +4,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { useSofa } from 'sofa-api';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import path from 'path';
+import logger from './libs/logger';
 import { conn, dbModels } from './db';
 import pm2 from 'pm2';
 import { buildAppsFromDB } from './controllers/manageApp';
@@ -170,12 +171,19 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
         await monolithFunctions();
         resolve();
       });
+      conn.on('disconnected', async () => {
+        reject(`✗ Metadata DB could not be connected`);
+      });
     }
 
     if (cmsConfig.metadataDb.orm === 'sequelize') {
-      await conn.sync();
-      await monolithFunctions();
-      resolve();
+      try {
+        await conn.sync();
+        await monolithFunctions();
+        resolve();
+      } catch (error) {
+        reject(`✗ Metadata DB could not be connected due to : ${error}`);
+      }
     }
   });
 };

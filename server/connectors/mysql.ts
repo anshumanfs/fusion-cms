@@ -1,4 +1,5 @@
 import { Sequelize } from 'sequelize';
+import logger from '../libs/logger';
 
 interface MySQLConnectionOptions {
   host: string;
@@ -24,11 +25,11 @@ function connector(appName: string, config: MySQLConnectionOptions) {
       logging: false,
     });
     conn.addHook('afterConnect', (connection: any) => {
-      console.log(`✓ ${appName} MySQL connected`);
+      logger.info(`✓ ${appName} MySQL connected`);
     });
     return conn;
   } catch (error) {
-    throw new Error(`${appName} MySQL connection error: ${error}`);
+    throw new Error(`✗ ${appName} MySQL connection error: ${error}`);
   }
 }
 

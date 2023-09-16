@@ -2,6 +2,7 @@ import Express from 'express';
 import next from 'next';
 import path from 'path';
 import { runAsMicroService, runAsMonolith } from './appRunner';
+import logger from './libs/logger';
 
 require('dotenv').config({
   path: '../.env',
@@ -23,7 +24,7 @@ const startExpressApp = async () => {
   app.use(Express.json());
 
   app.listen(port);
-  console.log(`\n✓ API is running on:`, `http://${host}:${port}`);
+  logger.info(`✓ API is running on: http://${host}:${port}`);
 
   if (app_mode === 'monolith') {
     await runAsMonolith({ app, dev });
@@ -49,7 +50,7 @@ if (checkEnv.includes(node_env)) {
       });
     })
     .catch((err: any) => {
-      console.log(err);
+      logger.error(err);
     });
 } else {
   startExpressApp();
