@@ -47,7 +47,11 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
       schemaPart = `primaryKey(${schemaPart})`;
     }
     if (isUnique) {
-      schemaPart = `unique(${schemaPart})`;
+      if (isUnique === 'compositeIndex') {
+        schemaPart = `unique(${schemaPart}, true)`;
+      } else {
+        schemaPart = `unique(${schemaPart})`;
+      }
     }
     if (autoIncrement) {
       schemaPart = `autoIncrement(${schemaPart})`;

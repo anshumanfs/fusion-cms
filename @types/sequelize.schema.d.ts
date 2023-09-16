@@ -11,7 +11,7 @@ declare global {
     defaultValue: string | undefined;
     isNullable: boolean | false;
     isIndex: boolean | false;
-    isUnique: boolean | false;
+    isUnique: boolean | false | 'compositeIndex';
     isSparse: boolean | false;
     isPrimaryKey: boolean | false;
     autoIncrement: boolean | false;

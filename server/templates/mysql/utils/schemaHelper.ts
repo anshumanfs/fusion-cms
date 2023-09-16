@@ -57,9 +57,12 @@ const Optional = (obj: any) => {
   return Obj;
 };
 
-const unique = (obj: any) => {
+const unique = (obj: any, compositeIndex: any = false) => {
   const Obj = lodash.cloneDeep(obj);
   Obj.unique = true;
+  if (compositeIndex) {
+    Obj.unique = 'compositeIndex';
+  }
   return Obj;
 };
 
