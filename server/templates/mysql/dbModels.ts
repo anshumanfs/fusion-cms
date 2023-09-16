@@ -23,7 +23,7 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
     }: MySQLSchemaFields = value;
     if (required) {
       schemaPart = `{
-        type: DataTypes.${type},
+        type: DataTypes.${type}
       }`;
     } else {
       schemaPart = `Optional({
@@ -31,7 +31,7 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
       })`;
     }
 
-    if (!['true', true].includes(isNullable)) {
+    if (!isNullable) {
       if (isArray) {
         schemaPart = `ObjArray(${schemaPart})`;
       }
@@ -73,20 +73,20 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
 const relationshipParts = (pluralCollectionName: string, schema: MySQLSchemaInput) => {
   const jsonSchema = lodash.cloneDeep(schema);
   const relationshipRequires = new Set();
-  let requireString = '';
+  let relationshipRequirementString = '';
   let relationshipString = '';
   for (const [key, value] of Object.entries(jsonSchema)) {
     const { ref } = value;
-    const { to, type, options } = ref;
     if (ref) {
+      const { to, type, options } = ref;
       relationshipRequires.add(to);
-      relationshipString += `${pluralCollectionName}Schema.${type}(${to}, ${options});\n`;
+      relationshipString += `${pluralCollectionName}Schema.${type}(${to}Schema, ${JSON.stringify(options)});\n`;
     }
   }
   relationshipRequires.forEach((requirement) => {
-    requireString += `const ${requirement} = require('${requirement}');\n`;
+    relationshipRequirementString += `const ${requirement}Schema = require('${requirement}');\n`;
   });
-  return { requireString, relationshipString };
+  return { relationshipRequirementString, relationshipString };
 };
 
 /**
@@ -103,7 +103,7 @@ const generateMySqlSchema = (
   schema: MySQLSchemaInput
 ) => {
   const schemaString = jsonToSequelizeSchema(schema);
-  const { requireString, relationshipString } = relationshipParts(pluralCollectionName, schema);
+  const { relationshipRequirementString, relationshipString } = relationshipParts(pluralCollectionName, schema);
   const schemaContentToWrite = ` 
     const conn = require('../db.js'); 
     const { DataTypes } = require('sequelize'); 
@@ -119,7 +119,7 @@ const generateMySqlSchema = (
       Types, 
       Optional 
     } = require('../utils/schemaHelper');
-    ${requireString}
+    ${relationshipRequirementString}
  
     const ${pluralCollectionName}Schema = sequelize.define('${pluralCollectionName}', 
         ${schemaString}, 
