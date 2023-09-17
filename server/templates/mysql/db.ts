@@ -6,11 +6,12 @@ const generateDbConFile = (appName: string) => {
           dialect: 'mysql',
           logging: false, 
           dialectOptions: options
-      }); 
+      });
+      const logger = require('../../libs/logger');
       conn.authenticate().then(() => { 
-        console.log('✔ ${appName} :- Database Connected Successfully'); 
+        logger.log('✓ ${appName} :- Database Connected Successfully'); 
       }).catch(err => { 
-        console.error('❌ ${appName} :- Unable to establish Connection', err); 
+        logger.error('✗ ${appName} :- Unable to establish Connection', err); 
       }); 
       module.exports =conn;`;
   return dbConString;

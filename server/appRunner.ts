@@ -47,7 +47,7 @@ const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boole
   await apollo.start();
   app.use(`/graphql/${subfolder}`, cors(), json(), expressMiddleware(apollo));
   app.use(`/rest/${subfolder}`, getSofa({ Schema, Resolver, appName: subfolder }));
-  console.log(`✔ ${subfolder} :- GraphQL running on /graphql/${subfolder}`);
+  logger.info(`✓ ${subfolder} :- GraphQL running on /graphql/${subfolder}`);
   return true;
 };
 
@@ -71,7 +71,7 @@ const appManagerApolloServer = async ({ app }: { app: any }) => {
     })
   );
   app.use(`/rest/appManager`, getSofa({ Schema, Resolver, appName: 'appManager' }));
-  console.log(`✔ appManager :- GraphQL running on /appManager`);
+  logger.info(`✓ appManager :- GraphQL running on /appManager`);
   return true;
 };
 
@@ -85,7 +85,7 @@ const createGraphQlFederation = async (app: any) => {
   });
   await apollo.start();
   app.use(`/graphql`, cors(), json(), expressMiddleware(apollo));
-  console.log(`✔ Federated GraphQL running on /graphql`);
+  logger.info(`✓ Federated GraphQL running on /graphql`);
   return true;
 };
 
@@ -107,7 +107,7 @@ const runAppWithPM2 = ({ appName, script }: { appName: string; script: string })
               if (err) {
                 reject(err);
               } else {
-                console.log(`🔁 Restarted ${appName} on microservices mode`);
+                logger.info(`✓ Restarted ${appName} on microservices mode`);
                 resolve(true);
               }
             });
@@ -116,7 +116,7 @@ const runAppWithPM2 = ({ appName, script }: { appName: string; script: string })
               if (err) {
                 reject(err);
               }
-              console.log(`☑ Started ${appName} on microservices mode`);
+              logger.info(`✓ Started ${appName} on microservices mode`);
               resolve(true);
             });
           }

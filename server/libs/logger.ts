@@ -25,8 +25,11 @@ const logger = {
   debug: (message: string) => {
     log(`${chalk.blue(`[DEBUG]`)} ${message}`);
   },
+  event: (message: string) => {
+    log(`${chalk.hex('#d604b0')(`[EVENT]`)} ${message}`);
+  },
   log: (message: string) => {
-    log(`${chalk.white(`[LOG]`)} ${message}`);
+    log(`${message}`);
   },
   success: (message: string) => {
     log(`${chalk.green(`[SUCCESS]`)} ${message}`);

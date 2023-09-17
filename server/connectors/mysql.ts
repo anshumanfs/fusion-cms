@@ -25,7 +25,7 @@ function connector(appName: string, config: MySQLConnectionOptions) {
       logging: false,
     });
     conn.addHook('afterConnect', (connection: any) => {
-      logger.info(`✓ ${appName} MySQL connected`);
+      logger.log(`✓ ${appName} MySQL connected`);
     });
     return conn;
   } catch (error) {

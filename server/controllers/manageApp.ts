@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { dbModels } from '../db';
+import logger from '../libs/logger';
 
 const changeRunningStatus = async (req: Request, res: Response) => {
   try {
@@ -14,7 +15,7 @@ const changeRunningStatus = async (req: Request, res: Response) => {
         const running = status === 'true' ? true : false;
         await dbModels.apps.findOneAndUpdate({ appName }, { running });
         res.send({ message: 'Restarting the app.. Please wait ...' });
-        console.log('Restarting Application Please wait....');
+        logger.warn('Restarting Application Please wait....');
       }
     }
   } catch (error) {
@@ -27,7 +28,7 @@ const buildAppsFromDB = async () => {
   try {
     const APP_ENV = ('NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development').toLowerCase();
     const QUERY_ENV = APP_ENV === 'development' ? 'development' : APP_ENV;
-    console.log('✔ Started Generating Apps From Data');
+    logger.event('✓ Started Generating Apps From Data');
     const templates = {
       mongo: require('../templates/mongo'),
       mysql: require('../templates/mysql'),
@@ -53,10 +54,10 @@ const buildAppsFromDB = async () => {
         console.log(e.reason);
       }
     });
-    console.log('✔ Finished Generating Apps From Data');
+    logger.success('✓ Finished Generating Apps From Data');
     return;
   } catch (error) {
-    throw new Error(`Failed to generate apps, error: ${error}`);
+    throw new Error(`✗ Failed to generate apps, error: ${error}`);
   }
 };
 
