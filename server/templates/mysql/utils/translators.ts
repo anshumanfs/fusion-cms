@@ -140,11 +140,6 @@ const translateQueryToSequelize = (jsonQuery: any, connection: any) => {
   if (group) {
     finalQuery.group = group;
   }
-  finalQuery.include = {
-    all: true,
-    nested: true,
-  };
-  finalQuery.raw = true;
   return finalQuery;
 };
 
