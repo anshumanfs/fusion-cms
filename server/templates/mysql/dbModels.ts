@@ -70,7 +70,8 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
   return dbSchemaString;
 };
 
-const relationshipParts = (pluralCollectionName: string, schema: MySQLSchemaInput) => {
+const relationshipParts = (pluralCollectionName: string, schema: MySQLSchemaInput, appName: string) => {
+  const appJSON = require('../../apps/' + appName + '/app.json');
   const jsonSchema = lodash.cloneDeep(schema);
   const relationshipRequires = new Set();
   let relationshipRequirementString = '';
@@ -79,12 +80,15 @@ const relationshipParts = (pluralCollectionName: string, schema: MySQLSchemaInpu
     const { ref } = value;
     if (ref) {
       const { to, type, options } = ref;
-      relationshipRequires.add(to);
-      relationshipString += `${pluralCollectionName}Schema.${type}(${to}Schema, ${JSON.stringify(options)});\n`;
+      const record = appJSON.collections.find((e: any) => e.originalCollectionName === to);
+      relationshipRequires.add(record.pluralCollectionName);
+      relationshipString += `${pluralCollectionName}Schema.${type}(${
+        record.pluralCollectionName
+      }Schema, ${JSON.stringify(options)});\n`;
     }
   }
   relationshipRequires.forEach((requirement) => {
-    relationshipRequirementString += `const ${requirement}Schema = require('${requirement}');\n`;
+    relationshipRequirementString += `const ${requirement}Schema = require('./${requirement}.js');\n`;
   });
   return { relationshipRequirementString, relationshipString };
 };
@@ -100,10 +104,15 @@ const relationshipParts = (pluralCollectionName: string, schema: MySQLSchemaInpu
 const generateMySqlSchema = (
   originalCollectionName: string,
   pluralCollectionName: string,
-  schema: MySQLSchemaInput
+  schema: MySQLSchemaInput,
+  appName: string
 ) => {
   const schemaString = jsonToSequelizeSchema(schema);
-  const { relationshipRequirementString, relationshipString } = relationshipParts(pluralCollectionName, schema);
+  const { relationshipRequirementString, relationshipString } = relationshipParts(
+    pluralCollectionName,
+    schema,
+    appName
+  );
   const schemaContentToWrite = ` 
     const conn = require('../db.js'); 
     const { DataTypes } = require('sequelize'); 

@@ -12,10 +12,10 @@ const generateDbFile = (appName: string) => {
     const conn = mongoose.createConnection( uri, options);
     const logger = require('../../libs/logger');
     conn.on('connected', () => {
-        logger.log('✓ ${appName} :- MongoDB connected');
+        logger.default.log('✓ ${appName} :- MongoDB connected');
     });
     conn.on('error', (err) => {
-        logger.error('✗ ${appName} :- MongoDB connection error: \${err}\');
+        logger.default.error('✗ ${appName} :- MongoDB connection error: \${err}\');
     })
     module.exports = conn;
     `;

@@ -9,9 +9,9 @@ const generateDbConFile = (appName: string) => {
       });
       const logger = require('../../libs/logger');
       conn.authenticate().then(() => { 
-        logger.log('✓ ${appName} :- Database Connected Successfully'); 
+        logger.default.log('✓ ${appName} :- Database Connected Successfully'); 
       }).catch(err => { 
-        logger.error('✗ ${appName} :- Unable to establish Connection', err); 
+        logger.default.error('✗ ${appName} :- Unable to establish Connection', err); 
       }); 
       module.exports =conn;`;
   return dbConString;

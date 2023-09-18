@@ -38,7 +38,7 @@ const buildAppsFromDB = async () => {
     const allApps = await dbModels.apps.find({ appName: { $in: appsRelatedToCurrentEnv } });
     const buildApp = async ({ appName, dbType }: { appName: string; dbType: string }) => {
       const appSchemas = await dbModels.dbSchemas.find({ appName });
-      return await Promise.allSettled(
+      return await Promise.all(
         appSchemas.map((e: any) => templates[dbType as keyof typeof templates].createDbModels(e))
       );
     };
@@ -48,7 +48,7 @@ const buildAppsFromDB = async () => {
         promiseArr.push(buildApp({ appName, dbType }));
       }
     });
-    const appBuiltResult = await Promise.allSettled(promiseArr);
+    const appBuiltResult = await Promise.all(promiseArr);
     appBuiltResult.forEach((e: any) => {
       if (e.status === 'rejected') {
         console.log(e.reason);

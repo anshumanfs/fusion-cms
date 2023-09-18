@@ -56,8 +56,9 @@ const jsonToQueryType = (json: any, singularCollectionName: string, appName: str
       ).singularCollectionName;
       if (object[field].isArray) {
         object[field].type = `[${refGraphQLType}]`;
+      } else {
+        object[field].type = `${refGraphQLType}`;
       }
-      object[field].type = `${refGraphQLType}`;
     }
     object[field].type = replaceAllParenthesis(object[field].type, '');
     return `${field}: ${object[field].type}`;

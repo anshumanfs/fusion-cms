@@ -140,7 +140,30 @@ const translateQueryToSequelize = (jsonQuery: any, connection: any) => {
   if (group) {
     finalQuery.group = group;
   }
+  finalQuery.include = {
+    all: true,
+    nested: true,
+  };
+  finalQuery.raw = true;
   return finalQuery;
+};
+
+const translateResponseAfterEagerLoading = (response: any, pluralCollectionName: string) => {
+  const appJSON = require('../app.json');
+  const keysMap: any = {};
+  const schema = appJSON.collections.find(
+    (collection: any) => collection.pluralCollectionName === pluralCollectionName
+  ).schema;
+  for (const key in schema) {
+    if (schema[key].hasOwnProperty('ref')) {
+      keysMap[key] = schema[key].ref.options.as;
+    }
+  }
+  if (lodash.isArray(response)) {
+  }
+
+  if (lodash.isPlainObject(response)) {
+  }
 };
 
 export {

@@ -60,6 +60,7 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
           const query = translateQueryToSequelize({ where, attributes, order, group, limit, offset },${pluralCollectionName});
           let result = await ${pluralCollectionName}.findAll(query);       
           const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
+          console.log(postMiddlewareResult);
           return postMiddlewareResult;
         }, 
         count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 

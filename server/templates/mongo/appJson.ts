@@ -6,7 +6,7 @@ const generateAppJsonFile = async (appName: string) => {
   const env = APP_ENV;
   const { credentials } = await dbModels.dbCredentials.findOne({ appName, env }, { _id: 0, appName: 0, env: 0 });
   const collections = await dbModels.dbSchemas.find({ appName }, { _id: 0, appName: 0 });
-  return { dbCredentials: credentials, collections };
+  return { dbCredentials: credentials, collections, appName };
 };
 
 export { generateAppJsonFile };

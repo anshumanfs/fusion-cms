@@ -71,11 +71,11 @@ const createDbModels = async (options: DbModelsInput) => {
   fs.ensureFileSync(appJson);
   fs.writeJsonSync(appJson, await generateAppJsonFile(appName), { spaces: '\t' });
 
-  // for mongoose schema
+  // for sequelize schema
   fs.ensureFileSync(`${dbModelsDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
     `${dbModelsDir}/${pluralCollectionName}.js`,
-    beautify(generateMySqlSchema(originalCollectionName, pluralCollectionName, schema), beautifyOption)
+    beautify(generateMySqlSchema(originalCollectionName, pluralCollectionName, schema, appName), beautifyOption)
   );
 
   // disabled app specific REST endpoints for time unless its required
@@ -91,7 +91,7 @@ const createDbModels = async (options: DbModelsInput) => {
   fs.ensureFileSync(`${graphQlSchemaDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
     `${graphQlSchemaDir}/${pluralCollectionName}.js`,
-    beautify(generateGqlSchema(schema, singularCollectionName, pluralCollectionName), beautifyOption)
+    beautify(generateGqlSchema(schema, singularCollectionName, pluralCollectionName, appName), beautifyOption)
   );
 
   //create index Schema
