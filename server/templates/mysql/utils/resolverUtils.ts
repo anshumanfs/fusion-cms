@@ -1,3 +1,5 @@
+import lodash from 'lodash';
+
 /**
  * Maps a GraphQL field to the corresponding SQL string and attributes.
  *
@@ -12,21 +14,31 @@ const mapGqlFieldToSql = (info: any) => {
   };
 };
 
-const getEagerLoadingOptions = (info: any) => {
+const getEagerLoadingOptions = (info: any, pluralCollectionName: string) => {
+  const appJSON = require('../app.json');
+  const { collections } = appJSON;
   function populateOptionsHelper(fieldsArr: any) {
-    const populateOptions: any = [];
+    const includeOptions: any = [];
     fieldsArr.forEach((e: any) => {
       if (e.selectionSet) {
-        let populateObj: any = {};
-        populateObj.path = e.name.value;
-        populateObj.populate = populateOptionsHelper(e.selectionSet.selections);
-        populateOptions.push(populateObj);
+        const { schema } = collections.find(
+          (collection: any) => collection.pluralCollectionName === pluralCollectionName
+        );
+        let includeObj: any = {};
+        // finding object that is being referenced
+        const referenceObj = collections.find(
+          (collection: any) => schema[e.name.value].ref.to === collection.originalCollectionName
+        );
+        // add require statement for dbModels
+        includeObj.model = require(`../dbModels/${referenceObj.pluralCollectionName}.js`);
+        includeObj.include = populateOptionsHelper(e.selectionSet.selections);
+        includeOptions.push(includeObj);
       }
     });
-    return populateOptions;
+    return includeOptions;
   }
   const result = populateOptionsHelper(info.fieldNodes[0].selectionSet.selections);
   return result;
 };
 
-module.exports = { mapGqlFieldToSql };
+module.exports = { mapGqlFieldToSql, getEagerLoadingOptions };

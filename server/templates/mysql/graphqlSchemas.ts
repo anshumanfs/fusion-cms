@@ -1,5 +1,10 @@
 import { jsonToQueryType, jsonToCreateType, jsonToUpdateType } from './utils/jsonToGraphQL';
 
+/**
+ * Generates the index schema content for the GraphQL server.
+ *
+ * @return {string} The index schema content.
+ */
 const createIndexSchema = () => {
   const indexSchemaContent = `  
       const fs = require('fs-extra'); 
@@ -26,6 +31,15 @@ const createIndexSchema = () => {
   return indexSchemaContent;
 };
 
+/**
+ * Generates a GraphQL schema string based on the provided JSON schema and collection names.
+ *
+ * @param {MySQLSchemaInput} jsonSchema - The JSON schema representing the MySQL schema.
+ * @param {string} singularCollectionName - The singular name of the collection.
+ * @param {string} pluralCollectionName - The plural name of the collection.
+ * @param {string} appName - The name of the application.
+ * @return {string} The generated GraphQL schema string.
+ */
 const generateGqlSchema = (
   jsonSchema: MySQLSchemaInput,
   singularCollectionName: string,

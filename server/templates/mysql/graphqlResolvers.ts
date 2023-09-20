@@ -47,8 +47,8 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
   const resolverFileContent = `
     const ${pluralCollectionName} = require('../dbModels/${pluralCollectionName}.js'); 
     const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
-    const { mapGqlFieldToSql } = require('../utils/resolverUtils');
-    const { translateQueryToSequelize, translateWhereToSequelize } = require('../utils/translators');
+    const { mapGqlFieldToSql, getEagerLoadingOptions } = require('../utils/resolverUtils');
+    const { translateQueryToSequelize, translateWhereToSequelize, translateResponseAfterEagerLoading } = require('../utils/translators');
     const Errors = require('../../../libs/errors');
 
     const resolvers = { 
@@ -56,11 +56,12 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
         ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
           const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info); 
           const { attributes } = mapGqlFieldToSql(info);
+          const include = getEagerLoadingOptions(info, '${pluralCollectionName}');
           const { where , order, group, limit, offset } = preMiddlewareResult.args;
-          const query = translateQueryToSequelize({ where, attributes, order, group, limit, offset },${pluralCollectionName});
-          let result = await ${pluralCollectionName}.findAll(query);       
+          const query = translateQueryToSequelize({ where, attributes, order, group, limit, offset, include },${pluralCollectionName});
+          let result = await ${pluralCollectionName}.findAll(query);      
+          result = translateResponseAfterEagerLoading(result, '${pluralCollectionName}'); 
           const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
-          console.log(postMiddlewareResult);
           return postMiddlewareResult;
         }, 
         count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 

@@ -28,7 +28,6 @@ declare global {
     onDelete?: 'CASCADE' | 'SET NULL' | 'SET DEFAULT' | 'NO ACTION' | 'RESTRICT';
     onUpdate?: 'CASCADE' | 'SET NULL' | 'SET DEFAULT' | 'NO ACTION' | 'RESTRICT';
     foreignKey: string | foreignKeyOptions;
-    as: string;
   }
 
   interface foreignKeyOptions {
@@ -41,14 +40,12 @@ declare global {
     onDelete?: 'CASCADE' | 'SET NULL' | 'SET DEFAULT' | 'NO ACTION' | 'RESTRICT';
     onUpdate?: 'CASCADE' | 'SET NULL' | 'SET DEFAULT' | 'NO ACTION' | 'RESTRICT';
     foreignKey: string | foreignKeyOptions;
-    as: string;
   }
 
   interface hasManyType {
     onDelete?: 'CASCADE' | 'SET NULL' | 'SET DEFAULT' | 'NO ACTION' | 'RESTRICT';
     onUpdate?: 'CASCADE' | 'SET NULL' | 'SET DEFAULT' | 'NO ACTION' | 'RESTRICT';
     foreignKey: string | foreignKeyOptions;
-    as: string;
   }
 
   interface belongsToManyType {
@@ -56,7 +53,6 @@ declare global {
     onUpdate?: 'CASCADE' | 'SET NULL' | 'SET DEFAULT' | 'NO ACTION' | 'RESTRICT';
     foreignKey: string | foreignKeyOptions;
     throughKey: string;
-    as: string;
   }
 }
 

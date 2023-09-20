@@ -58,7 +58,7 @@
 //     timestamps: false
 //     });module.exports=usersSchema;`.replace(/[\n\s]/g, '');
 
-//     expect(generateMySqlSchema('user', 'users', jsonSchema1,).replace(/[\n\s]/g, '')).toEqual(expctedOutput1);
+//     expect(generateMySqlSchema('user', 'users', jsonSchema1, 'cmsTest').replace(/[\n\s]/g, '')).toEqual(expctedOutput1);
 //   });
 //   test('2. Testing composite index', () => {
 //     // test 2
@@ -125,7 +125,7 @@
 //         timestamps: false
 //         });module.exports=usersSchema;`.replace(/[\n\s]/g, '');
 
-//     expect(generateMySqlSchema('user', 'users', jsonSchema2).replace(/[\n\s]/g, '')).toEqual(expctedOutput2);
+//     expect(generateMySqlSchema('user', 'users', jsonSchema2, 'cmsTest').replace(/[\n\s]/g, '')).toEqual(expctedOutput2);
 //   });
 //   test('3. Testing Relations', () => {
 //     const jsonSchema: MySQLSchemaInput = {
@@ -183,7 +183,7 @@
 //             Types,
 //             Optional
 //           } = require('../utils/schemaHelper');
-//           const coursesSchema = require('courses');
+//           const coursesSchema = require('./courses.js');
 //           const usersSchema = sequelize.define('users', {
 //             userId: unique({
 //                 type: DataTypes.INTEGER
@@ -215,6 +215,6 @@
 //           });
 //           module.exports=usersSchema;`.replace(/[\n\s]/g, '');
 
-//     expect(generateMySqlSchema('user', 'users', jsonSchema).replace(/[\n\s]/g, '')).toEqual(expctedOutput);
+//     expect(generateMySqlSchema('user', 'users', jsonSchema, 'cmsTest').replace(/[\n\s]/g, '')).toEqual(expctedOutput);
 //   });
 // });

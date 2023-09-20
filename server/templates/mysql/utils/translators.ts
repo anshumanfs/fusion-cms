@@ -118,6 +118,7 @@ const translateQueryToSequelize = (jsonQuery: any, connection: any) => {
   const Query = lodash.cloneDeep(jsonQuery);
   const where = Query.where || {};
   const attributes = Query.attributes || undefined;
+  const include = Query.include || undefined;
   const order = Query.order || undefined;
   const group = Query.group || undefined; // default group to empty string
   const limit = Query.limit || 20; // default limit to 20
@@ -140,25 +141,50 @@ const translateQueryToSequelize = (jsonQuery: any, connection: any) => {
   if (group) {
     finalQuery.group = group;
   }
+  if (include) {
+    finalQuery.include = include;
+  }
+  finalQuery.raw = true;
   return finalQuery;
 };
 
 const translateResponseAfterEagerLoading = (response: any, pluralCollectionName: string) => {
+  response = lodash.cloneDeep(response);
   const appJSON = require('../app.json');
   const keysMap: any = {};
-  const schema = appJSON.collections.find(
+  const { schema } = appJSON.collections.find(
     (collection: any) => collection.pluralCollectionName === pluralCollectionName
-  ).schema;
+  );
   for (const key in schema) {
     if (schema[key].hasOwnProperty('ref')) {
-      keysMap[key] = schema[key].ref.options.as;
+      keysMap[key] = schema[key].ref.to;
     }
   }
   if (lodash.isArray(response)) {
+    response.forEach((_, index) => {
+      if (lodash.isPlainObject(response[index])) {
+        response[index] = translateResponseAfterEagerLoading(response[index], pluralCollectionName);
+      }
+    });
+    return response;
   }
 
   if (lodash.isPlainObject(response)) {
+    for (const [key, value] of Object.entries(keysMap)) {
+      const populateObj: any = {};
+      if (lodash.isString(value)) {
+        for (const [k, v] of Object.entries(response)) {
+          if (k.startsWith(value)) {
+            let keyName = k.split('.')[1];
+            populateObj[keyName] = v;
+            delete response[k];
+          }
+        }
+      }
+      response[key] = populateObj;
+    }
   }
+  return response;
 };
 
 export {
@@ -166,4 +192,5 @@ export {
   translateAttributesToSequelize,
   translateOrderToSequelize,
   translateQueryToSequelize,
+  translateResponseAfterEagerLoading,
 };
