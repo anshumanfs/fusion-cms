@@ -152,6 +152,13 @@ const Types = Object.freeze({
     allowNull: false,
     type: DataTypes.DOUBLE,
   }),
+  EMAIL: () => ({
+    allowNull: false,
+    type: DataTypes.STRING,
+    validate: {
+      isEmail: true,
+    },
+  }),
   ENUM: () => ({
     allowNull: false,
     type: DataTypes.ENUM,

@@ -17,8 +17,8 @@ const model: any = conn.define(
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
     userName: Types.STRING(),
-    useSSO: Types.BOOLEAN(),
-    contactPerson: Types.STRING(),
+    email: Types.EMAIL(),
+    password: Types.STRING(),
     apiKey: Types.STRING(),
   },
   {

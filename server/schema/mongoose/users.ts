@@ -7,8 +7,8 @@ const QuerySchema: any = new Schema(
   {
     _id: Types.ObjectId(),
     userName: Types.String(),
-    useSSO: Types.Boolean(),
-    contactPerson: Types.String(),
+    email: Types.Email(),
+    password: Types.String(),
     apiKey: Types.String(),
   },
   {
