@@ -43,9 +43,9 @@ const generateGraphqlSchema = (
   jsonSchema: MongoSchemaInput,
   singularCollectionName: string,
   pluralCollectionName: string,
-  appName: string
+  appJson: any
 ) => {
-  const queryType = jsonToQueryType(jsonSchema, singularCollectionName, appName);
+  const queryType = jsonToQueryType(jsonSchema, singularCollectionName, appJson);
   const createType = jsonToCreateType(jsonSchema, singularCollectionName);
   const updateType = jsonToUpdateType(jsonSchema, singularCollectionName);
 

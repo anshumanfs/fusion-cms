@@ -32,8 +32,7 @@ const mongoToGraphQLMapper: any = {
  * @param {string} name - The name of the query type.
  * @return {string} The GraphQL query type.
  */
-const jsonToQueryType = (json: any, singularCollectionName: string, appName: string) => {
-  const appJSON = require('../../../apps/' + appName + '/app.json');
+const jsonToQueryType = (json: any, singularCollectionName: string, appJson: any) => {
   let object: any;
   if (typeof json === 'string') {
     object = JSON.parse(json);
@@ -43,7 +42,7 @@ const jsonToQueryType = (json: any, singularCollectionName: string, appName: str
   let subQueryString = ``;
   const queryFields = Object.keys(object).map((field) => {
     if (lodash.isPlainObject(object[field].type)) {
-      subQueryString += jsonToQueryType(object[field].type, field, appName);
+      subQueryString += jsonToQueryType(object[field].type, field, appJson.appName);
       object[field].type = `${field}`;
     }
     object[field].type = mongoToGraphQLMapper[object[field].type];
@@ -51,7 +50,7 @@ const jsonToQueryType = (json: any, singularCollectionName: string, appName: str
       object[field].type = `[${object[field].type}]`;
     }
     if (object[field].hasOwnProperty('ref') && lodash.isString(object[field].ref)) {
-      let refGraphQLType = appJSON.collections.find(
+      let refGraphQLType = appJson.collections.find(
         (e: any) => e.originalCollectionName === object[field].ref
       ).singularCollectionName;
       if (object[field].isArray) {

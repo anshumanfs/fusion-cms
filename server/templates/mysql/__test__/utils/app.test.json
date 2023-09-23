@@ -1,0 +1,113 @@
+{
+  "dbCredentials": {
+    "database": "cms_test_db",
+    "username": "root",
+    "password": "",
+    "options": {
+      "host": "localhost",
+      "port": 3306
+    }
+  },
+  "collections": [
+    {
+      "schema": {
+        "CUST_ID": {
+          "type": "INTEGER",
+          "isPrimaryKey": true,
+          "autoIncrement": true
+        },
+        "ADDRESS": {
+          "type": "STRING(30)",
+          "isNullable": true
+        },
+        "CITY": {
+          "type": "STRING(20)",
+          "isNullable": true
+        },
+        "CUST_TYPE_CD": {
+          "type": "STRING(1)",
+          "required": true
+        },
+        "FED_ID": {
+          "type": "STRING(12)",
+          "required": true
+        },
+        "POSTAL_CODE": {
+          "type": "STRING(10)",
+          "isNullable": true
+        },
+        "STATE": {
+          "type": "STRING(20)",
+          "isNullable": true
+        }
+      },
+      "singularCollectionName": "customer",
+      "originalCollectionName": "customer",
+      "pluralCollectionName": "customers",
+      "createdAt": "2023-08-16T07:15:42.000Z",
+      "updatedAt": "2023-09-23T14:03:09.000Z"
+    },
+    {
+      "schema": {
+        "ACCOUNT_ID": {
+          "type": "INTEGER",
+          "isPrimaryKey": true,
+          "autoIncrement": true
+        },
+        "AVAIL_BALANCE": {
+          "type": "FLOAT",
+          "isNullable": true
+        },
+        "CLOSE_DATE": {
+          "type": "DATE",
+          "isNullable": true
+        },
+        "LAST_ACTIVITY_DATE": {
+          "type": "DATE",
+          "isNullable": true
+        },
+        "OPEN_DATE": {
+          "type": "DATE"
+        },
+        "PENDING_BALANCE": {
+          "type": "FLOAT",
+          "isNullable": true
+        },
+        "STATUS": {
+          "type": "STRING(10)",
+          "isNullable": true
+        },
+        "CUST_ID": {
+          "type": "INTEGER",
+          "isIndex": true,
+          "isNullable": true,
+          "ref": {
+            "to": "customer",
+            "type": "hasOne",
+            "options": {
+              "foreignKey": "CUST_ID"
+            }
+          }
+        },
+        "OPEN_BRANCH_ID": {
+          "type": "INTEGER",
+          "isIndex": true
+        },
+        "OPEN_EMP_ID": {
+          "type": "INTEGER",
+          "isIndex": true
+        },
+        "PRODUCT_CD": {
+          "type": "STRING(10)",
+          "isIndex": true
+        }
+      },
+      "singularCollectionName": "account",
+      "originalCollectionName": "account",
+      "pluralCollectionName": "accounts",
+      "createdAt": "2023-09-17T07:48:38.000Z",
+      "updatedAt": "2023-09-23T14:03:09.000Z"
+    }
+  ],
+  "appName": "cmsTest"
+}

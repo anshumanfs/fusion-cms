@@ -12,8 +12,7 @@ const replaceAllParenthesis = (text: string, replacement: string) => {
  * @param {string} name - The name of the query type.
  * @return {string} The GraphQL query type.
  */
-const jsonToQueryType = (json: any, name: string, appName: string) => {
-  const appJSON = require('../../../apps/' + appName + '/app.json');
+const jsonToQueryType = (json: any, name: string, appJson: any) => {
   let object: any;
   if (typeof json === 'string') {
     object = JSON.parse(json);
@@ -23,14 +22,14 @@ const jsonToQueryType = (json: any, name: string, appName: string) => {
   let subQueryString = ``;
   const queryFields = Object.keys(object).map((field) => {
     if (lodash.isPlainObject(object[field].type)) {
-      subQueryString += jsonToQueryType(object[field].type, field, appName);
+      subQueryString += jsonToQueryType(object[field].type, field, appJson.appName);
       object[field].type = `${field}`;
     }
     if (object[field].isArray) {
       object[field].type = `[${object[field].type}]`;
     }
     if (object[field].hasOwnProperty('ref') && lodash.isPlainObject(object[field].ref)) {
-      let refGraphQLType = appJSON.collections.find(
+      let refGraphQLType = appJson.collections.find(
         (e: any) => e.originalCollectionName === object[field].ref.to
       ).singularCollectionName;
       if (object[field].isArray) {

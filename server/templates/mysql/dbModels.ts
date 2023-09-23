@@ -70,8 +70,7 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
   return dbSchemaString;
 };
 
-const relationshipParts = (pluralCollectionName: string, schema: MySQLSchemaInput, appName: string) => {
-  const appJSON = require('../../apps/' + appName + '/app.json');
+const relationshipParts = (pluralCollectionName: string, schema: MySQLSchemaInput, appJSON: any) => {
   const jsonSchema = lodash.cloneDeep(schema);
   const relationshipRequires = new Set();
   let relationshipRequirementString = '';
@@ -105,13 +104,13 @@ const generateMySqlSchema = (
   originalCollectionName: string,
   pluralCollectionName: string,
   schema: MySQLSchemaInput,
-  appName: string
+  appJson: any
 ) => {
   const schemaString = jsonToSequelizeSchema(schema);
   const { relationshipRequirementString, relationshipString } = relationshipParts(
     pluralCollectionName,
     schema,
-    appName
+    appJson
   );
   const schemaContentToWrite = ` 
     const conn = require('../db.js'); 

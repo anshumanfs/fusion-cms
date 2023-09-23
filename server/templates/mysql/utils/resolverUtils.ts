@@ -1,5 +1,3 @@
-import lodash from 'lodash';
-
 /**
  * Maps a GraphQL field to the corresponding SQL string and attributes.
  *
@@ -14,6 +12,13 @@ const mapGqlFieldToSql = (info: any) => {
   };
 };
 
+/**
+ * Generates the eager loading options for a given GraphQL query.
+ *
+ * @param {any} info - the GraphQL query information
+ * @param {string} pluralCollectionName - the plural name of the collection
+ * @return {any} the eager loading options for the query
+ */
 const getEagerLoadingOptions = (info: any, pluralCollectionName: string) => {
   const appJSON = require('../app.json');
   const { collections } = appJSON;

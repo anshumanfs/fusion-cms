@@ -27,6 +27,7 @@ describe('translate Query To Sequelize', () => {
       order: [['name', 'ASC']],
       group: 'department',
       limit: 10,
+      raw: true,
     };
     expect(translateQueryToSequelize(jsonQuery1, connection1)).toEqual(expectedQuery1);
 
@@ -47,6 +48,7 @@ describe('translate Query To Sequelize', () => {
       order: [['createdAt', 'DESC']],
       limit: 5,
       offset: 10,
+      raw: true,
     };
     expect(translateQueryToSequelize(jsonQuery2, connection2)).toEqual(expectedQuery2);
 
@@ -70,6 +72,7 @@ describe('translate Query To Sequelize', () => {
     const output5 = {
       where: Sequelize.where(Sequelize.fn('char_length', Sequelize.col('content')), 7),
       limit: 20,
+      raw: true,
     };
     expect(translateQueryToSequelize(input5, connection5)).toEqual(output5);
   });

@@ -44,7 +44,7 @@ const createApp = async (fields: any, files: any) => {
 const createDbModels = async (options: DbModelsInput) => {
   const { originalCollectionName, singularCollectionName, pluralCollectionName, schema, appName } = options;
   const appDir = path.resolve(__dirname, '../../apps/' + appName);
-  const appJson = appDir + '/app.json';
+  const appJsonFile = appDir + '/app.json';
   const dbModelsDir = path.resolve(__dirname, '../../apps/' + appName + '/dbModels');
   const graphQlSchemaDir = path.resolve(__dirname, '../../apps/' + appName + '/graphQlSchemas');
   const resolverDir = path.resolve(__dirname, '../../apps/' + appName + '/resolvers');
@@ -68,14 +68,15 @@ const createDbModels = async (options: DbModelsInput) => {
   );
 
   // write app json file
-  fs.ensureFileSync(appJson);
-  fs.writeJsonSync(appJson, await generateAppJsonFile(appName), { spaces: '\t' });
+  const appJson = await generateAppJsonFile(appName);
+  fs.ensureFileSync(appJsonFile);
+  fs.writeJsonSync(appJsonFile, appJson, { spaces: '\t' });
 
   // for sequelize schema
   fs.ensureFileSync(`${dbModelsDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
     `${dbModelsDir}/${pluralCollectionName}.js`,
-    beautify(generateMySqlSchema(originalCollectionName, pluralCollectionName, schema, appName), beautifyOption)
+    beautify(generateMySqlSchema(originalCollectionName, pluralCollectionName, schema, appJson), beautifyOption)
   );
 
   // disabled app specific REST endpoints for time unless its required
@@ -91,7 +92,7 @@ const createDbModels = async (options: DbModelsInput) => {
   fs.ensureFileSync(`${graphQlSchemaDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
     `${graphQlSchemaDir}/${pluralCollectionName}.js`,
-    beautify(generateGqlSchema(schema, singularCollectionName, pluralCollectionName, appName), beautifyOption)
+    beautify(generateGqlSchema(schema, singularCollectionName, pluralCollectionName, appJson), beautifyOption)
   );
 
   //create index Schema
