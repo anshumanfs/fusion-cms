@@ -9,5 +9,11 @@
       "password": "",
       "database": "cms_metadata"
     }
+  },
+  "secrets": {
+    "bearerSecret": "secret-token",
+    "refreshTokenSecret": "refresh-token",
+    "apiKeySecret": "api-key-secret",
+    "passwordSecret": "password-secret"
   }
 }
