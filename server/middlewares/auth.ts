@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import CryptoJS from 'crypto-js';
-import Config from '../../config.json';
-import { dbModels } from '../../db';
+import Config from '../config.json';
+import { dbModels } from '../db';
 
 const tokenLogin = async (req: Request, res: Response, next: NextFunction) => {
   const { userName, password } = req.body;
