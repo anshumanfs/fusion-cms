@@ -60,7 +60,7 @@ export function SideBar({ className }: SidebarProps) {
   };
   useEffect(() => {
     detectRoute();
-  }, [pathname]);
+  }, [detectRoute, pathname]);
 
   return (
     <div className={cn('pb-12', className)}>
