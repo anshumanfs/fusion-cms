@@ -6,7 +6,7 @@
       "host": "localhost",
       "port": 3306,
       "username": "root",
-      "password": "",
+      "password": "root",
       "database": "cms_metadata"
     }
   },
@@ -15,5 +15,6 @@
     "refreshTokenSecret": "refresh-token",
     "apiKeySecret": "api-key-secret",
     "passwordSecret": "password-secret"
-  }
+  },
+  "appStatus": {}
 }

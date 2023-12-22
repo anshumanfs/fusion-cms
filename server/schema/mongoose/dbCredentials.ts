@@ -3,7 +3,7 @@ import { conn } from '../../db';
 import { AES, enc } from 'crypto-js';
 import mongooseQueryServices from '../services/mongoose';
 
-const { Optional, Types, addGetter, addSetter } = require('../../templates/mongo/utils/schemaHelper');
+const { Optional, Types } = require('../../templates/mongo/utils/schemaHelper');
 require('dotenv').config();
 const CIPHER_KEY = process.env.CIPHER_KEY;
 

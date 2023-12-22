@@ -43,7 +43,11 @@ if (checkEnv.includes(node_env)) {
   nextApp
     .prepare()
     .then(async () => {
-      await startExpressApp();
+      try {
+        await startExpressApp();
+      } catch (err: any) {
+        logger.error(err);
+      }
       // handles next js endpoints
       app.all('*', (req, res) => {
         return handle(req, res);
