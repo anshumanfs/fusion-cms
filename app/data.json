@@ -1,0 +1,52 @@
+{
+  "page": {
+    "commands": ["npm i", "yarn add", "pnpm add"],
+    "Features": [
+      {
+        "icon": "Webhook",
+        "title": "API",
+        "description": "FusionCMS provides a powerful API that is ready for you to use. You can use the API to query your data, perform mutations, and more."
+      },
+      {
+        "icon": "ShieldCheck",
+        "title": "Secured",
+        "description": "FusionCMS is secured by default. We have implemented a variety of security features to ensure your endpoints are safe from attacks."
+      },
+      {
+        "icon": "Database",
+        "title": "Multi-Database",
+        "description": "FusionCMS supports multiple database drivers. You can use MySQL, PostgreSQL, SQLite, and more. You can even use multiple databases at once."
+      },
+      {
+        "icon": "Settings",
+        "title": "Configurable",
+        "description": "FusionCMS is highly configurable. You can configure your application to your liking. If you need to change something, you can do so with ease using the config file."
+      },
+      {
+        "icon": "Scale",
+        "title": "Scalable",
+        "description": "FusionCMS is built to scale. You can use FusionCMS to build small applications, or large applications. FusionCMS is built to handle it all."
+      },
+      {
+        "icon": "FlaskConical",
+        "title": "Tested",
+        "description": "FusionCMS is tested. We have a variety of tests that ensure FusionCMS is working as expected. We also have a variety of tests that ensure FusionCMS is secure."
+      },
+      {
+        "icon": "Code",
+        "title": "Extensible",
+        "description": "FusionCMS is built to be extensible. You can extend FusionCMS by using middleware, or by using the FusionCMS API. You can even create your own plugins."
+      },
+      {
+        "icon": "MailCheck",
+        "title": "Support",
+        "description": "FusionCMS is backed by a team of developers. If you need help, you can reach out to us on Discord, or you can create a GitHub issue."
+      },
+      {
+        "icon": "FileText",
+        "title": "Documentation",
+        "description": "FusionCMS has extensive documentation. You can find documentation for all of the features that FusionCMS has to offer."
+      }
+    ]
+  }
+}

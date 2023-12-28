@@ -9,7 +9,7 @@ const copyCommand = (command: string) => {
 const CodeBlock = (props: { command: string; children: any }) => {
   return (
     <>
-      <code className="text-sm sm:text-base inline-flex text-left items-center space-x-4 dark:bg-gray-800 bg-slate-100 text-white rounded-lg p-4 pl-6 shadow-md">
+      <code className="text-sm sm:text-base inline-flex text-left items-center space-x-4 dark:bg-gray-800 bg-slate-100 text-white rounded-lg p-1 pl-4 shadow-xl hover:shadow-violet-500/50">
         <span className="flex gap-4">
           <span className="shrink-0 text-green-600">$</span>
           {props.children}
