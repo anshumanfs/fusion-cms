@@ -1,13 +1,13 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ModeToggle } from '@/components/themeToggle';
 import { CodeBlock } from '@/components/ui/codeBlock';
 import Logo from '@/components/ui/logo';
 import data from './data.json';
-import { FacebookIcon, GithubIcon } from 'lucide-react';
-import { InstagramLogoIcon, TwitterLogoIcon } from '@radix-ui/react-icons';
+import { FacebookIcon, GithubIcon, InstagramIcon } from 'lucide-react';
 
 function Feature() {
   const LucidReact = require('lucide-react');
@@ -32,7 +32,7 @@ function Feature() {
 export default function Home() {
   return (
     <>
-      <section id="Page-Header">
+      <section id="Page-Header" className="polka-v2-bg">
         <header className="body-font">
           <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
             <a className="flex title-font font-medium items-center mb-4 md:mb-0">
@@ -98,6 +98,52 @@ export default function Home() {
         <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
           <div className="mx-auto max-w-lg text-center">
             <h2 className="text-3xl font-bold sm:text-4xl">Our Manifesto</h2>
+          </div>
+          <div className="mt-12 mx-auto ml-32 mr-32">
+            <a href="#" className="relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8">
+              <span className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
+
+              <div className="sm:flex sm:justify-between sm:gap-4">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-200 sm:text-xl">
+                    Building a CMS as a software developer
+                  </h3>
+
+                  <p className="mt-1 text-xs font-medium text-gray-600">By Anshuman Nayak</p>
+                </div>
+
+                <div className="hidden sm:block sm:shrink-0">
+                  <Image
+                    src="https://anshumanfs.github.io/images/avatar.jpg"
+                    alt="Anshuman Nayak"
+                    className="h-16 w-16 rounded-lg object-cover shadow-sm"
+                    width={100}
+                    height={100}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <p className="max-w-[40ch] text-sm text-gray-500">
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quibusdam. Lorem ipsum dolor sit amet
+                  consectetur adipisicing elit. Quasi, quibusdam. Lorem ipsum dolor sit amet consectetur adipisicing
+                  elit. Quasi, quibusdam. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quibusdam.
+                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quibusdam.
+                </p>
+              </div>
+
+              <dl className="mt-6 flex gap-4 sm:gap-6">
+                <div className="flex flex-col-reverse">
+                  <dt className="text-sm font-medium text-gray-600">Published</dt>
+                  <dd className="text-xs text-gray-500">31st June, 2021</dd>
+                </div>
+
+                <div className="flex flex-col-reverse">
+                  <dt className="text-sm font-medium text-gray-600">Reading time</dt>
+                  <dd className="text-xs text-gray-500">3 minute</dd>
+                </div>
+              </dl>
+            </a>
           </div>
         </div>
       </section>
@@ -291,7 +337,7 @@ export default function Home() {
                     <a href="/" rel="noreferrer" target="_blank" className="text-gray-700 transition hover:opacity-75">
                       <span className="sr-only">Instagram</span>
 
-                      <InstagramLogoIcon className="h-6 w-6" />
+                      <InstagramIcon className="h-6 w-6" />
                     </a>
                   </li>
 
@@ -306,7 +352,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-8 border-t border-gray-100 pt-8">
+            <div className="mt-8 border-t border-gray-300 pt-8">
               <div className="sm:flex sm:justify-between">
                 <p className="text-xs text-gray-500">
                   &copy; {new Date().getFullYear()}. Fusion CMS. All rights reserved.
