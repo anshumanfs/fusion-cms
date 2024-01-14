@@ -54,21 +54,19 @@ export default function Home() {
         </div>
         <div className="container mx-auto flex px-5 pt-24 items-center justify-center flex-col">
           <div className="mb-4 mt-12 inline-flex flex-col items-center space-x-0 space-y-4 text-center sm:flex-row sm:space-x-4 sm:space-y-0">
-            {data.page.commands.map((command, index) => {
-              return (
-                <>
-                  <CodeBlock command={`${command} fusion-cms`} key={`CodeBlock-Page-${index}`}>
-                    <span className="flex-1">
-                      <span className="dark:text-white text-slate-800">{command}</span>
-                      <span className="dark:text-yellow-500 text-violet-700 ml-2">fusion-cms</span>
-                    </span>
-                  </CodeBlock>
-                  {index !== data.page.commands.length - 1 && (
-                    <span className="bg-slate-800 dark:bg-white  hidden h-5 w-px md:inline-flex"></span>
-                  )}
-                </>
-              );
-            })}
+            {data.page.commands.map((command, index) => (
+              <React.Fragment key={`CodeBlock-Page-${index}`}>
+                <CodeBlock command={`${command} fusion-cms`}>
+                  <span className="flex-1">
+                    <span className="dark:text-white text-slate-800">{command}</span>
+                    <span className="dark:text-yellow-500 text-violet-700 ml-2">fusion-cms</span>
+                  </span>
+                </CodeBlock>
+                {index !== data.page.commands.length - 1 && (
+                  <span className="bg-slate-800 dark:bg-white  hidden h-5 w-px md:inline-flex"></span>
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </section>
@@ -149,7 +147,7 @@ export default function Home() {
       </section>
       <section id="Page-Footer">
         <footer>
-          <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w px-2 py-16 sm:px-6 lg:px-8">
             <div className="lg:flex lg:items-start lg:gap-8">
               <div className="text-teal-600">
                 <Logo width={100} height={100} />
