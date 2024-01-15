@@ -1,0 +1,49 @@
+import config from '../config.json';
+import lodash from 'lodash';
+import { z } from 'zod';
+import { metaDataDbSchema, secretSchema } from '../schema/zod/configJsonSchema';
+
+class Application {
+  isRunning: boolean;
+  version: string;
+  isMetadataDbConfigured: boolean;
+  isMetadataDbConnected: boolean;
+  isSecretsConfigured: boolean;
+
+  public constructor() {
+    this.isRunning = true;
+    this.version = '1.0.0';
+    this.isMetadataDbConfigured = false;
+    this.isMetadataDbConnected = false;
+    this.isSecretsConfigured = false;
+  }
+
+  public checkAppStaus(): void {
+    this.checkIfMetadataDbConfigured();
+    this.checkIfSecretsConfigured();
+  }
+
+  private checkIfMetadataDbConfigured(): void {
+    const configJson = lodash.cloneDeep(config);
+    try {
+      metaDataDbSchema.parse(configJson.metadataDb);
+      this.isMetadataDbConfigured = true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        this.isMetadataDbConfigured = false;
+      }
+    }
+  }
+
+  private checkIfSecretsConfigured(): void {
+    const configJson = lodash.cloneDeep(config);
+    try {
+      secretSchema.parse(configJson.secrets);
+      this.isSecretsConfigured = true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        this.isSecretsConfigured = false;
+      }
+    }
+  }
+}
