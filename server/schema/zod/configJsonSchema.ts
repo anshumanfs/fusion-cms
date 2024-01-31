@@ -28,19 +28,19 @@ const mongooseConfigSchema = z.object({
 });
 
 const sequelizeConfigSchema = z.object({
-  dialect: z.string(),
+  dialect: z.optional(z.string()),
   host: z.string(),
   port: z.number(),
   username: z.string(),
   password: z.string(),
   database: z.string(),
-  logging: z.boolean(),
+  logging: z.optional(z.boolean()),
 });
 
 const metaDataDbSchema = z.object({
   type: z.string(),
   orm: z.string(),
-  config: mongooseConfigSchema || sequelizeConfigSchema,
+  configs: z.union([mongooseConfigSchema, sequelizeConfigSchema]),
 });
 
 const secretSchema = z.object({

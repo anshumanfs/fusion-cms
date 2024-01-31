@@ -1,4 +1,5 @@
 import config from '../config.json';
+import logger from '../libs/logger';
 import lodash from 'lodash';
 import { z } from 'zod';
 import { metaDataDbSchema, secretSchema } from '../schema/zod/configJsonSchema';
@@ -28,7 +29,8 @@ class Application {
     try {
       metaDataDbSchema.parse(configJson.metadataDb);
       this.isMetadataDbConfigured = true;
-    } catch (error) {
+    } catch (error: string | any) {
+      logger.error(error);
       if (error instanceof z.ZodError) {
         this.isMetadataDbConfigured = false;
       }
@@ -47,3 +49,5 @@ class Application {
     }
   }
 }
+
+export default Application;

@@ -3,6 +3,7 @@ import fs from 'fs-extra';
 
 const env = process.env.NODE_ENV || 'development';
 const logFile = '../../.logs/logs.txt';
+fs.ensureFileSync(logFile);
 
 const getTime = () => {
   return new Date().toISOString();
@@ -12,7 +13,6 @@ const log = (message: string) => {
   if (env === 'development') {
     console.log(message);
   } else {
-    fs.ensureFileSync(logFile);
     fs.appendFileSync(logFile, `${getTime()} ${message}\n`);
   }
 };

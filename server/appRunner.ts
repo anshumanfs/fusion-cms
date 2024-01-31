@@ -11,6 +11,7 @@ import { buildAppsFromDB } from './controllers/manageApp';
 import { json } from 'body-parser';
 import cors from 'cors';
 import { customFileParser } from './libs/customFileParser';
+import Application from './controllers/appStatus';
 import cmsConfig from './config.json';
 
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
@@ -146,6 +147,13 @@ const runAsMicroService = async () => {
 };
 
 const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
+  const appStatus = new Application();
+  appStatus.checkAppStaus();
+  if (!appStatus.isMetadataDbConfigured) {
+    logger.error(`✗ Metadata DB is not configured`);
+    process.exit(1);
+  }
+
   return new Promise<void>(async (resolve, reject) => {
     const monolithFunctions = async () => {
       if (work_env === 'development') {
