@@ -9,8 +9,11 @@ const getTime = () => {
   return new Date().toISOString();
 };
 
-const log = (message: string) => {
+const log = (message: string, type: string = 'message') => {
   if (env === 'development') {
+    if (type === 'error') {
+      throw new Error(message);
+    }
     console.log(message);
   } else {
     fs.appendFileSync(logFile, `${getTime()} ${message}\n`);

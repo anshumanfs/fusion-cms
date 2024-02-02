@@ -15,5 +15,8 @@
     "refreshTokenSecret": "refresh-token",
     "apiKeySecret": "api-key-secret",
     "passwordSecret": "password-secret"
+  },
+  "user": {
+    "additionalRoles": ["consumerGold"]
   }
 }

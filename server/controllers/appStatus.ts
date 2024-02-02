@@ -3,6 +3,7 @@ import logger from '../libs/logger';
 import lodash from 'lodash';
 import { z } from 'zod';
 import { metaDataDbSchema, secretSchema } from '../schema/zod/configJsonSchema';
+import { dbModels } from '../db';
 
 class Application {
   isRunning: boolean;
@@ -22,6 +23,15 @@ class Application {
   public checkAppStaus(): void {
     this.checkIfMetadataDbConfigured();
     this.checkIfSecretsConfigured();
+  }
+
+  public async checkIfAdminRegistered() {
+    const { users } = dbModels;
+    const result = await users.find({ role: 'admin' });
+    if (result.length > 0) {
+      return true;
+    }
+    return false;
   }
 
   private checkIfMetadataDbConfigured(): void {

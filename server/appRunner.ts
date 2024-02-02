@@ -150,7 +150,7 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
   const appStatus = new Application();
   appStatus.checkAppStaus();
   if (!appStatus.isMetadataDbConfigured) {
-    logger.error(`✗ Metadata DB is not configured`);
+    logger.error(`✗ DataBase not configured for metadata`);
     process.exit(1);
   }
 
@@ -176,6 +176,10 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
     };
     if (cmsConfig.metadataDb.orm === 'mongoose') {
       conn.on('connected', async () => {
+        const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
+        if (!checkIfAdminRegistered) {
+          logger.error(`✗ Admin user not registered`);
+        }
         await monolithFunctions();
         resolve();
       });
@@ -187,6 +191,10 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
     if (cmsConfig.metadataDb.orm === 'sequelize') {
       try {
         await conn.sync();
+        const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
+        if (!checkIfAdminRegistered) {
+          logger.error(`✗ Admin user not registered`);
+        }
         await monolithFunctions();
         resolve();
       } catch (error) {
