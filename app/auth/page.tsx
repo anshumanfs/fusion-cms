@@ -18,7 +18,7 @@ export default function Login() {
       </div>
       <Card className="w-[480px] m-auto ">
         <CardHeader>
-          <CardTitle>Create User</CardTitle>
+          <CardTitle>Register Admin</CardTitle>
           <CardDescription>Start by creating the admin user for your project</CardDescription>
         </CardHeader>
         <CardContent>

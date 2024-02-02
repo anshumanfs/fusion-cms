@@ -15,6 +15,7 @@ import Application from './controllers/appStatus';
 import cmsConfig from './config.json';
 
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
+const ROOT = 'ROOT' in process.env ? process?.env?.ROOT?.trim() : '';
 const checkEnv = ['production', 'performance'];
 
 const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; appName: string }) => {
@@ -178,9 +179,10 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
       conn.on('connected', async () => {
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
-          logger.error(`✗ Admin user not registered`);
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth/`);
+        } else {
+          await monolithFunctions();
         }
-        await monolithFunctions();
         resolve();
       });
       conn.on('disconnected', async () => {
@@ -193,9 +195,10 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
         await conn.sync();
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
-          logger.error(`✗ Admin user not registered`);
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth`);
+        } else {
+          await monolithFunctions();
         }
-        await monolithFunctions();
         resolve();
       } catch (error) {
         reject(`✗ Metadata DB could not be connected due to : ${error}`);
