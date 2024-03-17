@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import Logo from '@/components/ui/logo';
-export default function Login() {
+export default function Register() {
   return (
     <div className="flex h-screen">
       <div className="m-auto">

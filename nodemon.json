@@ -1,5 +1,8 @@
 {
-  "watch": ["server", ".env"],
+  "watch": [
+    "server",
+    ".env"
+  ],
   "ext": "ts, js",
-  "exec": "tsc --project tsconfig.server.json && node ./.build/app.js"
+  "exec": "tsc --project tsconfig.server.json && node ./.build/server/app.js"
 }

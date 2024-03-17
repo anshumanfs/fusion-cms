@@ -154,6 +154,10 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
     logger.error(`✗ DataBase not configured for metadata`);
     process.exit(1);
   }
+  if (!appStatus.isSecretsConfigured) {
+    logger.error(`✗ Secrets not configured`);
+    process.exit(1);
+  }
 
   return new Promise<void>(async (resolve, reject) => {
     const monolithFunctions = async () => {
