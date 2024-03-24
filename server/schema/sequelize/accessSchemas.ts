@@ -27,7 +27,6 @@ const model: any = conn.define(
   {
     tableName: 'cms_accessSchemas',
     timestamps: true,
-    alter: true,
   }
 );
 const services = sequelizeQueryServices(model);

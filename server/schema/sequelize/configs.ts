@@ -22,7 +22,6 @@ const model: any = conn.define(
   {
     tableName: 'cms_configs',
     timestamps: true,
-    alter: true,
   }
 );
 const services = sequelizeQueryServices(model);

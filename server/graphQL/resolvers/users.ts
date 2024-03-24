@@ -1,23 +1,27 @@
 import { dbModels } from '../../db';
+import sendMail from '../../libs/mailer';
+import Errors from '../../libs/errors';
+import ChangePasswordTemplate from '../../libs/emailTemplates/changePassword.template';
+import Config from '../../config.json';
+import { oneWayEncoder, twoWayEncoder, twoWayDecoder } from '../../libs/encoderDecoder';
 
 const registerUser = async (_: any, args: any) => {
-  const { email, password } = args;
-  const user = await dbModels.users.findOne({ email });
+  const { email, firstName, lastName, password } = args;
+  const [user, userCount] = [await dbModels.users.findOne({ email }), await dbModels.users.countDocuments({})];
   if (user) {
-    throw new Error('User already exists');
+    throw Errors.BAD_REQUEST('User already exists !');
   }
-  const newUser = await dbModels.users.create({ email, password });
-  return newUser;
-};
-
-const registerAdmin = async (_: any, args: any) => {
-  const { firstName, lastName, email, password } = args;
-  const admin = await dbModels.users.findOne({ email, role: 'admin' });
-  if (admin) {
-    throw new Error('Admin already exists !');
+  const userData: any = {
+    email,
+    firstName,
+    lastName,
+    password: oneWayEncoder(password),
+  };
+  if (userCount === 0) {
+    userData.role = 'admin'; // First user will be admin by default
   }
-  const newAdmin = await dbModels.users.create({ email, firstName, lastName, password, role: 'admin' });
-  return newAdmin;
+  const result = await dbModels.users.create(userData);
+  return result;
 };
 
 const login = async (_: any, args: any) => {
@@ -41,13 +45,70 @@ const modifyUser = async (_: any, args: any) => {
   return updatedUser;
 };
 
-const changePassword = async (_: any, args: any) => {
-  /**
-   * Password can be changed in two ways
-   * 1. By the user itself (if the user knows the current password)
-   * 2. By the user (if the user forgets the password and requests for a new password using email otp)
-   * 3. By the admin (by sending user a unique password change email)
-   */
+/**
+ * Password can be changed in three ways
+ * 1. By the user itself (if the user knows the current password)
+ * 2. By the user (if the user forgets the password and requests for a new password using email otp)
+ * 3. By the admin (by sending user a unique password change email)
+ */
+const changePasswordByOldPass = async (_: any, args: any) => {
+  const { id, oldPassword, newPassword } = args;
+  const user = await dbModels.users.findOne({ id });
+  if (!user) {
+    throw Errors.BAD_REQUEST('User not found');
+  }
+  if (user.password !== oneWayEncoder(oldPassword)) {
+    throw Errors.UNAUTHORIZED('Invalid old password');
+  }
+  user.password = oneWayEncoder(newPassword);
+  const updatedUser = await dbModels.users.findOneAndUpdate(
+    { id },
+    {
+      password: user.password,
+    }
+  );
+  if (!updatedUser) {
+    throw Errors.NOT_IMPLEMENTED('Password not updated');
+  }
+  return { message: 'Password updated successfully' };
 };
 
-export {};
+const forgotPassword = async (_: any, args: any) => {
+  const { uniqueCode, password } = args;
+  const decodedCode = JSON.parse(twoWayDecoder(uniqueCode));
+  if (!decodedCode.email) {
+    throw Errors.BAD_REQUEST('Invalid code');
+  }
+  const updatedUser = await dbModels.users.findOneAndUpdate(
+    { email: decodedCode.email },
+    {
+      password: oneWayEncoder(password),
+    }
+  );
+  if (!updatedUser) {
+    throw Errors.NOT_IMPLEMENTED('Password not updated');
+  }
+  return { message: 'Password updated successfully' };
+};
+
+const requestPasswordChangeEmail = async (_: any, args: any) => {
+  const { email } = args;
+  const user = await dbModels.users.findOne({
+    email,
+  });
+  if (!user) {
+    throw Errors.BAD_REQUEST('User not found');
+  }
+  const uniqueCode = twoWayEncoder(
+    JSON.stringify({
+      id: user.id,
+    }),
+    Config.secrets.twoWayEncryptionSecret
+  );
+  const uniqueLink = `${Config.DEPLOYMENT_URL}/reset-password/${uniqueCode}`;
+  // Send email with unique link
+  await sendMail(email, 'Reset Password', '', ChangePasswordTemplate(uniqueLink));
+  return { message: 'Email sent successfully' };
+};
+
+export { registerUser, login, modifyUser, changePasswordByOldPass, forgotPassword, requestPasswordChangeEmail };

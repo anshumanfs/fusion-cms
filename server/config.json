@@ -1,4 +1,6 @@
 {
+  "APP_NAME": "FUSION CMS",
+  "DEPLOYMENT_URL": "http://localhost:3000",
   "metadataDb": {
     "type": "mysql",
     "orm": "sequelize",
@@ -14,7 +16,8 @@
     "bearerSecret": "secret-token",
     "refreshTokenSecret": "refresh-token",
     "apiKeySecret": "api-key-secret",
-    "passwordSecret": "password-secret"
+    "twoWayEncryptionSecret": "twoWay-encryption-secret",
+    "uniqueEmailSecret": "unique-email-secret"
   },
   "user": {
     "additionalRoles": ["consumerGold"]

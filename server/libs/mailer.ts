@@ -6,7 +6,7 @@ const transporter = nodemailer.createTransport({
   ...smtp,
 });
 
-const sendMail = (email: string, to: string | [string], subject: string, text: string = '', html: string = '') => {
+const sendMail = (to: string | [string], subject: string, text: string = '', html: string = '') => {
   const mailOptions = {
     from: `Fusion CMS <${smtp.auth.user}>`,
     to,

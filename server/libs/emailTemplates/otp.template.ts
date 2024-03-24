@@ -1,9 +1,11 @@
-const template = `<!DOCTYPE html>
+import Config from '../../config.json';
+
+const template = (otp: string) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fusion CMS - OTP Verification</title>
+  <title>${Config.APP_NAME} - OTP Verification</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -66,19 +68,19 @@ const template = `<!DOCTYPE html>
 <body>
   <div class="container">
     <header class="header">
-      <img src="https://beta.getfusioncms.com/" alt="Fusion CMS Logo" class="logo">
+      <img src="https://beta.getfusioncms.com/" alt="${Config.APP_NAME} Logo" class="logo">
     </header>
     <div class.content>
       <p class="p">Hi there,</p>
-      <p class="p">We've sent you a one-time code (OTP) to verify your identity for your <b>Fusion</b> application.</p>
+      <p class="p">We've sent you a one-time code (OTP) to verify your identity for your <b>${Config.APP_NAME}</b> application.</p>
       <div class="otp-code">
         <div class="otp-container">
-          <span class="otp-box">1</span>
-          <span class="otp-box">2</span>
-          <span class="otp-box">3</span>
-          <span class="otp-box">4</span>
-          <span class="otp-box">5</span>
-          <span class="otp-box">6</span>
+          <span class="otp-box">${otp[0]}</span>
+          <span class="otp-box">${otp[1]}</span>
+          <span class="otp-box">${otp[2]}</span>
+          <span class="otp-box">${otp[3]}</span>
+          <span class="otp-box">${otp[4]}</span>
+          <span class="otp-box">${otp[5]}</span>
         </div>
       </div>
       <p class="p">This code is valid for 5 minutes. Please enter it in the designated field to complete your action.</p>
@@ -86,8 +88,10 @@ const template = `<!DOCTYPE html>
     </div>
     <footer class="footer">
       <p>Thank you,</p>
-      <p>The Fusion CMS Team</p>
+      <p>The ${Config.APP_NAME} Team</p>
     </footer>
   </div>
 </body>
 </html>`;
+
+export default template;

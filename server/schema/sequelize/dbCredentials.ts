@@ -48,7 +48,6 @@ const model: any = conn.define(
   {
     tableName: 'cms_dbCredentials',
     timestamps: true,
-    alter: true,
   }
 );
 const services = sequelizeQueryServices(model);
