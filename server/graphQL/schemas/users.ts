@@ -3,16 +3,22 @@ import { gql } from 'graphql-tag';
 const userSchema = gql`
   extend type Query {
     getUser(id: ID!): User
-    getUsers: [User]!
+    getUsers(page: Int): [User]!
   }
 
   extend type Mutation {
-    registerUser(email: String!, password: String!): User | Response
-    registerAdmin(firstName: String!, lastName: String!, email: String!, password: String!): User | Response
-    login(email: String!, password: String!): String | Response
-    modifyUser(id: ID!, email: String, role: String, firstName: String, lastName: String): User
-    changePassword(id: ID!, password: String!): PasswordChangeResponse
+    activateAccount(uniqueCode: String!): Response
+    changePasswordByOldPass(id: ID!, oldPassword: String!, newPassword: String!): Response
+    forgotPassword(uniqueCode: String!, password: String!): Response
+    login(email: String!, password: String!): AuthenticationResponse
+    modifyUser(id: ID!, email: String, role: String, firstName: String, lastName: String): UserResponse
+    registerUser(email: String!, firstName: String!, lastName: String!, password: String!): UserResponse
+    requestNewToken(refreshToken: String!): AuthenticationResponse
+    requestPasswordChangeEmail(email: String!): Response
   }
+
+  union AuthenticationResponse = Token | Response
+  union UserResponse = User | Response
 
   type User {
     _id: ID!
@@ -26,7 +32,11 @@ const userSchema = gql`
 
   type Response {
     message: String
-    status: Boolean
+  }
+
+  type Token {
+    token: String!
+    refreshToken: String!
   }
 `;
 

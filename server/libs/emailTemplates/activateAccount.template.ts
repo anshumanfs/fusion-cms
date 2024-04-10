@@ -1,10 +1,10 @@
 import Config from '../../config.json';
-const template = (uniquePasswordResetLink: string) => `<!DOCTYPE html>
+const template = (uniqueAccountActivationLink: string, firstName: string) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${Config.APP_NAME} Password Reset</title>
+  <title>${Config.APP_NAME} Account Activation</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -52,17 +52,16 @@ const template = (uniquePasswordResetLink: string) => `<!DOCTYPE html>
       <img src="${Config.DEPLOYMENT_URL}${Config.LOGO_URL.light}" alt="${Config.APP_NAME} Logo" class="logo">
     </div>
     <div class="content">
-      <p>Dear User,</p>
-      <p>We heard you needed a new key to unlock your ${Config.APP_NAME} account. No worries, happens to the best of us! Click the button below to create a strong new password.</p>
-      <p><a href="${uniquePasswordResetLink}" class="link">Reset Your Password</a></p>
-      <p>This link will expire in 24 hours for your security. If you didn't request a password reset, simply disregard this email.</p>
+      <p>Hi ${firstName},</p>
+      <p>Welcome to ${Config.APP_NAME}! We're thrilled to have you join our adventure. To start exploring, click the button below to activate your account.</p>
+      <p><a href="${uniqueAccountActivationLink}" class="link">Activate Your Account</a></p>
+      <p>This link will expire in 24 hours for your security. If you didn't create an account with ${Config.APP_NAME}, please disregard this email.</p>
     </div>
     <div class="footer">
       <p>Happy adventuring,<br>The ${Config.APP_NAME} Team</p>
     </div>
   </div>
 </body>
-</html>
-`;
+</html>`;
 
 export default template;

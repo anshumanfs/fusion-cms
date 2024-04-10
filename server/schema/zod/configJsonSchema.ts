@@ -47,7 +47,8 @@ const secretSchema = z.object({
   bearerSecret: z.string(),
   refreshTokenSecret: z.string(),
   apiKeySecret: z.string(),
-  passwordSecret: z.string(),
+  twoWayEncryptionSecret: z.string(),
+  uniqueEmailSecret: z.string(),
 });
 
 const configJsonSchema = z.object({

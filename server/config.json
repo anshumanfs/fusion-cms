@@ -1,6 +1,10 @@
 {
   "APP_NAME": "FUSION CMS",
   "DEPLOYMENT_URL": "http://localhost:3000",
+  "LOGO_URL": {
+    "light": "/logo/light/icons8-react-native-96.svg",
+    "dark": "/logo/dark/icons8-react-native-96.svg"
+  },
   "metadataDb": {
     "type": "mysql",
     "orm": "sequelize",
@@ -21,5 +25,10 @@
   },
   "user": {
     "additionalRoles": ["consumerGold"]
+  },
+  "envConfigurations": {
+    "toekenTimeDescription": "Times are in minutes",
+    "tokenExpiration": 15,
+    "refreshTokenExpiration": 1440
   }
 }

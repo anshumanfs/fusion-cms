@@ -1,9 +1,22 @@
-import { dbModels } from '../../db';
-import sendMail from '../../libs/mailer';
-import Errors from '../../libs/errors';
+import ActivateAccountTemplate from '../../libs/emailTemplates/activateAccount.template';
 import ChangePasswordTemplate from '../../libs/emailTemplates/changePassword.template';
 import Config from '../../config.json';
-import { oneWayEncoder, twoWayEncoder, twoWayDecoder } from '../../libs/encoderDecoder';
+import Errors from '../../libs/errors';
+import sendMail from '../../libs/mailer';
+import { dbModels } from '../../db';
+import { oneWayEncoder, twoWayDecoder, twoWayEncoder } from '../../libs/encoderDecoder';
+
+const getUser = async (_: any, args: any) => {
+  const { id } = args;
+  const user = await dbModels.users.findOne({ id });
+  return user;
+};
+
+const getUsers = async (_: any, args: any) => {
+  const { page } = args;
+  const users = await dbModels.users.find({}, { skip: page * 20, limit: 20 });
+  return users;
+};
 
 const registerUser = async (_: any, args: any) => {
   const { email, firstName, lastName, password } = args;
@@ -20,19 +33,83 @@ const registerUser = async (_: any, args: any) => {
   if (userCount === 0) {
     userData.role = 'admin'; // First user will be admin by default
   }
+  const uniqueCode = twoWayEncoder(email, Config.secrets.uniqueEmailSecret);
+  const uniqueAccountActivationLink = `${Config.DEPLOYMENT_URL}/activate-account/${uniqueCode}`;
+  await ActivateAccountTemplate(uniqueAccountActivationLink, firstName);
   const result = await dbModels.users.create(userData);
   return result;
 };
 
+const activateAccount = async (_: any, args: any) => {
+  const { uniqueCode } = args;
+  const email = twoWayDecoder(uniqueCode, Config.secrets.uniqueEmailSecret);
+  if (!email) {
+    throw Errors.BAD_REQUEST('Invalid code');
+  }
+  const user = await dbModels.users.findOne({ email });
+  if (!user) {
+    throw Errors.BAD_REQUEST('User not found');
+  }
+  if (user.isActive) {
+    throw Errors.BAD_REQUEST('Account already activated');
+  }
+  const updatedUser = await dbModels.users.findOneAndUpdate({ email }, { isActive: true });
+  return updatedUser;
+};
+
 const login = async (_: any, args: any) => {
   const { email, password } = args;
-  const user = await dbModels.users.findOne({ email, password });
+  const encodedPassword = oneWayEncoder(password);
+  const user = await dbModels.users.findOne({ email, password: encodedPassword });
   if (!user) {
-    throw new Error('Invalid credentials');
+    throw Errors.UNAUTHORIZED('Invalid email or password');
   }
-  const token = await user.generateToken();
-  // it will return token
-  return token;
+  const tokenCredentials = {
+    email,
+    createdAt: new Date().toISOString(),
+  };
+  const token = twoWayEncoder(JSON.stringify({ ...tokenCredentials, type: 'token' }), Config.secrets.bearerSecret);
+  const refreshToken = twoWayEncoder(
+    JSON.stringify({ ...tokenCredentials, type: 'refreshToken' }),
+    Config.secrets.refreshTokenSecret
+  );
+  return { token, refreshToken };
+};
+
+const requestNewToken = async (_: any, args: any) => {
+  const { refreshToken } = args;
+  if (!refreshToken) {
+    throw Errors.UNAUTHORIZED('Refresh token not found');
+  }
+  const decryptedRefreshToken = JSON.parse(twoWayDecoder(refreshToken, Config.secrets.refreshTokenSecret));
+  const refreshTokenValidityInMs = Config.envConfigurations.refreshTokenExpiration * 60;
+
+  const refreshTokenCreatedAt = new Date(decryptedRefreshToken.createdAt).getTime();
+  const currentTime = new Date().getTime();
+
+  if (currentTime - refreshTokenCreatedAt > refreshTokenValidityInMs) {
+    throw Errors.UNAUTHORIZED('Refresh token expired');
+  }
+  const user = await dbModels.users.findOne({ email: decryptedRefreshToken.email });
+  if (!user) {
+    throw Errors.UNAUTHORIZED('Invalid refresh token');
+  }
+  if (!user.isVerified || !user.isBlocked) {
+    throw Errors.UNAUTHORIZED('User is either not verified or blocked by the admin');
+  }
+
+  const tokenCredentials = {
+    email: decryptedRefreshToken.email,
+    createdAt: new Date().toISOString(),
+  };
+
+  const token = twoWayEncoder(JSON.stringify({ ...tokenCredentials, type: 'token' }), Config.secrets.bearerSecret);
+  const newRefreshToken = twoWayEncoder(
+    JSON.stringify({ ...tokenCredentials, type: 'refreshToken' }),
+    Config.secrets.refreshTokenSecret
+  );
+
+  return { token, refreshToken: newRefreshToken };
 };
 
 const modifyUser = async (_: any, args: any) => {
@@ -111,4 +188,15 @@ const requestPasswordChangeEmail = async (_: any, args: any) => {
   return { message: 'Email sent successfully' };
 };
 
-export { registerUser, login, modifyUser, changePasswordByOldPass, forgotPassword, requestPasswordChangeEmail };
+export {
+  activateAccount,
+  changePasswordByOldPass,
+  forgotPassword,
+  getUser,
+  getUsers,
+  login,
+  modifyUser,
+  registerUser,
+  requestNewToken,
+  requestPasswordChangeEmail,
+};

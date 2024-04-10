@@ -13,6 +13,8 @@ const QuerySchema: any = new Schema(
     password: Types.String(),
     apiKey: Types.String(),
     role: addDefaultValue(addEnums(Types.String(), ['admin', 'user', ...additionalRoles]), 'user'),
+    isVerified: addDefaultValue(Types.Boolean(), false), // true if user has verified the email and account is active
+    isBlocked: addDefaultValue(Types.Boolean(), false), // true if user is blocked by admin
   },
   {
     timestamps: true,

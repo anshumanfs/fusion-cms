@@ -1,13 +1,24 @@
 'use client';
 import * as React from 'react';
-
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useQuery, gql } from '@apollo/client';
 import Logo from '@/components/ui/logo';
+
 export default function Register() {
+  const [registrationStatus, setRegistrationStatus] = React.useState({});
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setRegistrationStatus({
+      status: 'loading',
+      message: 'Creating your account...',
+    });
+  };
+
   return (
     <div className="flex h-screen">
       <div className="m-auto">
