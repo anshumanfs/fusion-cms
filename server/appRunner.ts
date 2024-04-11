@@ -33,7 +33,7 @@ const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; ap
       endpoint: '/openapi.json',
     },
     swaggerUI: {
-      path: '/docs',
+      path: `/docs`,
     },
   });
 };
@@ -50,6 +50,7 @@ const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boole
   app.use(`/graphql/${subfolder}`, cors(), json(), expressMiddleware(apollo));
   app.use(`/rest/${subfolder}`, getSofa({ Schema, Resolver, appName: subfolder }));
   logger.info(`✓ ${subfolder} :- GraphQL running on /graphql/${subfolder}`);
+  logger.info(`✓ ${subfolder} :- Swagger docs on /rest/${subfolder}/docs`);
   return true;
 };
 
@@ -199,6 +200,7 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
         await conn.sync();
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
+          await monolithFunctions();
           logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth`);
         } else {
           await monolithFunctions();
