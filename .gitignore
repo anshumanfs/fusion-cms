@@ -33,6 +33,9 @@ yarn-error.log*
 # ignore files that are marked as secure
 .secure*
 
+# ignore files that are marked as temp
+.temp*
+
 # vercel
 .vercel
 

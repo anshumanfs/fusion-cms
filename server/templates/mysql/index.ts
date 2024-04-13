@@ -51,7 +51,7 @@ const createDbModels = async (options: DbModelsInput) => {
   const rawSQLMiddlewareFile = path.resolve(__dirname, `../../../data/files/middleware/${appName}/rawSQL.js`);
   const middlewareFile = path.resolve(
     __dirname,
-    `../../../data/files/middleware/${appName}/${pluralCollectionName}.js`
+    `../../../../data/files/middleware/${appName}/${pluralCollectionName}.js`
   );
 
   //const subDirs = ['/middleware', '/dbModels', '/certs', '/graphQlSchemas', '/resolvers', '/routes']

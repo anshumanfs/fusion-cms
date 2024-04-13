@@ -12,7 +12,7 @@ const createIndexResolver = (appName: string) => {
         const conn = require('./db'); 
         const { QueryTypes } = require('sequelize'); 
         const { customScalarResolvers } = require('./utils/customScalar');
-        const { rawSQLMiddleware } = require('../../../data/files/middleware/${appName}/rawSQL.js'); 
+        const { rawSQLMiddleware } = require('../../../../data/files/middleware/${appName}/rawSQL.js'); 
         let Query = { 
           RAW_SQL : async (parent, args, contextValue, info) => { 
             const preMiddlewareResult = await rawSQLMiddleware.pre(parent, args, contextValue, info); 

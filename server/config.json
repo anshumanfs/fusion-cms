@@ -5,6 +5,8 @@
     "light": "/logo/light/icons8-react-native-96.svg",
     "dark": "/logo/dark/icons8-react-native-96.svg"
   },
+  "ENVS": ["development", "production"],
+  "DEV_ENVS": ["development"],
   "metadataDb": {
     "type": "mysql",
     "orm": "sequelize",

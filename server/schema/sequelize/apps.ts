@@ -13,6 +13,9 @@ const {
   Types,
 } = require('../../templates/mysql/utils/schemaHelper');
 
+const dbCredentials = require('./dbCredentials');
+const dbSchemas = require('./dbSchemas');
+
 const model: any = conn.define(
   'cms_apps',
   {
@@ -28,6 +31,10 @@ const model: any = conn.define(
     timestamps: true,
   }
 );
+
+model.hasMany(dbCredentials.model, { foreignKey: 'appName' });
+model.hasMany(dbSchemas.model, { foreignKey: 'appName' });
+
 const services = sequelizeQueryServices(model);
 
 export { model, services };

@@ -105,7 +105,11 @@ const createPostHookString = (pluralCollectionName: string) => {
       const virtualArr = Object.keys(${pluralCollectionName}Schema.virtuals); 
       const fieldsToBeExcluded = ['_id', '__v', 'createdAt', 'updatedAt', 'id'];
       const virtualFields = virtualArr.filter((virtual) => !fieldsToBeExcluded.includes(virtual));
-      docs = await docs.populate(virtualFields);
+      try {
+        docs = await docs.populate(virtualFields);
+      } catch(err) {
+        // it will fallback to resolver chain
+      }
     });
   `;
 };
@@ -116,7 +120,11 @@ const updatePostHookString = (pluralCollectionName: string) => {
       const virtualArr = Object.keys(${pluralCollectionName}Schema.virtuals); 
       const fieldsToBeExcluded = ['_id', '__v', 'createdAt', 'updatedAt', 'id'];
       const virtualFields = virtualArr.filter((virtual) => !fieldsToBeExcluded.includes(virtual));
-      docs = await docs.populate(virtualFields);
+      try {
+        docs = await docs.populate(virtualFields);
+      } catch(err) {
+        // it will fallback to resolver chain
+      }
     });`;
 };
 

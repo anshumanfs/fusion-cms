@@ -19,7 +19,10 @@ const getPopulateOptions = (info: any) => {
     const populateOptions: any = [];
     fieldsArr.forEach((e: any) => {
       if (e.selectionSet) {
-        let populateObj: any = {};
+        // essential to allow fallback to resolver chain
+        let populateObj: any = {
+          strictPopulate: false,
+        };
         populateObj.path = e.name.value;
         populateObj.populate = populateOptionsHelper(e.selectionSet.selections);
         populateOptions.push(populateObj);

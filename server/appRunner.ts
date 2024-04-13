@@ -13,6 +13,7 @@ import cors from 'cors';
 import { customFileParser } from './libs/customFileParser';
 import Application from './controllers/appStatus';
 import cmsConfig from './config.json';
+import fs from 'fs-extra';
 
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
 const ROOT = 'ROOT' in process.env ? process?.env?.ROOT?.trim() : '';
@@ -148,6 +149,22 @@ const runAsMicroService = async () => {
   });
 };
 
+const writeAppJson = async () => {
+  try {
+    const tempJsonPath = path.resolve(__dirname, '../../data/.temp.json');
+    const env = work_env;
+    const [apps, dbSchemas, dbCredentials] = await Promise.all([
+      await dbModels.apps.find({}),
+      await dbModels.dbSchemas.find({}),
+      await dbModels.dbCredentials.find({ env }),
+    ]);
+    fs.writeJSONSync(tempJsonPath, { apps, dbSchemas, dbCredentials }, { spaces: '\t' });
+  } catch (error) {
+    logger.error(`${error}`);
+  }
+  return true;
+};
+
 const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
   const appStatus = new Application();
   appStatus.checkAppStaus();
@@ -188,6 +205,7 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
         } else {
           await monolithFunctions();
         }
+        writeAppJson();
         resolve();
       });
       conn.on('disconnected', async () => {
@@ -198,6 +216,7 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
     if (cmsConfig.metadataDb.orm === 'sequelize') {
       try {
         await conn.sync();
+        writeAppJson();
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
           await monolithFunctions();
