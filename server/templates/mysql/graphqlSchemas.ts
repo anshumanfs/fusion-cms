@@ -10,7 +10,9 @@ const createIndexSchema = () => {
       const fs = require('fs-extra'); 
       const path = require('path'); 
       const directory = path.resolve(__dirname,'./graphQlSchemas');
-      const { customScalarTypeDefs } = require('./utils/customScalar'); 
+      const { typeDefs: scalarTypeDefs } = require('graphql-scalars');
+      const { customScalarTypeDefs } = require('./utils/customScalar');
+      const mongoCustomScalarTypeDefs = require('../../templates/mongo/utils/customScalar'); 
       const importedModules = []; 
       fs.readdirSync(directory) 
         .filter((file) => file.endsWith('.js')) 
@@ -19,7 +21,9 @@ const createIndexSchema = () => {
           importedModules.push(require(path.join(directory, file))); 
         }); 
       const Schema = \`#graphql
-        \${customScalarTypeDefs} 
+        \${scalarTypeDefs}
+        \${customScalarTypeDefs}
+        \${mongoCustomScalarTypeDefs.customScalarTypeDefs} 
         scalar Any 
         type Query 
         type Mutation 

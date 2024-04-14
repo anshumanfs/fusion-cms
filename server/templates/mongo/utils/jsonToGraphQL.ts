@@ -64,9 +64,9 @@ const jsonToQueryType = (json: any, singularCollectionName: string, appJson: any
       }
     }
     // handles references to other collections or in other apps // federation
-    if (object[field].hasOwnProperty('ref') && lodash.isPlainObject(object[field].ref)) {
-      let appName = object[field].ref.appName;
-      let refCollectionName = object[field].ref.collection;
+    if (object[field].hasOwnProperty('federate') && lodash.isPlainObject(object[field].federate)) {
+      let appName = object[field].federate.appName;
+      let refCollectionName = object[field].federate.collection;
       let allCollections = lodash.filter(tempJson.dbSchemas, {
         appName,
       });

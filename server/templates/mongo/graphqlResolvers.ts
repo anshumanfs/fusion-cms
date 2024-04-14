@@ -13,16 +13,18 @@ const generateFederatedResolver = (
   try {
     let schemaKeys = Object.keys(schema);
     schemaKeys.forEach((key: string) => {
-      let { ref, type }: any = schema[key as keyof typeof schema];
-      if (lodash.isString(type) && lodash.isPlainObject(ref)) {
-        let { appName, collection, foreignField } = ref;
+      let { federate, type }: any = schema[key as keyof typeof schema];
+      if (lodash.isString(type) && lodash.isPlainObject(federate)) {
+        let { appName, collection, foreignField } = federate;
         let collectionSchema = lodash.filter(tempJson.dbSchemas, { appName, originalCollectionName: collection });
+        let { dbType } = lodash.filter(tempJson.apps, { appName })[0];
         let collectionName = collectionSchema[0].singularCollectionName;
         let pluralCollectionName = collectionSchema[0].pluralCollectionName;
-        federationImports += `const ${appName}${collectionName}dbModel = require('../../${appName}/dbModels/${pluralCollectionName}');\n`;
+        federationImports += `const ${appName}${collectionName}Resolver = require('../../${appName}/graphqlResolvers/${pluralCollectionName}');\n`;
+        let args = dbType === 'mongo' ? `{${foreignField}: parent.${key}}` : `{where:{${foreignField}: parent.${key}}}`;
         federationResolver += `
-          async ${key}(parent) {
-            return await ${appName}${collectionName}dbModel.findOne({ ${foreignField}: parent.${key} });
+          async ${key}(parent, args, contextValue, info) {
+            return await ${appName}${collectionName}Resolver.Query.${collectionName}(parent, ${args}, contextValue, info);
           },`;
       }
 
@@ -51,7 +53,8 @@ const generateIndexResolver = () => {
         const keys = require('./app.json');
         const directory = path.resolve(__dirname, './graphqlResolvers');
         const { resolvers:scalarResolvers } = require('graphql-scalars');
-        const { customScalarResolvers } = require('./utils/customScalar');
+        const mongoCustomScalarResolvers = require('./utils/customScalar');
+        const sqlCustomScalarResolvers = require('../../templates/mysql/utils/customScalar');
         let Query = {};
         let Mutation = {};
         let OtherResolvers = {}; // includes resolvers meant for federation
@@ -63,7 +66,8 @@ const generateIndexResolver = () => {
             Mutation = { ...Mutation, ...ref.Mutation };
         });
         module.exports = {
-            ...customScalarResolvers,
+            ...mongoCustomScalarResolvers.customScalarResolvers,
+            ...sqlCustomScalarResolvers.customScalarResolvers,
             ...scalarResolvers,
             ...OtherResolvers,
             Query,

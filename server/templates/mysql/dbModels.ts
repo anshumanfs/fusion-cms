@@ -136,6 +136,7 @@ const generateMySqlSchema = (
         timestamps: false
       });
     ${relationshipString}
+    ${pluralCollectionName}Schema.sync();
     module.exports =  ${pluralCollectionName}Schema;`;
   return schemaContentToWrite;
 };

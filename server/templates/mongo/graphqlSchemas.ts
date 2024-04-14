@@ -12,6 +12,7 @@ const createIndexSchema = () => {
         const directory = path.join(__dirname, './graphqlSchemas');
         const { typeDefs: scalarTypeDefs } = require('graphql-scalars');
         const { customScalarTypeDefs } = require('./utils/customScalar');
+        const mysqlCustomScalarTypeDefs = require('../../templates/mysql/utils/customScalar');
         const importedModules = [];
         fs.readdirSync(directory)
             .filter((file) => file.endsWith('.js'))
@@ -22,6 +23,7 @@ const createIndexSchema = () => {
         const typeDefs = \`#graphql
             \${scalarTypeDefs}
             \${customScalarTypeDefs}
+            \${mysqlCustomScalarTypeDefs.customScalarTypeDefs}
             scalar Any
             type Query
             type Mutation

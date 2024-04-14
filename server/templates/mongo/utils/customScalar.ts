@@ -182,6 +182,20 @@ const customScalarResolvers = {
       return ast.value;
     },
   }),
+  ObjectId: new GraphQLScalarType({
+    name: 'ObjectId',
+    description: 'A scalar type representing Mongo ObjectId',
+    serialize: defaultSerialize,
+    parseValue(value: any) {
+      if (!ObjectId.isValid(value)) {
+        throw GRAPHQL_VALIDATION_FAILED('Invalid ObjectId');
+      }
+      return new ObjectId(value);
+    },
+    parseLiteral(ast: any) {
+      return new ObjectId(ast.value);
+    },
+  }),
 };
 const customScalarTypeDefs = Object.keys(customScalarResolvers)
   .map((e) => `scalar ${e}`)
