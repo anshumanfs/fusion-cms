@@ -10,6 +10,7 @@ const Schema = gql`
     createApp(input: createApp!): Message
     updateApp(input: createApp!): Message
     removeApp(appName: String!): JSON
+    runApp(appName: String!): Message
   }
 
   type App {

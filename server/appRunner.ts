@@ -131,21 +131,67 @@ const runAppWithPM2 = ({ appName, script }: { appName: string; script: string })
 };
 
 const runAsMicroService = async () => {
-  conn.on('connected', async () => {
-    if (work_env === 'local') {
-      await buildAppsFromDB();
-    }
-    const promiseArr: any = [];
-    const apps: any = await dbModels.apps.find({});
-    apps.forEach((e: any) => {
-      const { appName, running } = e;
-      const script = path.resolve(__dirname, `./apps/${appName}/server.js`);
-      if (running) {
-        promiseArr.push(runAppWithPM2({ appName, script }));
+  const appStatus = new Application();
+  appStatus.checkAppStaus();
+  if (!appStatus.isMetadataDbConfigured) {
+    logger.error(`✗ DataBase not configured for metadata`);
+    process.exit(1);
+  }
+  if (!appStatus.isSecretsConfigured) {
+    logger.error(`✗ Secrets not configured`);
+    process.exit(1);
+  }
+
+  return new Promise<void>(async (resolve, reject) => {
+    const microservicesFunctions = async () => {
+      if (work_env === 'development') {
+        await buildAppsFromDB();
       }
-    });
-    await Promise.allSettled(promiseArr);
-    pm2.disconnect();
+      const promiseArr: any = [];
+      const apps: any = await dbModels.apps.find({});
+      apps.forEach((e: any) => {
+        const { appName, running } = e;
+        const script = path.resolve(__dirname, `./apps/${appName}/server.js`);
+        if (running) {
+          promiseArr.push(runAppWithPM2({ appName, script }));
+        }
+      });
+      await Promise.allSettled(promiseArr);
+      pm2.disconnect();
+    };
+
+    if (cmsConfig.metadataDb.orm === 'mongoose') {
+      conn.on('connected', async () => {
+        const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
+        if (!checkIfAdminRegistered) {
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth/`);
+        } else {
+          await microservicesFunctions();
+        }
+        writeAppJson();
+        resolve();
+      });
+      conn.on('disconnected', async () => {
+        reject(`✗ Metadata DB could not be connected`);
+      });
+    }
+
+    if (cmsConfig.metadataDb.orm === 'sequelize') {
+      try {
+        await conn.sync();
+        writeAppJson();
+        const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
+        if (!checkIfAdminRegistered) {
+          await microservicesFunctions();
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth`);
+        } else {
+          await microservicesFunctions();
+        }
+        resolve();
+      } catch (error) {
+        reject(`✗ Metadata DB could not be connected due to : ${error}`);
+      }
+    }
   });
 };
 

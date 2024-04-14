@@ -76,7 +76,8 @@ export default function sequelizeQueryServices(model: any) {
           }
           delete update.$inc;
         }
-        return model.update(update, { where: filter, ...options });
+        await model.update(update, { where: filter, ...options });
+        return model.findOne({ where: filter });
       } else {
         if (options.upsert) {
           return model.create({ ...filter, ...update }, { ...options });

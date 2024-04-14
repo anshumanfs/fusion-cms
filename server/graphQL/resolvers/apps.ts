@@ -62,4 +62,16 @@ const removeApp = async (_: any, args: any) => {
   }
 };
 
-export { createApp, getAppData, getAppsData, updateApp, removeApp };
+const runApp = async (_: any, args: any) => {
+  const { appName } = args;
+  const findApp = await dbModels.apps.findOne({ appName });
+  if (!findApp) {
+    throw Errors.BAD_REQUEST('No application found with provided appName');
+  } else {
+    const { running } = findApp;
+    await dbModels.apps.findOneAndUpdate({ appName }, { running: !running });
+    return { message: `App ${running ? 'stopped' : 'started'} successfully` };
+  }
+};
+
+export { createApp, getAppData, getAppsData, updateApp, removeApp, runApp };

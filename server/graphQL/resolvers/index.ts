@@ -1,4 +1,4 @@
-import { createApp, getAppData, getAppsData, updateApp, removeApp } from './apps';
+import { createApp, getAppData, getAppsData, updateApp, removeApp, runApp } from './apps';
 import { getDbCredential, getDbCredentials, removeDbCredentials } from './dbCreds';
 import { getAppSchema, getAppSchemas, createAppSchema, removeAppSchema } from './appSchemas';
 import {
@@ -29,6 +29,7 @@ const Mutation = {
   createApp,
   updateApp,
   removeApp,
+  runApp,
   removeDbCredentials,
   createAppSchema,
   removeAppSchema,
