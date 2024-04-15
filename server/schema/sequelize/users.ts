@@ -7,6 +7,7 @@ const {
   primaryKey,
   autoIncrement,
   Types,
+  Optional,
 } = require('../../templates/mysql/utils/schemaHelper');
 const additionalRoles = config.user.additionalRoles || [];
 
@@ -14,7 +15,8 @@ const model: any = conn.define(
   'cms_users',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
-    userName: Types.STRING(),
+    firstName: Types.STRING(),
+    lastName: Optional(Types.STRING()),
     email: Types.EMAIL(),
     password: Types.STRING(),
     apiKey: Types.STRING(),

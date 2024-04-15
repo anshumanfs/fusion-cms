@@ -10,15 +10,12 @@ const userSchema = gql`
     activateAccount(uniqueCode: String!): Response
     changePasswordByOldPass(id: ID!, oldPassword: String!, newPassword: String!): Response
     forgotPassword(uniqueCode: String!, password: String!): Response
-    login(email: String!, password: String!): AuthenticationResponse
-    modifyUser(id: ID!, email: String, role: String, firstName: String, lastName: String): UserResponse
-    registerUser(email: String!, firstName: String!, lastName: String!, password: String!): UserResponse
-    requestNewToken(refreshToken: String!): AuthenticationResponse
+    login(email: String!, password: String!): Token
+    modifyUser(id: ID!, email: String, role: String, firstName: String, lastName: String): User
+    registerUser(email: String!, firstName: String!, lastName: String!, password: String!): User
+    requestNewToken(refreshToken: String!): Token
     requestPasswordChangeEmail(email: String!): Response
   }
-
-  union AuthenticationResponse = Token | Response
-  union UserResponse = User | Response
 
   type User {
     _id: ID!
@@ -26,8 +23,8 @@ const userSchema = gql`
     lastName: String
     email: String
     role: String
-    createdAt: String
-    updatedAt: String
+    createdAt: DateTime
+    updatedAt: DateTime
   }
 
   type Response {

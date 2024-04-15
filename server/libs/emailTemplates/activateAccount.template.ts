@@ -54,7 +54,9 @@ const template = (uniqueAccountActivationLink: string, firstName: string) => `<!
     <div class="content">
       <p>Hi ${firstName},</p>
       <p>Welcome to ${Config.APP_NAME}! We're thrilled to have you join our adventure. To start exploring, click the button below to activate your account.</p>
+      <br/><br/>
       <p><a href="${uniqueAccountActivationLink}" class="link">Activate Your Account</a></p>
+      <br/><br/>
       <p>This link will expire in 24 hours for your security. If you didn't create an account with ${Config.APP_NAME}, please disregard this email.</p>
     </div>
     <div class="footer">

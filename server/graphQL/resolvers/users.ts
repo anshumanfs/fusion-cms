@@ -1,5 +1,7 @@
 import ActivateAccountTemplate from '../../libs/emailTemplates/activateAccount.template';
 import ChangePasswordTemplate from '../../libs/emailTemplates/changePassword.template';
+import SendAPIKeyTemplate from '../../libs/emailTemplates/apiKey.template';
+import nodeCrypto from 'node:crypto';
 import Config from '../../config.json';
 import Errors from '../../libs/errors';
 import sendMail from '../../libs/mailer';
@@ -25,6 +27,7 @@ const registerUser = async (_: any, args: any) => {
     throw Errors.BAD_REQUEST('User already exists !');
   }
   const userData: any = {
+    apiKey: nodeCrypto.randomUUID(),
     email,
     firstName,
     lastName,
@@ -33,16 +36,21 @@ const registerUser = async (_: any, args: any) => {
   if (userCount === 0) {
     userData.role = 'admin'; // First user will be admin by default
   }
-  const uniqueCode = twoWayEncoder(email, Config.secrets.uniqueEmailSecret);
+  const uniqueCode = encodeURIComponent(twoWayEncoder(email, Config.secrets.uniqueEmailSecret));
   const uniqueAccountActivationLink = `${Config.DEPLOYMENT_URL}/activate-account/${uniqueCode}`;
-  await ActivateAccountTemplate(uniqueAccountActivationLink, firstName);
+  await sendMail(
+    email,
+    `Activate your ${Config.APP_NAME} account`,
+    '',
+    ActivateAccountTemplate(uniqueAccountActivationLink, firstName)
+  );
   const result = await dbModels.users.create(userData);
   return result;
 };
 
 const activateAccount = async (_: any, args: any) => {
   const { uniqueCode } = args;
-  const email = twoWayDecoder(uniqueCode, Config.secrets.uniqueEmailSecret);
+  const email = twoWayDecoder(decodeURIComponent(uniqueCode), Config.secrets.uniqueEmailSecret);
   if (!email) {
     throw Errors.BAD_REQUEST('Invalid code');
   }
@@ -53,8 +61,13 @@ const activateAccount = async (_: any, args: any) => {
   if (user.isActive) {
     throw Errors.BAD_REQUEST('Account already activated');
   }
-  const updatedUser = await dbModels.users.findOneAndUpdate({ email }, { isActive: true });
-  return updatedUser;
+  const updatedUser = await dbModels.users.findOneAndUpdate({ email }, { isVerified: true }, { new: true });
+  if (updatedUser) {
+    await sendMail(updatedUser.email, `API Key for ${Config.APP_NAME}`, '', SendAPIKeyTemplate(updatedUser.apiKey));
+  } else {
+    throw Errors.NOT_IMPLEMENTED('Account not activated');
+  }
+  return { message: 'Account activated successfully' };
 };
 
 const login = async (_: any, args: any) => {
@@ -184,7 +197,7 @@ const requestPasswordChangeEmail = async (_: any, args: any) => {
   );
   const uniqueLink = `${Config.DEPLOYMENT_URL}/reset-password/${uniqueCode}`;
   // Send email with unique link
-  await sendMail(email, 'Reset Password', '', ChangePasswordTemplate(uniqueLink));
+  await sendMail(email, `Reset Password ${Config.APP_NAME}`, '', ChangePasswordTemplate(uniqueLink));
   return { message: 'Email sent successfully' };
 };
 

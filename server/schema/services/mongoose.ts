@@ -1,5 +1,8 @@
 export default function mongooseQueryServices(model: any) {
   return {
+    countDocuments: async (filter = {}) => {
+      return model.countDocuments(filter);
+    },
     find: async (filter = {}, projection = {}, options = {}) => {
       return model.find(filter, projection, options);
     },

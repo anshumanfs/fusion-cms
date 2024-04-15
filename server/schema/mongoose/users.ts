@@ -2,13 +2,14 @@ import { Schema } from 'mongoose';
 import { conn } from '../../db';
 import mongooseQueryServices from '../services/mongoose';
 import config from '../../config.json';
-const { Types, addEnums, addDefaultValue } = require('../../templates/mongo/utils/schemaHelper');
+const { Types, addEnums, addDefaultValue, Optional } = require('../../templates/mongo/utils/schemaHelper');
 
 const additionalRoles = config.user.additionalRoles || [];
 const QuerySchema: any = new Schema(
   {
     _id: Types.ObjectId(),
-    userName: Types.String(),
+    firstName: Types.String(),
+    lastName: Optional(Types.String()),
     email: Types.Email(),
     password: Types.String(),
     apiKey: Types.String(),
