@@ -16,7 +16,7 @@ const getUser = async (_: any, args: any) => {
 
 const getUsers = async (_: any, args: any) => {
   const { page } = args;
-  const users = await dbModels.users.find({}, { skip: page * 20, limit: 20 });
+  const users = await dbModels.users.find({});
   return users;
 };
 

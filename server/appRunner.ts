@@ -79,20 +79,6 @@ const appManagerApolloServer = async ({ app }: { app: any }) => {
   return true;
 };
 
-const createGraphQlFederation = async (app: any) => {
-  const Schemas = require('./federatedEP/schema');
-  const Resolvers = require('./federatedEP/resolvers');
-  const apollo = new ApolloServer({
-    introspection: !checkEnv.includes(work_env),
-    resolvers: Resolvers,
-    typeDefs: Schemas,
-  });
-  await apollo.start();
-  app.use(`/graphql`, cors(), json(), expressMiddleware(apollo));
-  logger.info(`✓ Federated GraphQL running on /graphql`);
-  return true;
-};
-
 const runAppWithPM2 = ({ appName, script }: { appName: string; script: string }) => {
   return new Promise((resolve, reject) => {
     pm2.connect(function (err: any) {

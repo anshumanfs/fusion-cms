@@ -49,18 +49,18 @@ export function SideBar({ className }: SidebarProps) {
     setElementStates(elementStatesCopy);
   };
 
-  const switchHandler = (component: any) => {
+  const switchHandler = (key: string) => {
     const elementStatesCopy = _.cloneDeep(elementStates);
     Object.keys(elementStatesCopy).forEach((key) => {
       elementStatesCopy[key].variant = 'ghost';
     });
-    elementStatesCopy[component.target.value].variant = 'secondary';
+    elementStatesCopy[key].variant = 'secondary';
     setElementStates(elementStatesCopy);
-    router.push(`/dashboard/${component.target.value}`);
+    router.push(`/dashboard/${key}`);
   };
   useEffect(() => {
     detectRoute();
-  }, [detectRoute, pathname]);
+  }, []);
 
   return (
     <div className={cn('pb-12', className)}>
@@ -74,8 +74,7 @@ export function SideBar({ className }: SidebarProps) {
             <Button
               variant={elementStates.databases.variant}
               className="w-full justify-start"
-              value="databases"
-              onClick={switchHandler}
+              onClick={() => switchHandler('databases')}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -96,8 +95,7 @@ export function SideBar({ className }: SidebarProps) {
             <Button
               variant={elementStates.schemas.variant}
               className="w-full justify-start"
-              value="schemas"
-              onClick={switchHandler}
+              onClick={() => switchHandler('schemas')}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -118,8 +116,7 @@ export function SideBar({ className }: SidebarProps) {
             <Button
               variant={elementStates.users.variant}
               className="w-full justify-start"
-              value="users"
-              onClick={switchHandler}
+              onClick={() => switchHandler('users')}
             >
               <AvatarIcon className="mr-2 h-4 w-4" />
               Users
@@ -127,8 +124,7 @@ export function SideBar({ className }: SidebarProps) {
             <Button
               variant={elementStates.accesses.variant}
               className="w-full justify-start"
-              value="accesses"
-              onClick={switchHandler}
+              onClick={() => switchHandler('accesses')}
             >
               <LockClosedIcon className="mr-2 h-4 w-4" />
               Accesses

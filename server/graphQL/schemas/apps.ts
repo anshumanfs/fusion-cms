@@ -20,7 +20,7 @@ const Schema = gql`
     isAppCompleted: Boolean
     port: Int
     running: Boolean
-    schemas: JSON
+    schemas: [appSchema]
   }
 
   type Message {

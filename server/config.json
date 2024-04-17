@@ -1,6 +1,6 @@
 {
   "APP_NAME": "Fusion CMS",
-  "DEPLOYMENT_URL": "http://localhost:3000",
+  "DEPLOYMENT_URL": "http://localhost:3001",
   "LOGO_URL": {
     "light": "/logo/light/icons8-react-native-96.svg",
     "dark": "/logo/dark/icons8-react-native-96.svg"

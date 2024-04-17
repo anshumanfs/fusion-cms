@@ -8,6 +8,10 @@ const templates = {
 const getAppsData = async (_: any, args: any) => {
   const { filter } = args;
   const appsData = await dbModels.apps.find(filter || {});
+  const schemas = await dbModels.dbSchemas.find({});
+  appsData.forEach((app: any) => {
+    app.schemas = schemas.filter((schema: any) => schema.appName === app.appName);
+  });
   return appsData;
 };
 
