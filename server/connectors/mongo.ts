@@ -19,7 +19,7 @@ interface MongooseConfigOptions {
 
 interface MongooseConfig {
   uri: string;
-  options: Partial<MongooseConfigOptions>;
+  options?: Partial<MongooseConfigOptions>;
 }
 
 function connector(appName: string, config: MongooseConfig) {

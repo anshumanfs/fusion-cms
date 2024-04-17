@@ -5,8 +5,13 @@
     "light": "/logo/light/icons8-react-native-96.svg",
     "dark": "/logo/dark/icons8-react-native-96.svg"
   },
-  "ENVS": ["development", "production"],
-  "DEV_ENVS": ["development"],
+  "ENVS": [
+    "development",
+    "production"
+  ],
+  "DEV_ENVS": [
+    "development"
+  ],
   "metadataDb": {
     "type": "mysql",
     "orm": "sequelize",
@@ -26,7 +31,9 @@
     "uniqueEmailSecret": "unique-email-secret"
   },
   "user": {
-    "additionalRoles": ["consumerGold"]
+    "additionalRoles": [
+      "consumerGold"
+    ]
   },
   "envConfigurations": {
     "toekenTimeDescription": "Times are in minutes",
