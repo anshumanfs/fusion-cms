@@ -57,7 +57,7 @@ describe('Testing dbModels translation', () => {
     {
     tableName : 'user',
     timestamps: false
-    });module.exports=usersSchema;`.replace(/[\n\s]/g, '');
+    });usersSchema.sync();module.exports=usersSchema;`.replace(/[\n\s]/g, '');
 
     expect(generateMySqlSchema('user', 'users', jsonSchema1, appJson).replace(/[\n\s]/g, '')).toEqual(expctedOutput1);
   });
@@ -124,7 +124,7 @@ describe('Testing dbModels translation', () => {
         {
         tableName : 'user',
         timestamps: false
-        });module.exports=usersSchema;`.replace(/[\n\s]/g, '');
+        });usersSchema.sync();module.exports=usersSchema;`.replace(/[\n\s]/g, '');
 
     expect(generateMySqlSchema('user', 'users', jsonSchema2, appJson).replace(/[\n\s]/g, '')).toEqual(expctedOutput2);
   });
@@ -214,6 +214,7 @@ describe('Testing dbModels translation', () => {
             "onUpdate":"CASCADE",
             "foreignKey":"courseId"
           });
+          usersSchema.sync();
           module.exports=usersSchema;`.replace(/[\n\s]/g, '');
 
     expect(generateMySqlSchema('user', 'users', jsonSchema, appJson).replace(/[\n\s]/g, '')).toEqual(expctedOutput);

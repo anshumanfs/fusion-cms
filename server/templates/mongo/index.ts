@@ -50,7 +50,7 @@ const createDbModels = async (options: DbModelsInput) => {
   const resolverDir = path.resolve(__dirname, '../../apps/' + appName + '/graphqlResolvers');
   const middlewareFile = path.resolve(
     __dirname,
-    `../../../data/files/middleware/${appName}/${pluralCollectionName}.js`
+    `../../../../data/files/middleware/${appName}/${pluralCollectionName}.js`
   );
 
   const subDirs = ['/middleware', '/dbModels', '/graphQlSchemas', '/graphqlResolvers'];
@@ -102,7 +102,7 @@ const createDbModels = async (options: DbModelsInput) => {
   fs.writeFileSync(
     `${resolverDir}/${pluralCollectionName}.js`,
     beautify(
-      generateResolver(appName, originalCollectionName, singularCollectionName, pluralCollectionName),
+      generateResolver(appName, originalCollectionName, singularCollectionName, pluralCollectionName, schema),
       beautifyOption
     )
   );

@@ -38,7 +38,7 @@ const startExpressApp = async () => {
 };
 
 if (checkEnv.includes(node_env)) {
-  const nextApp = next({ dev, dir: path.resolve(__dirname, '../'), port });
+  const nextApp = next({ dev, dir: path.resolve(__dirname, '../../'), port });
   const handle = nextApp.getRequestHandler();
   nextApp
     .prepare()

@@ -11,9 +11,12 @@ import { buildAppsFromDB } from './controllers/manageApp';
 import { json } from 'body-parser';
 import cors from 'cors';
 import { customFileParser } from './libs/customFileParser';
+import Application from './controllers/appStatus';
 import cmsConfig from './config.json';
+import fs from 'fs-extra';
 
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
+const ROOT = 'ROOT' in process.env ? process?.env?.ROOT?.trim() : '';
 const checkEnv = ['production', 'performance'];
 
 const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; appName: string }) => {
@@ -31,7 +34,7 @@ const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; ap
       endpoint: '/openapi.json',
     },
     swaggerUI: {
-      path: '/docs',
+      path: `/docs`,
     },
   });
 };
@@ -48,6 +51,7 @@ const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boole
   app.use(`/graphql/${subfolder}`, cors(), json(), expressMiddleware(apollo));
   app.use(`/rest/${subfolder}`, getSofa({ Schema, Resolver, appName: subfolder }));
   logger.info(`✓ ${subfolder} :- GraphQL running on /graphql/${subfolder}`);
+  logger.info(`✓ ${subfolder} :- Swagger docs on /rest/${subfolder}/docs`);
   return true;
 };
 
@@ -72,20 +76,6 @@ const appManagerApolloServer = async ({ app }: { app: any }) => {
   );
   app.use(`/rest/appManager`, getSofa({ Schema, Resolver, appName: 'appManager' }));
   logger.info(`✓ appManager :- GraphQL running on /appManager`);
-  return true;
-};
-
-const createGraphQlFederation = async (app: any) => {
-  const Schemas = require('./federatedEP/schema');
-  const Resolvers = require('./federatedEP/resolvers');
-  const apollo = new ApolloServer({
-    introspection: !checkEnv.includes(work_env),
-    resolvers: Resolvers,
-    typeDefs: Schemas,
-  });
-  await apollo.start();
-  app.use(`/graphql`, cors(), json(), expressMiddleware(apollo));
-  logger.info(`✓ Federated GraphQL running on /graphql`);
   return true;
 };
 
@@ -127,25 +117,98 @@ const runAppWithPM2 = ({ appName, script }: { appName: string; script: string })
 };
 
 const runAsMicroService = async () => {
-  conn.on('connected', async () => {
-    if (work_env === 'local') {
-      await buildAppsFromDB();
-    }
-    const promiseArr: any = [];
-    const apps: any = await dbModels.apps.find({});
-    apps.forEach((e: any) => {
-      const { appName, running } = e;
-      const script = path.resolve(__dirname, `./apps/${appName}/server.js`);
-      if (running) {
-        promiseArr.push(runAppWithPM2({ appName, script }));
+  const appStatus = new Application();
+  appStatus.checkAppStaus();
+  if (!appStatus.isMetadataDbConfigured) {
+    logger.error(`✗ DataBase not configured for metadata`);
+    process.exit(1);
+  }
+  if (!appStatus.isSecretsConfigured) {
+    logger.error(`✗ Secrets not configured`);
+    process.exit(1);
+  }
+
+  return new Promise<void>(async (resolve, reject) => {
+    const microservicesFunctions = async () => {
+      if (work_env === 'development') {
+        await buildAppsFromDB();
       }
-    });
-    await Promise.allSettled(promiseArr);
-    pm2.disconnect();
+      const promiseArr: any = [];
+      const apps: any = await dbModels.apps.find({});
+      apps.forEach((e: any) => {
+        const { appName, running } = e;
+        const script = path.resolve(__dirname, `./apps/${appName}/server.js`);
+        if (running) {
+          promiseArr.push(runAppWithPM2({ appName, script }));
+        }
+      });
+      await Promise.allSettled(promiseArr);
+      pm2.disconnect();
+    };
+
+    if (cmsConfig.metadataDb.orm === 'mongoose') {
+      conn.on('connected', async () => {
+        const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
+        if (!checkIfAdminRegistered) {
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth/`);
+        } else {
+          await microservicesFunctions();
+        }
+        writeAppJson();
+        resolve();
+      });
+      conn.on('disconnected', async () => {
+        reject(`✗ Metadata DB could not be connected`);
+      });
+    }
+
+    if (cmsConfig.metadataDb.orm === 'sequelize') {
+      try {
+        await conn.sync();
+        writeAppJson();
+        const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
+        if (!checkIfAdminRegistered) {
+          await microservicesFunctions();
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth`);
+        } else {
+          await microservicesFunctions();
+        }
+        resolve();
+      } catch (error) {
+        reject(`✗ Metadata DB could not be connected due to : ${error}`);
+      }
+    }
   });
 };
 
+const writeAppJson = async () => {
+  try {
+    const tempJsonPath = path.resolve(__dirname, '../../data/.temp.json');
+    const env = work_env;
+    const [apps, dbSchemas, dbCredentials] = await Promise.all([
+      await dbModels.apps.find({}),
+      await dbModels.dbSchemas.find({}),
+      await dbModels.dbCredentials.find({ env }),
+    ]);
+    fs.writeJSONSync(tempJsonPath, { apps, dbSchemas, dbCredentials }, { spaces: '\t' });
+  } catch (error) {
+    logger.error(`${error}`);
+  }
+  return true;
+};
+
 const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
+  const appStatus = new Application();
+  appStatus.checkAppStaus();
+  if (!appStatus.isMetadataDbConfigured) {
+    logger.error(`✗ DataBase not configured for metadata`);
+    process.exit(1);
+  }
+  if (!appStatus.isSecretsConfigured) {
+    logger.error(`✗ Secrets not configured`);
+    process.exit(1);
+  }
+
   return new Promise<void>(async (resolve, reject) => {
     const monolithFunctions = async () => {
       if (work_env === 'development') {
@@ -168,7 +231,13 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
     };
     if (cmsConfig.metadataDb.orm === 'mongoose') {
       conn.on('connected', async () => {
-        await monolithFunctions();
+        const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
+        if (!checkIfAdminRegistered) {
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth/`);
+        } else {
+          await monolithFunctions();
+        }
+        writeAppJson();
         resolve();
       });
       conn.on('disconnected', async () => {
@@ -179,7 +248,14 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
     if (cmsConfig.metadataDb.orm === 'sequelize') {
       try {
         await conn.sync();
-        await monolithFunctions();
+        writeAppJson();
+        const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
+        if (!checkIfAdminRegistered) {
+          await monolithFunctions();
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth`);
+        } else {
+          await monolithFunctions();
+        }
         resolve();
       } catch (error) {
         reject(`✗ Metadata DB could not be connected due to : ${error}`);

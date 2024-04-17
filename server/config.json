@@ -1,4 +1,12 @@
 {
+  "APP_NAME": "Fusion CMS",
+  "DEPLOYMENT_URL": "http://localhost:3001",
+  "LOGO_URL": {
+    "light": "/logo/light/icons8-react-native-96.svg",
+    "dark": "/logo/dark/icons8-react-native-96.svg"
+  },
+  "ENVS": ["development", "production"],
+  "DEV_ENVS": ["development"],
   "metadataDb": {
     "type": "mysql",
     "orm": "sequelize",
@@ -14,7 +22,15 @@
     "bearerSecret": "secret-token",
     "refreshTokenSecret": "refresh-token",
     "apiKeySecret": "api-key-secret",
-    "passwordSecret": "password-secret"
+    "twoWayEncryptionSecret": "twoWay-encryption-secret",
+    "uniqueEmailSecret": "unique-email-secret"
   },
-  "appStatus": {}
+  "user": {
+    "additionalRoles": ["consumerGold"]
+  },
+  "envConfigurations": {
+    "toekenTimeDescription": "Times are in minutes",
+    "tokenExpiration": 15,
+    "refreshTokenExpiration": 1440
+  }
 }

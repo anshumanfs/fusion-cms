@@ -32,8 +32,12 @@ const getEagerLoadingOptions = (info: any, pluralCollectionName: string) => {
         let includeObj: any = {};
         // finding object that is being referenced
         const referenceObj = collections.find(
-          (collection: any) => schema[e.name.value].ref.to === collection.originalCollectionName
+          (collection: any) => schema[e.name.value]?.ref?.to === collection.originalCollectionName
         );
+        // required to mark federation so that the resolver chain will handle it
+        if (!referenceObj) {
+          return;
+        }
         // add require statement for dbModels
         includeObj.model = require(`../dbModels/${referenceObj.pluralCollectionName}.js`);
         includeObj.include = populateOptionsHelper(e.selectionSet.selections);

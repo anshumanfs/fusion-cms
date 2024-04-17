@@ -1,25 +1,28 @@
-import { DataTypes } from 'sequelize';
 import { conn } from '../../db';
+import config from '../../config.json';
 import sequelizeQueryServices from '../services/sequelize';
 const {
   addEnums,
-  unique,
   addDefaultValue,
   primaryKey,
-  ObjArray,
-  Optional,
   autoIncrement,
-  Nullable,
   Types,
+  Optional,
 } = require('../../templates/mysql/utils/schemaHelper');
+const additionalRoles = config.user.additionalRoles || [];
+
 const model: any = conn.define(
   'cms_users',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
-    userName: Types.STRING(),
+    firstName: Types.STRING(),
+    lastName: Optional(Types.STRING()),
     email: Types.EMAIL(),
     password: Types.STRING(),
     apiKey: Types.STRING(),
+    role: addDefaultValue(addEnums(Types.STRING(), ['admin', 'user', ...additionalRoles]), 'user'),
+    isVerified: addDefaultValue(Types.BOOLEAN(), false), // true if user has verified the email and account is active
+    isBlocked: addDefaultValue(Types.BOOLEAN(), false), // true if user is blocked by admin
   },
   {
     tableName: 'cms_users',

@@ -27,6 +27,15 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# local config files
+.vscode
+
+# ignore files that are marked as secure
+.secure*
+
+# ignore files that are marked as temp
+.temp*
+
 # vercel
 .vercel
 

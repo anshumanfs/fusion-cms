@@ -1,4 +1,5 @@
 import lodash from 'lodash';
+import tempJson from '../../../../data/.temp.json';
 
 const replaceAllParenthesis = (text: string, replacement: string) => {
   const pattern = /\([\w\W]*?\)/g;
@@ -14,6 +15,7 @@ const replaceAllParenthesis = (text: string, replacement: string) => {
  */
 const jsonToQueryType = (json: any, name: string, appJson: any) => {
   let object: any;
+  let federationTypes = ``;
   if (typeof json === 'string') {
     object = JSON.parse(json);
   } else {
@@ -38,6 +40,27 @@ const jsonToQueryType = (json: any, name: string, appJson: any) => {
         object[field].type = `${refGraphQLType}`;
       }
     }
+
+    // handles references to other collections or in other apps // federation
+    if (object[field].hasOwnProperty('federate') && lodash.isPlainObject(object[field].federate)) {
+      let appName = object[field].federate.appName;
+      let refCollectionName = object[field].federate.collection;
+      let allCollections = lodash.filter(tempJson.dbSchemas, {
+        appName,
+      });
+      let refCollectionSchema = lodash.filter(allCollections, {
+        originalCollectionName: refCollectionName,
+      });
+      federationTypes += jsonToQueryType(refCollectionSchema[0].schema, refCollectionSchema[0].originalCollectionName, {
+        appName,
+      });
+      if (object[field].isArray) {
+        object[field].type = `[${refCollectionName}]`;
+      } else {
+        object[field].type = `${refCollectionName}`;
+      }
+    }
+
     object[field].type = replaceAllParenthesis(object[field].type, '');
     return `${field}: ${object[field].type}`;
   });
@@ -46,6 +69,7 @@ const jsonToQueryType = (json: any, name: string, appJson: any) => {
     type ${name} {
         ${queryFields.join('\n  ')}
     }
+    ${federationTypes}
   `;
   return queryType;
 };

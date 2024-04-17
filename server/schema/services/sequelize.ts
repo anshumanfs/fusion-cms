@@ -41,6 +41,9 @@ const convertProjectionToAttribute = (projection: any, model: any) => {
 
 export default function sequelizeQueryServices(model: any) {
   return {
+    countDocuments: async (filter = {}) => {
+      return model.count({ where: filter });
+    },
     find: async (filter = {}, projection = {}, options = {}) => {
       const attributes = convertProjectionToAttribute(projection, model);
       // modify filter to include $in functionality to sequelize
@@ -76,7 +79,8 @@ export default function sequelizeQueryServices(model: any) {
           }
           delete update.$inc;
         }
-        return model.update(update, { where: filter, ...options });
+        await model.update(update, { where: filter, ...options });
+        return model.findOne({ where: filter });
       } else {
         if (options.upsert) {
           return model.create({ ...filter, ...update }, { ...options });

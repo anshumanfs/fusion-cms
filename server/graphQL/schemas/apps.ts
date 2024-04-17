@@ -10,6 +10,7 @@ const Schema = gql`
     createApp(input: createApp!): Message
     updateApp(input: createApp!): Message
     removeApp(appName: String!): JSON
+    runApp(appName: String!): Message
   }
 
   type App {
@@ -19,7 +20,7 @@ const Schema = gql`
     isAppCompleted: Boolean
     port: Int
     running: Boolean
-    schemas: JSON
+    schemas: [appSchema]
   }
 
   type Message {

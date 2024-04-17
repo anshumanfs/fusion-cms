@@ -48,10 +48,10 @@ const createDbModels = async (options: DbModelsInput) => {
   const dbModelsDir = path.resolve(__dirname, '../../apps/' + appName + '/dbModels');
   const graphQlSchemaDir = path.resolve(__dirname, '../../apps/' + appName + '/graphQlSchemas');
   const resolverDir = path.resolve(__dirname, '../../apps/' + appName + '/resolvers');
-  const rawSQLMiddlewareFile = path.resolve(__dirname, `../../../data/files/middleware/${appName}/rawSQL.js`);
+  const rawSQLMiddlewareFile = path.resolve(__dirname, `../../../../data/files/middleware/${appName}/rawSQL.js`);
   const middlewareFile = path.resolve(
     __dirname,
-    `../../../data/files/middleware/${appName}/${pluralCollectionName}.js`
+    `../../../../data/files/middleware/${appName}/${pluralCollectionName}.js`
   );
 
   //const subDirs = ['/middleware', '/dbModels', '/certs', '/graphQlSchemas', '/resolvers', '/routes']
@@ -117,7 +117,10 @@ const createDbModels = async (options: DbModelsInput) => {
   fs.ensureFileSync(`${resolverDir}/${pluralCollectionName}.js`);
   fs.writeFileSync(
     `${resolverDir}/${pluralCollectionName}.js`,
-    beautify(generateResolver(appName, singularCollectionName, pluralCollectionName), beautifyOption)
+    beautify(
+      generateResolver(appName, originalCollectionName, singularCollectionName, pluralCollectionName, schema),
+      beautifyOption
+    )
   );
 
   //create index Resolver

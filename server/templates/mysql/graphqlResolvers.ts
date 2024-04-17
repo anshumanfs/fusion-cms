@@ -1,3 +1,52 @@
+import lodash from 'lodash';
+import tempJson from '../../../data/.temp.json';
+
+const generateFederatedResolver = (
+  appName: string,
+  originalCollectionName: string,
+  singularCollectionName: string,
+  pluralCollectionName: string,
+  schema: any
+) => {
+  let federationImports = '';
+  let federationResolver = `${singularCollectionName}: {`;
+  try {
+    let schemaKeys = Object.keys(schema);
+    schemaKeys.forEach((key: string) => {
+      let { federate, type }: any = schema[key as keyof typeof schema];
+      if (lodash.isString(type) && lodash.isPlainObject(federate)) {
+        let { appName, collection, foreignField } = federate;
+        let collectionSchema = lodash.filter(tempJson.dbSchemas, { appName, originalCollectionName: collection });
+        let { dbType } = lodash.filter(tempJson.apps, { appName })[0];
+        let collectionName = collectionSchema[0].singularCollectionName;
+        let pluralCollectionName = collectionSchema[0].pluralCollectionName;
+        federationImports += `const ${appName}${collectionName}Resolver = require('../../${appName}/graphqlResolvers/${pluralCollectionName}');\n`;
+        let args = dbType === 'mongo' ? `{${foreignField}: parent.${key}}` : `{where:{${foreignField}: parent.${key}}}`;
+        federationResolver += `
+          async ${key}(parent, args, contextValue, info) {
+            return await ${appName}${collectionName}Resolver.Query.${collectionName}(parent, ${args}, contextValue, info);
+          },`;
+      }
+
+      if (lodash.isPlainObject(type)) {
+        let result = generateFederatedResolver(
+          appName,
+          originalCollectionName,
+          key,
+          pluralCollectionName,
+          lodash.cloneDeep(type)
+        );
+        federationImports += result.federationImports;
+        federationResolver += result.federationResolver;
+      }
+    });
+  } catch (error) {
+    throw error;
+  }
+  federationResolver += `},`;
+  return { federationImports, federationResolver };
+};
+
 /**
  * Generates the function comment for the given function body.
  *
@@ -10,9 +59,11 @@ const createIndexResolver = (appName: string) => {
         const keys = require('./app.json'); 
         const directory = path.resolve(__dirname,'./resolvers'); 
         const conn = require('./db'); 
-        const { QueryTypes } = require('sequelize'); 
-        const { customScalarResolvers } = require('./utils/customScalar');
-        const { rawSQLMiddleware } = require('../../../data/files/middleware/${appName}/rawSQL.js'); 
+        const { QueryTypes } = require('sequelize');
+        const { resolvers:scalarResolvers } = require('graphql-scalars'); 
+        const sqlCustomScalarResolvers = require('./utils/customScalar');
+        const mongoCustomScalarResolvers = require('../../templates/mongo/utils/customScalar');
+        const { rawSQLMiddleware } = require('../../../../data/files/middleware/${appName}/rawSQL.js'); 
         let Query = { 
           RAW_SQL : async (parent, args, contextValue, info) => { 
             const preMiddlewareResult = await rawSQLMiddleware.pre(parent, args, contextValue, info); 
@@ -25,13 +76,15 @@ const createIndexResolver = (appName: string) => {
           }, 
         }; 
         let Mutation = {}; 
+        let OtherResolvers = {};
         keys.collections.forEach(async(e)=>{ 
           const { pluralCollectionName } = e; 
           const ref = require(path.join(directory, pluralCollectionName)); 
-          Query = { ...Query, ...ref.Query } 
-          Mutation = { ...Mutation, ...ref.Mutation } 
+          Query = { ...Query, ...ref.Query };
+          Mutation = { ...Mutation, ...ref.Mutation };
+          OtherResolvers = { ...OtherResolvers, ...ref };
         }); 
-        module.exports = { ...customScalarResolvers , Query , Mutation};`;
+        module.exports = { ...sqlCustomScalarResolvers.customScalarResolvers, ...mongoCustomScalarResolvers.customScalarResolvers , ...scalarResolvers, ...OtherResolvers, Query , Mutation};`;
   return indexResolverContent;
 };
 
@@ -43,13 +96,29 @@ const createIndexResolver = (appName: string) => {
  * @param {string} pluralCollectionName - The name of the plural collection.
  * @return {string} The generated resolver file content.
  */
-const generateResolver = (appName: string, singularCollectionName: string, pluralCollectionName: string) => {
+const generateResolver = (
+  appName: string,
+  originalCollectionName: string,
+  singularCollectionName: string,
+  pluralCollectionName: string,
+  schema: string
+) => {
+  const { federationImports, federationResolver } = generateFederatedResolver(
+    appName,
+    originalCollectionName,
+    singularCollectionName,
+    pluralCollectionName,
+    schema
+  );
+
   const resolverFileContent = `
     const ${pluralCollectionName} = require('../dbModels/${pluralCollectionName}.js'); 
-    const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
+    const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
     const { mapGqlFieldToSql, getEagerLoadingOptions } = require('../utils/resolverUtils');
     const { translateQueryToSequelize, translateWhereToSequelize, translateResponseAfterEagerLoading } = require('../utils/translators');
     const Errors = require('../../../libs/errors');
+
+    ${federationImports}
 
     const resolvers = { 
       Query: { 
@@ -59,8 +128,8 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
           const include = getEagerLoadingOptions(info, '${pluralCollectionName}');
           const { where , order, group, limit, offset } = preMiddlewareResult.args;
           const query = translateQueryToSequelize({ where, attributes, order, group, limit, offset, include },${pluralCollectionName});
-          let result = await ${pluralCollectionName}.findAll(query);      
-          result = translateResponseAfterEagerLoading(result, '${pluralCollectionName}'); 
+          let result = await ${pluralCollectionName}.findAll(query);
+          result = translateResponseAfterEagerLoading(result, '${pluralCollectionName}');
           const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
           return postMiddlewareResult;
         }, 
@@ -124,7 +193,8 @@ const generateResolver = (appName: string, singularCollectionName: string, plura
             const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(findResult); 
             return postMiddlewareResult; 
           } 
-        } 
+        },
+        ${federationResolver} 
       }; 
       module.exports = resolvers;
     `;
