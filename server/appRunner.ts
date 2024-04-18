@@ -14,6 +14,7 @@ import { customFileParser } from './libs/customFileParser';
 import Application from './controllers/appStatus';
 import cmsConfig from './config.json';
 import fs from 'fs-extra';
+import { authMiddleware } from './middlewares/auth';
 
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
 const ROOT = 'ROOT' in process.env ? process?.env?.ROOT?.trim() : '';
@@ -48,7 +49,16 @@ const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boole
     typeDefs: Schema,
   });
   await apollo.start();
-  app.use(`/graphql/${subfolder}`, cors(), json(), expressMiddleware(apollo));
+  app.use(
+    `/graphql/${subfolder}`,
+    cors(),
+    json(),
+    expressMiddleware(apollo, {
+      context: async ({ req }: any) => {
+        return await authMiddleware(req);
+      },
+    })
+  );
   app.use(`/rest/${subfolder}`, getSofa({ Schema, Resolver, appName: subfolder }));
   logger.info(`✓ ${subfolder} :- GraphQL running on /graphql/${subfolder}`);
   logger.info(`✓ ${subfolder} :- Swagger docs on /rest/${subfolder}/docs`);
@@ -70,7 +80,7 @@ const appManagerApolloServer = async ({ app }: { app: any }) => {
     customFileParser,
     expressMiddleware(apollo, {
       context: async ({ req }: any) => {
-        return { req };
+        return await authMiddleware(req);
       },
     })
   );

@@ -5,9 +5,17 @@ import { dbModels } from '../db';
 import { oneWayEncoder, twoWayDecoder, twoWayEncoder } from '../libs/encoderDecoder';
 
 // operations for which the auth middleware should be excluded
-const excludedOperations = ['login', 'register', 'forgotPassword', 'resetPassword', 'verifyEmail'];
+// this is a very specific operation for security purposes
+const excludedOperations = [
+  'Login',
+  'RegisterUser',
+  'ForgotPassword',
+  'RequestPasswordChangeEmail',
+  'ActivateAccount',
+  'IntrospectionQuery',
+];
 
-const tokenBasedAuth = async (req: Request, res: Response) => {
+const tokenBasedAuth = async (req: Request) => {
   const token = req.headers.authorization;
   const bearerToken = token?.split(' ')[1];
   if (!bearerToken) {
@@ -25,10 +33,10 @@ const tokenBasedAuth = async (req: Request, res: Response) => {
   if (!user || !user.isBlocked || !user.isVerified) {
     throw Errors.UNAUTHORIZED('User is either not verified or blocked by the admin');
   }
-  return user;
+  req.body.user = user || {};
 };
 
-const apiKeyBasedAuth = async (req: Request, res: Response) => {
+const apiKeyBasedAuth = async (req: Request) => {
   const apiKey = req.headers['x-api-key'];
   if (!apiKey) {
     throw Errors.UNAUTHORIZED('API key not found');
@@ -38,17 +46,25 @@ const apiKeyBasedAuth = async (req: Request, res: Response) => {
   if (!user) {
     throw Errors.UNAUTHORIZED('Invalid API key');
   }
-  return user;
+  req.body.user = user || {};
 };
 
-const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+const authMiddleware = async (req: Request) => {
+  const operationName = req.body.operationName;
+  const path = req.baseUrl;
+  // this is a very strict implementation which needs to be exact or else it will fail
+  if (path === '/appManager' && excludedOperations.includes(operationName)) {
+    return { req };
+  }
+
   if (req.headers.authorization) {
-    await tokenBasedAuth(req, res);
+    await tokenBasedAuth(req);
   } else if (req.headers['x-api-key']) {
-    await apiKeyBasedAuth(req, res);
+    await apiKeyBasedAuth(req);
   } else {
     throw Errors.UNAUTHORIZED('API key or token not found');
   }
+  return { req };
 };
 
 export { apiKeyBasedAuth, authMiddleware, tokenBasedAuth };
