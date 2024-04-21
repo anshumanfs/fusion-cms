@@ -20,7 +20,7 @@ import { authMiddleware } from './middlewares/auth';
 
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
 const ROOT = 'ROOT' in process.env ? process?.env?.ROOT?.trim() : '';
-const GRAPHQL_MODULE = 'GRAPHQL_MODULE' in process.env ? process?.env?.GRAPHQL_MODULE?.trim() : 'yoga';
+const GRAPHQL_MODULE = 'GRAPHQL_MODULE' in process.env ? process?.env?.GRAPHQL_MODULE?.trim() : 'apollo';
 const checkEnv = ['production', 'performance'];
 
 const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; appName: string }) => {
