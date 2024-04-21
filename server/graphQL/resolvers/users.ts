@@ -95,7 +95,7 @@ const requestNewToken = async (_: any, args: any) => {
     throw Errors.UNAUTHORIZED('Refresh token not found');
   }
   const decryptedRefreshToken = JSON.parse(twoWayDecoder(refreshToken, Config.secrets.refreshTokenSecret));
-  const refreshTokenValidityInMs = Config.envConfigurations.refreshTokenExpiration * 60;
+  const refreshTokenValidityInMs = Config.envConfigurations.refreshTokenExpiration * 60 * 1000;
 
   const refreshTokenCreatedAt = new Date(decryptedRefreshToken.createdAt).getTime();
   const currentTime = new Date().getTime();
@@ -107,7 +107,7 @@ const requestNewToken = async (_: any, args: any) => {
   if (!user) {
     throw Errors.UNAUTHORIZED('Invalid refresh token');
   }
-  if (!user.isVerified || !user.isBlocked) {
+  if (!user.isVerified || user.isBlocked) {
     throw Errors.UNAUTHORIZED('User is either not verified or blocked by the admin');
   }
 

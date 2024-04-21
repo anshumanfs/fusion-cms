@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.9.0",
+    "@envelop/apollo-server-errors": "^6.0.0",
     "@graphql-tools/schema": "^10.0.0",
     "@hookform/resolvers": "^3.3.0",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -62,6 +63,7 @@
     "graphql": "^16.8.1",
     "graphql-scalars": "^1.22.2",
     "graphql-tag": "^2.12.6",
+    "graphql-yoga": "^5.3.0",
     "jest": "^29.6.2",
     "js-beautify": "^1.14.9",
     "lodash": "^4.17.21",

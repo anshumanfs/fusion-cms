@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { ApolloServer } from '@apollo/server';
+import { createYoga, createSchema } from 'graphql-yoga';
 import { expressMiddleware } from '@apollo/server/express4';
+import { useApolloServerErrors } from '@envelop/apollo-server-errors';
 import { useSofa } from 'sofa-api';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import path from 'path';
@@ -18,6 +20,7 @@ import { authMiddleware } from './middlewares/auth';
 
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
 const ROOT = 'ROOT' in process.env ? process?.env?.ROOT?.trim() : '';
+const GRAPHQL_MODULE = 'GRAPHQL_MODULE' in process.env ? process?.env?.GRAPHQL_MODULE?.trim() : 'yoga';
 const checkEnv = ['production', 'performance'];
 
 const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; appName: string }) => {
@@ -43,22 +46,40 @@ const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; ap
 const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boolean; subfolder: string }) => {
   const Resolver = require(`./apps/${subfolder}/indexResolver`);
   const Schema = require(`./apps/${subfolder}/indexSchema`);
-  const apollo = new ApolloServer({
-    introspection: !checkEnv.includes(work_env),
-    resolvers: Resolver,
-    typeDefs: Schema,
-  });
-  await apollo.start();
-  app.use(
-    `/graphql/${subfolder}`,
-    cors(),
-    json(),
-    expressMiddleware(apollo, {
+
+  if (GRAPHQL_MODULE === 'yoga') {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: Schema,
+        resolvers: Resolver,
+      }),
       context: async ({ req }: any) => {
         return await authMiddleware(req);
       },
-    })
-  );
+      plugins: [useApolloServerErrors()],
+      graphqlEndpoint: `/graphql/${subfolder}`,
+    });
+    app.use(`/graphql/${subfolder}`, cors(), json(), yoga);
+  }
+
+  if (GRAPHQL_MODULE === 'apollo') {
+    const apollo = new ApolloServer({
+      introspection: !checkEnv.includes(work_env),
+      resolvers: Resolver,
+      typeDefs: Schema,
+    });
+    await apollo.start();
+    app.use(
+      `/graphql/${subfolder}`,
+      cors(),
+      json(),
+      expressMiddleware(apollo, {
+        context: async ({ req }: any) => {
+          return await authMiddleware(req);
+        },
+      })
+    );
+  }
   app.use(`/rest/${subfolder}`, getSofa({ Schema, Resolver, appName: subfolder }));
   logger.info(`✓ ${subfolder} :- GraphQL running on /graphql/${subfolder}`);
   logger.info(`✓ ${subfolder} :- Swagger docs on /rest/${subfolder}/docs`);
@@ -68,22 +89,40 @@ const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boole
 const appManagerApolloServer = async ({ app }: { app: any }) => {
   const Resolver = require('./graphQL/resolvers/index');
   const Schema = require('./graphQl/schemas/index');
-  const apollo = new ApolloServer({
-    resolvers: Resolver,
-    typeDefs: Schema,
-  });
-  await apollo.start();
-  app.use(
-    `/appManager`,
-    cors(),
-    json(),
-    customFileParser,
-    expressMiddleware(apollo, {
+
+  if (GRAPHQL_MODULE === 'yoga') {
+    const yoga = createYoga({
+      schema: createSchema({
+        typeDefs: Schema,
+        resolvers: Resolver,
+      }),
       context: async ({ req }: any) => {
         return await authMiddleware(req);
       },
-    })
-  );
+      plugins: [useApolloServerErrors()],
+      graphqlEndpoint: `/appManager`,
+    });
+    app.use(`/appManager`, cors(), json(), yoga);
+  }
+
+  if (GRAPHQL_MODULE === 'apollo') {
+    const apollo = new ApolloServer({
+      introspection: !checkEnv.includes(work_env),
+      resolvers: Resolver,
+      typeDefs: Schema,
+    });
+    await apollo.start();
+    app.use(
+      `/appManager`,
+      cors(),
+      json(),
+      expressMiddleware(apollo, {
+        context: async ({ req }: any) => {
+          return await authMiddleware(req);
+        },
+      })
+    );
+  }
   app.use(`/rest/appManager`, getSofa({ Schema, Resolver, appName: 'appManager' }));
   logger.info(`✓ appManager :- GraphQL running on /appManager`);
   return true;
