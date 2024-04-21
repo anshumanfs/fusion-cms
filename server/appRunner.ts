@@ -102,7 +102,7 @@ const appManagerApolloServer = async ({ app }: { app: any }) => {
       plugins: [useApolloServerErrors()],
       graphqlEndpoint: `/appManager`,
     });
-    app.use(`/appManager`, cors(), json(), yoga);
+    app.use(`/appManager`, cors(), json(), customFileParser, yoga);
   }
 
   if (GRAPHQL_MODULE === 'apollo') {
@@ -116,6 +116,7 @@ const appManagerApolloServer = async ({ app }: { app: any }) => {
       `/appManager`,
       cors(),
       json(),
+      customFileParser,
       expressMiddleware(apollo, {
         context: async ({ req }: any) => {
           return await authMiddleware(req);
