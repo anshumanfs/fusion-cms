@@ -1,17 +1,16 @@
 import { Schema } from 'mongoose';
 import { conn } from '../../db';
 import mongooseQueryServices from '../services/mongoose';
-const { Types } = require('../../templates/mongo/utils/schemaHelper');
+const { Types, addDefaultValue } = require('../../templates/mongo/utils/schemaHelper');
 
 const QuerySchema: any = new Schema(
   {
     _id: Types.ObjectId(),
-    userName: Types.String(),
+    email: Types.String(),
     appName: Types.String(),
-    canCreate: Types.Mixed(),
-    canRead: Types.Mixed(),
-    canUpdate: Types.Mixed(),
-    canDelete: Types.Mixed(),
+    endPointName: Types.String(),
+    isAllowed: addDefaultValue(Types.String(), 'false'),
+    allowedInChain: addDefaultValue(Types.Boolean(), false), // to check if previous resolver has allowed the access
   },
   {
     timestamps: true,

@@ -17,16 +17,16 @@ const model: any = conn.define(
   'cms_accessSchemas',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
-    userName: Types.STRING(),
+    email: Types.STRING(),
     appName: Types.STRING(),
-    canCreate: addGetter(Types.JSON(), 'canCreate', toJSON),
-    canRead: addGetter(Types.JSON(), 'canRead', toJSON),
-    canUpdate: addGetter(Types.JSON(), 'canUpdate', toJSON),
-    canDelete: addGetter(Types.JSON(), 'canDelete', toJSON),
+    endPointName: Types.STRING(),
+    isAllowed: addDefaultValue(Types.STRING(), 'false'),
+    allowedInChain: addDefaultValue(Types.BOOLEAN(), false), // to check if previous resolver has allowed the access
   },
   {
     tableName: 'cms_accessSchemas',
     timestamps: true,
+    alter: true,
   }
 );
 const services = sequelizeQueryServices(model);

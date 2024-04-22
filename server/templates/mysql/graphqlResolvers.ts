@@ -63,16 +63,20 @@ const createIndexResolver = (appName: string) => {
         const { resolvers:scalarResolvers } = require('graphql-scalars'); 
         const sqlCustomScalarResolvers = require('./utils/customScalar');
         const mongoCustomScalarResolvers = require('../../templates/mongo/utils/customScalar');
-        const { rawSQLMiddleware } = require('../../../../data/files/middleware/${appName}/rawSQL.js'); 
+        const { rawSQLMiddleware } = require('../../../../data/files/middleware/${appName}/rawSQL.js');
+        const { checkPreAccess, checkPostAccess } = require('../../middlewares/accessManager');
+        
         let Query = { 
-          RAW_SQL : async (parent, args, contextValue, info) => { 
+          RAW_SQL : async (parent, args, contextValue, info) => {
+            await checkPreAccess(parent, args, contextValue, info, '${appName}', 'RAW_SQL'); 
             const preMiddlewareResult = await rawSQLMiddleware.pre(parent, args, contextValue, info); 
             const { sql, Type } = preMiddlewareResult.args; 
             const result = await conn.query(sql, { 
               type: QueryTypes[Type] 
             }); 
             const postMiddlewareResult = await rawSQLMiddleware.post(result); 
-            return postMiddlewareResult; 
+            const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+            return postAccessResult;
           }, 
         }; 
         let Mutation = {}; 
@@ -116,13 +120,15 @@ const generateResolver = (
     const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
     const { mapGqlFieldToSql, getEagerLoadingOptions } = require('../utils/resolverUtils');
     const { translateQueryToSequelize, translateWhereToSequelize, translateResponseAfterEagerLoading } = require('../utils/translators');
+    const { checkPreAccess, checkPostAccess } = require('../../../middlewares/accessManager');
     const Errors = require('../../../libs/errors');
 
     ${federationImports}
 
     const resolvers = { 
       Query: { 
-        ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
+        ${pluralCollectionName}: async (parent, args, contextValue, info) => {
+          await checkPreAccess(parent, args, contextValue, info, '${appName}', '${pluralCollectionName}'); 
           const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info); 
           const { attributes } = mapGqlFieldToSql(info);
           const include = getEagerLoadingOptions(info, '${pluralCollectionName}');
@@ -131,34 +137,42 @@ const generateResolver = (
           let result = await ${pluralCollectionName}.findAll(query);
           result = translateResponseAfterEagerLoading(result, '${pluralCollectionName}');
           const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result); 
-          return postMiddlewareResult;
+          const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+          return postAccessResult;
         }, 
-        count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
+        count_${pluralCollectionName} : async (parent, args, contextValue, info) => {
+          await checkPreAccess(parent, args, contextValue, info, '${appName}', 'count_${pluralCollectionName}'); 
           const preMiddlewareResult = await QueryPreMiddleware.count_${pluralCollectionName}(parent, args, contextValue, info); 
           const { filters } = preMiddlewareResult.args; 
           const result = await ${pluralCollectionName}.count({where: filters || {}}); 
           const postMiddlewareResult = await QueryPostMiddleware.count_${pluralCollectionName}(result); 
-          return postMiddlewareResult; 
+          const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+          return postAccessResult;
         },
 
-        ${singularCollectionName}: async (parent, args, contextValue, info) =>{  
+        ${singularCollectionName}: async (parent, args, contextValue, info) =>{
+            await checkPreAccess(parent, args, contextValue, info, '${appName}', '${singularCollectionName}'); 
             const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info); 
             const { attributes } = mapGqlFieldToSql(info); 
             const { where , order, group, limit, offset } = preMiddlewareResult.args; 
             const query = translateQueryToSequelize({ where, attributes, order, group, limit, offset },${pluralCollectionName});
             let result = await ${pluralCollectionName}.findOne(query);
             const postMiddlewareResult = await QueryPostMiddleware.${singularCollectionName}(result); 
-            return postMiddlewareResult; 
+            const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+            return postAccessResult;
           } 
         }, 
         Mutation: { 
-          create_${singularCollectionName}: async (parent, args, contextValue, info) => { 
+          create_${singularCollectionName}: async (parent, args, contextValue, info) => {
+            await checkPreAccess(parent, args, contextValue, info, '${appName}', 'create_${singularCollectionName}');
             const preMiddlewareResult = await MutationPreMiddleware.create_${singularCollectionName}(parent, args, contextValue, info); 
             const result = await ${pluralCollectionName}.create(preMiddlewareResult.args.input); 
             const postMiddlewareResult = await MutationPostMiddleware.create_${singularCollectionName}(result); 
-            return postMiddlewareResult; 
+            const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+            return postAccessResult; 
           }, 
           update_${singularCollectionName}: async (parent, args, contextValue, info) => { 
+            await checkPreAccess(parent, args, contextValue, info, '${appName}', 'update_${singularCollectionName}');
             const preMiddlewareResult = await MutationPreMiddleware.update_${singularCollectionName}(parent, args, contextValue, info);  
             let { where, updates } = preMiddlewareResult.args;
             if(Object.keys(where).length === 0 || Object.keys(where).length ===0){
@@ -174,9 +188,11 @@ const generateResolver = (
               result = await ${pluralCollectionName}.findOne({where});
             }
             const postMiddlewareResult = await MutationPostMiddleware.update_${singularCollectionName}(result);
-            return postMiddlewareResult; 
+            const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+            return postAccessResult;
           }, 
-          delete_${singularCollectionName}: async (parent, args, contextValue, info) => { 
+          delete_${singularCollectionName}: async (parent, args, contextValue, info) => {
+            await checkPreAccess(parent, args, contextValue, info, '${appName}', 'delete_${singularCollectionName}'); 
             const preMiddlewareResult = await MutationPreMiddleware.delete_${singularCollectionName}(parent, args, contextValue, info); 
             let { where } =  preMiddlewareResult.args; 
             if(Object.keys(where).length ===0){
@@ -191,7 +207,8 @@ const generateResolver = (
               throw Errors.default.BAD_REQUEST('Nothing to delete');
             }
             const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(findResult); 
-            return postMiddlewareResult; 
+            const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+            return postAccessResult; 
           } 
         },
         ${federationResolver} 
