@@ -63,17 +63,17 @@ const checkPreAccess = async (
   }
   try {
     const jsonAccess = JSON.parse(accessSchema.isAllowed); // {function:'()=>{}',precedence:'pre'|'post'}
-    if ((jsonAccess.precedence = 'pre')) {
+    if (jsonAccess.precedence === 'pre') {
       context.accessCheck.post = false;
       context.accessCheck.allowedInChain = accessSchema.allowedInChain;
-      const preFn = eval(`${jsonAccess.function}`);
+      const preFn = new Function('parent', 'args', 'context', 'info', jsonAccess.function);
       return preFn(parent, args, context, info);
     }
     // if precedence is post then set post to true and store the function in context
     // dont set allowedInChain to true as it will be set by the postcheck function
-    if ((jsonAccess.precedence = 'post')) {
+    if (jsonAccess.precedence === 'post') {
       context.accessCheck.post = true;
-      const postFn = eval(`${jsonAccess.function}`);
+      const postFn = new Function('parent', 'args', 'context', 'info', 'result', jsonAccess.function);
       context.accessCheck.function = postFn;
       return;
     }
