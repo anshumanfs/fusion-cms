@@ -17,6 +17,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 import databases from './databases.json';
+import { Link } from 'lucide-react';
 
 export function AddDatabase(props: {
   buttonVariant: 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive' | 'default';
@@ -39,88 +40,89 @@ export function AddDatabase(props: {
           {props.children}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-[60%]">
+      <DialogContent className="max-w-[100%] h-[100%]">
         <DialogHeader>
           <DialogTitle>Add Database</DialogTitle>
           <DialogDescription>Please add the details below to onboard a new database.</DialogDescription>
         </DialogHeader>
+        <div className="grid grid-cols-5">
+          <div className="col-span-1">
+            <nav className="flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1">
+              {databases.map((database, index) => {
+                return (
+                  <div key={`${index}_available_db`}>
+                    <Label
+                      htmlFor={`${database.name.toLowerCase()}_id`}
+                      className="flex flex-row items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                    >
+                      <Image src={database.image} width={35} height={35} alt={`${database.name}_logo`} />
+                      {database.name}
+                    </Label>
+                  </div>
+                );
+              })}
 
-        <div>
-          <Label htmlFor="dbType" className="text-normal">
-            Select Database
-          </Label>
-          <RadioGroup defaultValue="mongo" className="grid grid-cols-3 gap-4 pt-1" id="dbType">
-            {databases.map((database, index) => {
-              return (
-                <div key={`${index}_available_db`}>
-                  <RadioGroupItem
-                    value={database.value}
-                    id={`${database.name.toLowerCase()}_id`}
-                    className="peer sr-only"
-                  />
-                  <Label
-                    htmlFor={`${database.name.toLowerCase()}_id`}
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
-                  >
-                    <Image src={database.image} width={35} height={35} alt={`${database.name}_logo`} />
-                    {database.name}
-                  </Label>
-                </div>
-              );
-            })}
-          </RadioGroup>
-        </div>
-        <div className="grid pt-4">
-          <div className="grid grid-cols-4 items-center gap-2">
-            <Label htmlFor="name">Endpoint Name</Label>
-            <Input id="name" placeholder="Mongo" className="col-span-4" />
+              <Button variant="ghost" className="hidden lg:block">
+                Mongo
+              </Button>
+              <Button variant="ghost" className="hidden lg:block">
+                MySQL
+              </Button>
+            </nav>
+          </div>
+          <div className="col-span-4 pl-4">
+            <div className="grid pt-4">
+              <div className="grid grid-cols-4 items-center gap-2">
+                <Label htmlFor="name">Endpoint Name</Label>
+                <Input id="name" placeholder="MongoApplication" className="col-span-4" />
+              </div>
+            </div>
+            <div>
+              <Tabs defaultValue="basic" className="w-full mt-4">
+                <TabsList className="float-right py-4">
+                  <TabsTrigger value="basic">Basic</TabsTrigger>
+                  <TabsTrigger value="advanced">Advanced</TabsTrigger>
+                </TabsList>
+                <br />
+                <br />
+                <ScrollArea className="h-[200px]">
+                  <TabsContent value="basic" className="ml-2 w-[98%]">
+                    {Object.keys(options?.basicOptions).map((option, index) => {
+                      return (
+                        <div key={`${index}_basic_options`} className="grid grid-cols-4 gap-2">
+                          <Label htmlFor={option}>{options.basicOptions[option].label}</Label>
+                          <Input
+                            id={option}
+                            type={options.basicOptions[option].type}
+                            placeholder={options?.basicOptions[option].placeholder}
+                            className="col-span-4 "
+                          />
+                        </div>
+                      );
+                    })}
+                  </TabsContent>
+                  <TabsContent value="advanced" className="ml-2 w-[98%]">
+                    <div className="grid grid-cols-4 gap-2">
+                      {Object.keys(options?.advancedOptions).map((option, index) => {
+                        return (
+                          <div key={`${index}_basic_options`} className="grid gap-2">
+                            <Label htmlFor={option}>{options.advancedOptions[option].label}</Label>
+                            <Input
+                              id={option}
+                              type={options.advancedOptions[option].type}
+                              placeholder={options?.advancedOptions[option].placeholder}
+                              className="col-span-3"
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </TabsContent>
+                </ScrollArea>
+              </Tabs>
+            </div>
           </div>
         </div>
-        <div>
-          <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="float-right py-4">
-              <TabsTrigger value="basic">Basic</TabsTrigger>
-              <TabsTrigger value="advanced">Advanced</TabsTrigger>
-            </TabsList>
-            <br />
-            <br />
-            <ScrollArea className="h-[100px]">
-              <TabsContent value="basic">
-                {Object.keys(options?.basicOptions).map((option, index) => {
-                  return (
-                    <div key={`${index}_basic_options`} className="grid grid-cols-4 gap-2">
-                      <Label htmlFor={option}>{options.basicOptions[option].label}</Label>
-                      <Input
-                        id={option}
-                        type={options.basicOptions[option].type}
-                        placeholder={options?.basicOptions[option].placeholder}
-                        className="col-span-4"
-                      />
-                    </div>
-                  );
-                })}
-              </TabsContent>
-              <TabsContent value="advanced">
-                <div className="grid grid-cols-4 gap-2">
-                  {Object.keys(options?.advancedOptions).map((option, index) => {
-                    return (
-                      <div key={`${index}_basic_options`} className="grid gap-2">
-                        <Label htmlFor={option}>{options.advancedOptions[option].label}</Label>
-                        <Input
-                          id={option}
-                          type={options.advancedOptions[option].type}
-                          placeholder={options?.advancedOptions[option].placeholder}
-                          className="col-span-3"
-                        />
-                      </div>
-                    );
-                  })}
-                </div>
-              </TabsContent>
-            </ScrollArea>
-          </Tabs>
-        </div>
-
         <DialogFooter>
           <Button variant="outline">
             <svg

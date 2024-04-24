@@ -14,12 +14,9 @@ export default function Login() {
   const { toast } = useToast();
   const router = useRouter();
   const [formState, setFormState] = React.useState({
-    firstName: '',
-    lastName: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    terms: false,
+    remember: false,
   });
 
   const handleSubmit = async (e: any) => {
@@ -69,12 +66,8 @@ export default function Login() {
   };
 
   const handleValueChange = (e: any) => {
-    if (e.target.id === 'terms') {
-      setFormState((prev) => ({ ...prev, [e.target.id]: e.target.checked }));
-      return;
-    } else {
-      setFormState((prev) => ({ ...prev, [e.target.id]: e.target.value }));
-    }
+    setFormState((prev) => ({ ...prev, [e.target.id]: e.target.value }));
+    return;
   };
 
   return (
@@ -96,7 +89,15 @@ export default function Login() {
                 <Input id="password" type="password" placeholder="" onChange={handleValueChange} />
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="remember" onCheckedChange={handleValueChange} />
+                <Checkbox
+                  id="remember"
+                  onCheckedChange={() => {
+                    setFormState({
+                      ...formState,
+                      remember: !formState.remember,
+                    });
+                  }}
+                />
                 <label
                   htmlFor="remember"
                   className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
