@@ -13,6 +13,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
@@ -26,11 +27,11 @@ export function AddDatabase(props: {
 }) {
   const mongoObj = databases.find((database) => database.value === 'mongo');
   const [options, setOptions]: [any, any] = React.useState(mongoObj?.inputs);
+  const [selectedDb, setSelectedDb] = React.useState(mongoObj?.value);
 
-  const handleDbTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDb = event.target.value;
-    const selectedDbObj = databases.find((database) => database.value === selectedDb);
-    setOptions(selectedDbObj?.inputs);
+  const handleDbTypeChange = (database: any) => {
+    setSelectedDb(database?.value || 'mongo');
+    setOptions(database?.inputs || {});
   };
 
   return (
@@ -53,7 +54,12 @@ export function AddDatabase(props: {
                   <div key={`${index}_available_db`}>
                     <Label
                       htmlFor={`${database.name.toLowerCase()}_id`}
-                      className="flex flex-row items-center justify-between rounded-md border-2 border-muted bg-popover p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
+                      className={`flex flex-row items-center gap-2 rounded-md border-2 ${
+                        database.value === selectedDb ? 'border-primary' : 'border-muted'
+                      } bg-popover p-4 hover:bg-accent hover:text-accent-foreground`}
+                      onClick={() => {
+                        handleDbTypeChange(database);
+                      }}
                     >
                       <Image src={database.image} width={35} height={35} alt={`${database.name}_logo`} />
                       {database.name}
@@ -61,20 +67,13 @@ export function AddDatabase(props: {
                   </div>
                 );
               })}
-
-              <Button variant="ghost" className="hidden lg:block">
-                Mongo
-              </Button>
-              <Button variant="ghost" className="hidden lg:block">
-                MySQL
-              </Button>
             </nav>
           </div>
           <div className="col-span-4 pl-4">
             <div className="grid pt-4">
               <div className="grid grid-cols-4 items-center gap-2">
                 <Label htmlFor="name">Endpoint Name</Label>
-                <Input id="name" placeholder="MongoApplication" className="col-span-4" />
+                <Input id="name" placeholder="TestApplication" className="col-span-4" />
               </div>
             </div>
             <div>
@@ -87,32 +86,64 @@ export function AddDatabase(props: {
                 <br />
                 <ScrollArea className="h-[200px]">
                   <TabsContent value="basic" className="ml-2 w-[98%]">
-                    {Object.keys(options?.basicOptions).map((option, index) => {
-                      return (
-                        <div key={`${index}_basic_options`} className="grid grid-cols-4 gap-2">
-                          <Label htmlFor={option}>{options.basicOptions[option].label}</Label>
-                          <Input
-                            id={option}
-                            type={options.basicOptions[option].type}
-                            placeholder={options?.basicOptions[option].placeholder}
-                            className="col-span-4 "
-                          />
-                        </div>
-                      );
-                    })}
+                    <div className="grid grid-cols-4 gap-2">
+                      {Object.keys(options?.basicOptions).map((option, index) => {
+                        return (
+                          <div key={`${index}_basic_options`} className="grid gap-2">
+                            <Label htmlFor={option}>{options.basicOptions[option].label}</Label>
+                            {options.basicOptions[option].type === 'select' ? (
+                              <Select>
+                                <SelectTrigger className="col-span-4">
+                                  <SelectValue placeholder={options.basicOptions[option].placeholder} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {options.basicOptions[option].options.map((opt: any, index: number) => (
+                                    <SelectItem value={opt.value} key={`${index}_basic_select_options`}>
+                                      {opt.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <Input
+                                id={option}
+                                type={options.basicOptions[option].type}
+                                placeholder={options?.basicOptions[option].placeholder}
+                                className="col-span-4 "
+                              />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </TabsContent>
                   <TabsContent value="advanced" className="ml-2 w-[98%]">
                     <div className="grid grid-cols-4 gap-2">
                       {Object.keys(options?.advancedOptions).map((option, index) => {
                         return (
-                          <div key={`${index}_basic_options`} className="grid gap-2">
+                          <div key={`${index}_advanced_options`} className="grid gap-2">
                             <Label htmlFor={option}>{options.advancedOptions[option].label}</Label>
-                            <Input
-                              id={option}
-                              type={options.advancedOptions[option].type}
-                              placeholder={options?.advancedOptions[option].placeholder}
-                              className="col-span-3"
-                            />
+                            {options.advancedOptions[option].type === 'select' ? (
+                              <Select>
+                                <SelectTrigger className="col-span-4">
+                                  <SelectValue placeholder={options.advancedOptions[option].placeholder} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {options.advancedOptions[option].options.map((opt: any, index: number) => (
+                                    <SelectItem value={opt.value} key={`${index}_advanced_select_options`}>
+                                      {opt.label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <Input
+                                id={option}
+                                type={options.advancedOptions[option].type}
+                                placeholder={options?.advancedOptions[option].placeholder}
+                                className="col-span-4"
+                              />
+                            )}
                           </div>
                         );
                       })}
