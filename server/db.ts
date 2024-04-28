@@ -5,6 +5,10 @@ const connectorLocations = {
   mysql: './connectors/mysql',
   postgres: './connectors/postgres',
   sqlite: './connectors/sqlite',
+  mariadb: './connectors/mysql',
+  mssql: './connectors/mssql',
+  oracle: './connectors/oracle',
+  db2: './connectors/db2',
 };
 
 const orms = {
@@ -12,6 +16,10 @@ const orms = {
   mysql: 'sequelize',
   postgres: 'sequelize',
   sqlite: 'sequelize',
+  mariadb: 'sequelize',
+  mssql: 'sequelize',
+  oracle: 'sequelize',
+  db2: 'sequelize',
 };
 
 let conn: any;

@@ -5,7 +5,9 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'BAD_REQUEST',
-        status: 400,
+        http: {
+          status: 400,
+        },
       },
     });
   },
@@ -13,7 +15,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'UNAUTHORIZED',
-        status: 401,
+        http: { status: 401 },
       },
     });
   },
@@ -21,7 +23,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'FORBIDDEN',
-        status: 403,
+        http: { status: 403 },
       },
     });
   },
@@ -29,7 +31,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'NOT_FOUND',
-        status: 404,
+        http: { status: 404 },
       },
     });
   },
@@ -37,7 +39,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'METHOD_NOT_ALLOWED',
-        status: 405,
+        http: { status: 405 },
       },
     });
   },
@@ -45,7 +47,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'NOT_ACCEPTABLE',
-        status: 406,
+        http: { status: 406 },
       },
     });
   },
@@ -53,7 +55,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'PROXY_AUTHENTICATION_REQUIRED',
-        status: 407,
+        http: { status: 407 },
       },
     });
   },
@@ -61,7 +63,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'REQUEST_TIMEOUT',
-        status: 408,
+        http: { status: 408 },
       },
     });
   },
@@ -69,7 +71,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'CONFLICT',
-        status: 409,
+        http: { status: 409 },
       },
     });
   },
@@ -77,7 +79,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'GONE',
-        status: 410,
+        http: { status: 410 },
       },
     });
   },
@@ -85,7 +87,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'LENGTH_REQUIRED',
-        status: 411,
+        http: { status: 411 },
       },
     });
   },
@@ -93,7 +95,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'INTERNAL_SERVER_ERROR',
-        status: 500,
+        http: { status: 500 },
       },
     });
   },
@@ -101,7 +103,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'NOT_IMPLEMENTED',
-        status: 501,
+        http: { status: 501 },
       },
     });
   },
@@ -109,7 +111,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'BAD_GATEWAY',
-        status: 502,
+        http: { status: 502 },
       },
     });
   },
@@ -117,7 +119,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'SERVICE_UNAVAILABLE',
-        status: 503,
+        http: { status: 503 },
       },
     });
   },
@@ -125,7 +127,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'GATEWAY_TIMEOUT',
-        status: 504,
+        http: { status: 504 },
       },
     });
   },
@@ -133,7 +135,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'HTTP_VERSION_NOT_SUPPORTED',
-        status: 505,
+        http: { status: 505 },
       },
     });
   },
@@ -141,7 +143,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'VARIANT_ALSO_NEGOTIATES',
-        status: 506,
+        http: { status: 506 },
       },
     });
   },
@@ -149,7 +151,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'INSUFFICIENT_STORAGE',
-        status: 507,
+        http: { status: 507 },
       },
     });
   },
@@ -157,7 +159,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'LOOP_DETECTED',
-        status: 508,
+        http: { status: 508 },
       },
     });
   },
@@ -165,7 +167,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'BANDWIDTH_LIMIT_EXCEEDED',
-        status: 509,
+        http: { status: 509 },
       },
     });
   },
@@ -173,7 +175,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'NOT_EXTENDED',
-        status: 510,
+        http: { status: 510 },
       },
     });
   },
@@ -181,7 +183,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'NETWORK_AUTHENTICATION_REQUIRED',
-        status: 511,
+        http: { status: 511 },
       },
     });
   },
@@ -189,7 +191,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'NETWORK_CONNECT_TIMEOUT_ERROR',
-        status: 599,
+        http: { status: 599 },
       },
     });
   },
@@ -197,7 +199,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'GRAPHQL_VALIDATION_FAILED',
-        status: 400,
+        http: { status: 400 },
       },
     });
   },
@@ -205,7 +207,7 @@ const Error = {
     return new GraphQLError(message, {
       extensions: {
         code: 'GRAPHQL_PARSE_FAILED',
-        status: 400,
+        http: { status: 400 },
       },
     });
   },

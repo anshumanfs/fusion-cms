@@ -97,12 +97,14 @@ const generateResolver = (
   const { QueryPreMiddleware, QueryPostMiddleware, MutationPreMiddleware, MutationPostMiddleware } = require('../../../../../data/files/middleware/${appName}/${pluralCollectionName}.js'); 
   const { getProjections, getPopulateOptions } = require('../utils/resolverUtils'); 
   const { translateFilter, translateOptions } = require('../utils/translators');
+  const { checkPreAccess, checkPostAccess } = require('../../../middlewares/accessManager');
   const Errors = require('../../../libs/errors');
   ${federationImports}
 
   const resolvers = { 
     Query: { 
-      ${pluralCollectionName}: async (parent, args, contextValue, info) => { 
+      ${pluralCollectionName}: async (parent, args, contextValue, info) => {
+        await checkPreAccess(parent, args, contextValue, info, '${appName}', '${pluralCollectionName}');
         const projection = getProjections(info);
         const populate = getPopulateOptions(info);
         const preMiddlewareResult = await QueryPreMiddleware.${pluralCollectionName}(parent, args, contextValue, info);
@@ -115,29 +117,35 @@ const generateResolver = (
           result = await populate(result, dbRefPreserveFields);
         }
         const postMiddlewareResult = await QueryPostMiddleware.${pluralCollectionName}(result);
-        return postMiddlewareResult;
+        const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+        return postAccessResult;
       }, 
       count_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
+        await checkPreAccess(parent, args, contextValue, info, '${appName}', 'count_${pluralCollectionName}');
         const preMiddlewareResult = await QueryPreMiddleware.count_${pluralCollectionName}(parent, args, contextValue, info);
         let { filters } = preMiddlewareResult.args;
         filters = translateFilter(filters);
         const result = await ${pluralCollectionName}.find(filters).count();
         const postMiddlewareResult = await QueryPostMiddleware.count_${pluralCollectionName}(result);
-        return postMiddlewareResult;
+        const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+        return postAccessResult;
       },
       aggregate_${pluralCollectionName} : async (parent, args, contextValue, info) => { 
         try {
+          await checkPreAccess(parent, args, contextValue, info, '${appName}', 'aggregate_${pluralCollectionName}');
           const preMiddlewareResult = await QueryPreMiddleware.aggregation_${pluralCollectionName}(parent, args, contextValue, info);
           let { pipeline } = preMiddlewareResult.args;
           pipeline = validateAggregatePipeline(pipeline);
           const result = await ${pluralCollectionName}.aggregate(pipeline).allowDiskUse(true);
           const postMiddlewareResult = await QueryPostMiddleware.aggregation_${pluralCollectionName}(result);
-          return postMiddlewareResult;
+          const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+          return postAccessResult;
         } catch (error) { 
           throw Errors.default.BAD_REQUEST(error);
         }  
       }, 
-      ${singularCollectionName}: async (parent, args, contextValue, info) =>{ 
+      ${singularCollectionName}: async (parent, args, contextValue, info) =>{
+        await checkPreAccess(parent, args, contextValue, info, '${appName}', '${singularCollectionName}'); 
         const projection = getProjections(info);
         const populate = getPopulateOptions(info);
         const preMiddlewareResult = await QueryPreMiddleware.${singularCollectionName}(parent, args, contextValue, info);
@@ -150,18 +158,22 @@ const generateResolver = (
           result = await populate(result, dbRefPreserveFields);
         }
         const postMiddlewareResult = await QueryPostMiddleware.${singularCollectionName}(result);
-        return postMiddlewareResult;
+        const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+        return postAccessResult;
       }
     }, 
     Mutation: { 
-      create_${singularCollectionName}: async (parent, args, contextValue, info) => { 
+      create_${singularCollectionName}: async (parent, args, contextValue, info) => {
+        await checkPreAccess(parent, args, contextValue, info, '${appName}', 'create_${singularCollectionName}'); 
         const preMiddlewareResult = await MutationPreMiddleware.create_${singularCollectionName}(parent, args, contextValue, info);
         const model = new ${pluralCollectionName}(preMiddlewareResult.args.input);
         const result = await model.save();
         const postMiddlewareResult = await MutationPostMiddleware.create_${singularCollectionName}(result);
-        return postMiddlewareResult;
+        const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+        return postAccessResult;
       }, 
-      update_${singularCollectionName}: async (parent, args, contextValue, info) => { 
+      update_${singularCollectionName}: async (parent, args, contextValue, info) => {
+        await checkPreAccess(parent, args, contextValue, info, '${appName}', 'update_${singularCollectionName}'); 
         const preMiddlewareResult = await MutationPreMiddleware.update_${singularCollectionName}(parent, args, contextValue, info);
         let { filters, updates, options } = preMiddlewareResult.args;
         filters = translateFilter(filters);
@@ -172,9 +184,11 @@ const generateResolver = (
         options = { ...options, new: true };
         const result = await ${pluralCollectionName}.findOneAndUpdate(filters, updates, options);
         const postMiddlewareResult = await MutationPostMiddleware.update_${singularCollectionName}(result);
-        return postMiddlewareResult;
+        const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+        return postAccessResult;
       }, 
-      delete_${singularCollectionName}: async (parent, args, contextValue, info) => { 
+      delete_${singularCollectionName}: async (parent, args, contextValue, info) => {
+        await checkPreAccess(parent, args, contextValue, info, '${appName}', 'delete_${singularCollectionName}'); 
         const preMiddlewareResult = await MutationPreMiddleware.delete_${singularCollectionName}(parent, args, contextValue, info);
         let { filters, options } =  preMiddlewareResult.args;
         filters = translateFilter(filters);
@@ -184,7 +198,8 @@ const generateResolver = (
         options = translateOptions(options, 'findOneAndDelete');
         const result = await ${pluralCollectionName}.findOneAndDelete(filters, options);
         const postMiddlewareResult = await MutationPostMiddleware.delete_${singularCollectionName}(result);
-        return postMiddlewareResult;
+        const postAccessResult = await checkPostAccess(parent, args, contextValue, info, postMiddlewareResult);
+        return postAccessResult;
       }
     },
     ${federationResolver}

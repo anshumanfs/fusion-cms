@@ -20,5 +20,5 @@
     "server/**/*.json",
     "@types/**/*.ts"
   ],
-  "exclude": [".build", "node_modules", ".next", "**/*.test.*", "**/__mocks__/*", "**/__tests__/*"]
+  "exclude": [".build", "node_modules", ".next", "**/*.test.*", "**/__mocks__/*", "**/__tests__/*", "data"]
 }
