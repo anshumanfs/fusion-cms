@@ -45,4 +45,4 @@ const dbModels = {
   accessSchema,
 };
 
-export { conn, dbModels };
+export { conn, dbModels, connectorLocations };
