@@ -29,14 +29,19 @@ const removeDbCredentials = async (_: any, args: any) => {
 
 const testConnection = async (_: any, args: any) => {
   const { dbType, configs } = args;
-  const { connector } = require(connectorLocations[dbType as keyof typeof connectorLocations]);
+  const { connector } = require(`../../${connectorLocations[dbType as keyof typeof connectorLocations]}`);
   const conn = connector('test', configs);
   if (dbType === 'mongo') {
     return new Promise((resolve, reject) => {
       conn.on('error', (err: any) => {
-        reject({
+        resolve({
           message: 'Connection failed',
-          error: err,
+          status: false,
+        });
+      });
+      conn.on('disconnected', (err: any) => {
+        resolve({
+          message: 'Connection failed',
           status: false,
         });
       });
