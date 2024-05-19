@@ -8,34 +8,40 @@
         "uri": {
           "type": "textarea",
           "label": "Connection URI",
-          "placeholder": "mongodb://localhost:27017"
+          "placeholder": "mongodb://localhost:27017",
+          "required": true
         }
       },
       "advancedOptions": {
         "port": {
           "type": "number",
           "label": "Port",
-          "placeholder": 27017
+          "placeholder": 27017,
+          "required": false
         },
         "username": {
           "type": "text",
           "label": "Username",
-          "placeholder": "admin"
+          "placeholder": "admin",
+          "required": false
         },
         "password": {
           "type": "password",
           "label": "Password",
-          "placeholder": "admin"
+          "placeholder": "admin",
+          "required": false
         },
         "dbName": {
           "type": "text",
           "label": "Database",
-          "placeholder": "admin"
+          "placeholder": "admin",
+          "required": false
         },
         "sslFile": {
           "type": "file",
           "label": "SSL File",
-          "placeholder": "Select SSL Certificate"
+          "placeholder": "Select SSL Certificate",
+          "required": false
         }
       }
     }
@@ -49,34 +55,40 @@
         "uri": {
           "type": "textarea",
           "label": "Connection URI",
-          "placeholder": "postgres://localhost:5432"
+          "placeholder": "postgres://localhost:5432",
+          "required": true
         }
       },
       "advancedOptions": {
         "port": {
           "type": "number",
           "label": "Port",
-          "placeholder": 5432
+          "placeholder": 5432,
+          "required": false
         },
         "username": {
           "type": "text",
           "label": "Username",
-          "placeholder": "admin"
+          "placeholder": "admin",
+          "required": false
         },
         "password": {
           "type": "password",
           "label": "Password",
-          "placeholder": "admin"
+          "placeholder": "admin",
+          "required": false
         },
         "dbName": {
           "type": "text",
           "label": "Database",
-          "placeholder": "admin"
+          "placeholder": "admin",
+          "required": false
         },
         "sslFile": {
           "type": "file",
           "label": "SSL File",
-          "placeholder": "Select SSL Certificate"
+          "placeholder": "Select SSL Certificate",
+          "required": false
         }
       }
     }
@@ -90,34 +102,40 @@
         "username": {
           "type": "text",
           "label": "Username",
-          "placeholder": "admin"
+          "placeholder": "admin",
+          "required": true
         },
         "password": {
           "type": "password",
           "label": "Password",
-          "placeholder": "admin"
+          "placeholder": "admin",
+          "required": true
         },
         "dbName": {
           "type": "text",
           "label": "Database",
-          "placeholder": "admin"
+          "placeholder": "admin",
+          "required": true
         },
         "host": {
           "type": "text",
           "label": "Host",
-          "placeholder": "localhost"
+          "placeholder": "localhost",
+          "required": true
         },
         "port": {
           "type": "number",
           "label": "Port",
-          "placeholder": 3306
+          "placeholder": 3306,
+          "required": true
         }
       },
       "advancedOptions": {
         "schema": {
           "type": "text",
           "label": "Schema",
-          "placeholder": "public"
+          "placeholder": "public",
+          "required": false
         },
         "protocol": {
           "type": "select",
@@ -132,7 +150,8 @@
               "label": "SOCKET",
               "value": "socket"
             }
-          ]
+          ],
+          "required": false
         },
         "ssl": {
           "type": "select",
@@ -147,7 +166,8 @@
               "label": "False",
               "value": "false"
             }
-          ]
+          ],
+          "required": false
         }
       }
     }

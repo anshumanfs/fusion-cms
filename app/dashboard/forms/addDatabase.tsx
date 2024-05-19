@@ -11,12 +11,26 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useToast } from '@/components/ui/use-toast';
 
 import databases from './databases.json';
 import { CheckCircleIcon, XCircleIcon, InfoIcon, RefreshCcw } from 'lucide-react';
@@ -45,6 +59,8 @@ export function AddDatabase(props: {
   const [selectedDb, setSelectedDb] = React.useState(mongoObj?.value);
   const [dbConfigs, setDbConfigs] = React.useState({});
   const [testConnectionStatus, setTestConnectionStatus] = React.useState('initial');
+  const { toast } = useToast();
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
   const testConnection = async () => {
     setTestConnectionStatus('loading');
@@ -80,7 +96,102 @@ export function AddDatabase(props: {
     }
   };
 
+  const checkRequiredFields = () => {
+    let requiredFields = Object.keys(options.basicOptions).filter((option) => options.basicOptions[option].required);
+    let requiredFieldsAdvanced = Object.keys(options.advancedOptions).filter(
+      (option) => options.advancedOptions[option].required
+    );
+    let missingFields = requiredFields.filter((field) => !dbConfigs[field as keyof typeof dbConfigs]);
+    let missingFieldsAdvanced = requiredFieldsAdvanced.filter((field) => !dbConfigs[field as keyof typeof dbConfigs]);
+    let missingFieldLabels = missingFields.map((field) => options.basicOptions[field].label);
+    let missingFieldLabelsAdvanced = missingFieldsAdvanced.map((field) => options.advancedOptions[field].label);
+    return [...missingFieldLabels, ...missingFieldLabelsAdvanced];
+  };
+
+  const onBorardDatabase = async () => {
+    let missingFields = checkRequiredFields();
+    if (missingFields.length > 0) {
+      toast({
+        variant: 'destructive',
+        title: 'Missing Fields',
+        description: `Please fill in the required fields: ${missingFields.join(', ')}`,
+        onOpenChange: (open: boolean) => {
+          console.log(open);
+          console.log('onOpenChange');
+        },
+      });
+      return;
+    }
+    let variables: any = {
+      appName: dbConfigs['appName' as keyof typeof dbConfigs],
+      env: dbConfigs['env' as keyof typeof dbConfigs],
+      dbType: selectedDb,
+    };
+    variables[selectedDb as keyof typeof variables] = {
+      options: {},
+    };
+    options.basicOptions &&
+      Object.keys(options.basicOptions).forEach((option) => {
+        if (dbConfigs[option as keyof typeof dbConfigs]) {
+          variables[selectedDb as keyof typeof variables][option] = dbConfigs[option as keyof typeof dbConfigs];
+        }
+      });
+
+    options.advancedOptions &&
+      Object.keys(options.advancedOptions).forEach((option) => {
+        if (dbConfigs[option as keyof typeof dbConfigs]) {
+          variables[selectedDb as keyof typeof variables]['options'][option] =
+            dbConfigs[option as keyof typeof dbConfigs];
+        }
+      });
+
+    console.log('variables', dbConfigs, variables);
+
+    try {
+      const payload = JSON.stringify({
+        // query: `mutation CreateApp($input: createApp!) {
+        //   createApp(input: $input) {
+        //     message
+        //   }
+        // }`,
+        variables,
+      });
+      axios
+        .post('/appManager', payload)
+        .then((res) => {
+          const { data, errors } = res.data;
+          if (errors) {
+            console.error(errors);
+            return;
+          }
+          toast({
+            title: 'Success',
+            description: 'Database onboarded successfully',
+            onOpenChange: () => {
+              console.log('onOpenChange');
+              setDialogOpen(false);
+            },
+          });
+        })
+        .catch((err) => {
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'An error occurred while onboarding the database',
+          });
+        });
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'An error occurred while onboarding the database',
+      });
+    }
+  };
+
   const handleValueChange = (e: any) => {
+    console.log(e.target.type);
     setDbConfigs({ ...dbConfigs, [e.target.id]: e.target.value });
     setTestConnectionStatus('initial');
   };
@@ -93,9 +204,20 @@ export function AddDatabase(props: {
   };
 
   return (
-    <Dialog>
+    <Dialog
+      open={dialogOpen}
+      onOpenChange={(open: boolean) => {
+        setDialogOpen(open);
+      }}
+    >
       <DialogTrigger asChild>
-        <Button variant={props.buttonVariant || 'outline'} className={props.buttonClassName}>
+        <Button
+          variant={props.buttonVariant || 'outline'}
+          className={props.buttonClassName}
+          onClick={() => {
+            setDialogOpen(true);
+          }}
+        >
           {props.children}
         </Button>
       </DialogTrigger>
@@ -129,9 +251,33 @@ export function AddDatabase(props: {
           </div>
           <div className="col-span-4 pl-4">
             <div className="grid pt-4">
-              <div className="grid grid-cols-4 items-center gap-2">
-                <Label htmlFor="name">Endpoint Name</Label>
-                <Input id="name" placeholder="TestApplication" className="col-span-4" />
+              <div className="grid grid-cols-4 items-center gap-4">
+                <div className="col-span-2">
+                  <Label htmlFor="appName">Endpoint Name</Label>
+                  <Input id="appName" placeholder="TestApplication" onChange={handleValueChange} />
+                </div>
+                <div className="col-span-2">
+                  <Label htmlFor="env">Environment</Label>
+                  <Select
+                    onValueChange={(e) =>
+                      handleValueChange({
+                        target: {
+                          id: 'env',
+                          value: e,
+                        },
+                      })
+                    }
+                  >
+                    <SelectTrigger className="col-span-4">
+                      <SelectValue placeholder="Select Environment" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="development">Development</SelectItem>
+                      <SelectItem value="staging">Staging</SelectItem>
+                      <SelectItem value="production">Production</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </div>
             <div>
@@ -159,6 +305,7 @@ export function AddDatabase(props: {
                                     },
                                   })
                                 }
+                                required={options.basicOptions[option].required}
                               >
                                 <SelectTrigger className="col-span-4">
                                   <SelectValue placeholder={options.basicOptions[option].placeholder} />
@@ -178,6 +325,7 @@ export function AddDatabase(props: {
                                 placeholder={options?.basicOptions[option].placeholder}
                                 onChange={handleValueChange}
                                 className="col-span-4"
+                                required={options.basicOptions[option].required}
                               />
                             )}
                           </div>
@@ -201,6 +349,7 @@ export function AddDatabase(props: {
                                     },
                                   })
                                 }
+                                required={options.advancedOptions[option].required}
                               >
                                 <SelectTrigger className="col-span-4">
                                   <SelectValue placeholder={options.advancedOptions[option].placeholder} />
@@ -219,6 +368,8 @@ export function AddDatabase(props: {
                                 type={options.advancedOptions[option].type}
                                 placeholder={options?.advancedOptions[option].placeholder}
                                 className="col-span-4"
+                                onChange={handleValueChange}
+                                required={options.advancedOptions[option].required}
                               />
                             )}
                           </div>
@@ -236,7 +387,7 @@ export function AddDatabase(props: {
             {testConnectionIcons[testConnectionStatus as keyof typeof testConnectionIcons]}
             {testConnnectionLabel[testConnectionStatus as keyof typeof testConnectionIcons]}
           </Button>
-          <Button type="submit">
+          <Button type="submit" onClick={onBorardDatabase}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
