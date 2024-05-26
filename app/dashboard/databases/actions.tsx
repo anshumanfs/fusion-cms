@@ -1,6 +1,17 @@
 import * as React from 'react';
-
+import axios from '@/lib/axios';
 import { Button } from '@/components/ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -15,12 +26,70 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
 import { ConfirmDelete } from '../forms/confirmDelete';
-import { Trash2Icon, PauseCircleIcon, EyeIcon } from 'lucide-react';
+import { Trash2Icon, PlayCircleIcon, PauseCircleIcon, EyeIcon } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 
-export function Actions(props: { appName: string }) {
+const ConfirmRestart = (props: { children: any; appName: string }) => {
+  const { toast } = useToast();
+
+  const startEndpoint = (appName: string) => {
+    const payload = JSON.stringify({
+      query: `mutation RunApp($appName: String!) {
+        runApp(appName: $appName) {
+          message
+        }
+      }`,
+      variables: {
+        appName,
+      },
+    });
+    axios
+      .post('/appManager', payload)
+      .then((response) => {
+        if (response.data.errors) {
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: response.data.errors[0].message,
+          });
+        } else {
+          toast({
+            variant: 'default',
+            title: 'Success',
+            description: 'App started successfully',
+          });
+        }
+      })
+      .catch((error) => {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: error.message,
+        });
+      });
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>{props.children}</AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure ?</AlertDialogTitle>
+          <AlertDialogDescription>This action will restart the application.</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+export function Actions(props: { appName: string; running: boolean }) {
   const handleRouting = (path: string) => {
     // open in new tab
-    window.open(`/graphql/${path}`, '_blank');
+    window.open(`${path}`, '_blank');
   };
 
   return (
@@ -34,7 +103,7 @@ export function Actions(props: { appName: string }) {
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => handleRouting(`/graphql/${props.appName}`)}>
+          <DropdownMenuItem onClick={() => handleRouting(`/graphql/${props.appName}`)} disabled={!props.running}>
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="mr-2 w-5 h-5" viewBox="0 0 48 48">
               <path
                 fill="#ff4081"
@@ -50,7 +119,7 @@ export function Actions(props: { appName: string }) {
             </svg>
             GraphQL Playground
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleRouting(`/rest/${props.appName}/docs`)}>
+          <DropdownMenuItem onClick={() => handleRouting(`/rest/${props.appName}/docs`)} disabled={!props.running}>
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" className="mr-2 w-5 h-5" viewBox="0 0 48 48">
               <circle cx="24" cy="24" r="20" fill="#ffca28"></circle>
               <polygon
@@ -72,10 +141,19 @@ export function Actions(props: { appName: string }) {
             View
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <PauseCircleIcon className="w-5 h-5 mr-2" />
-            Pause
+            {props.running ? (
+              <>
+                <PauseCircleIcon className="w-5 h-5 mr-2" />
+                Pause
+              </>
+            ) : (
+              <>
+                <PlayCircleIcon className="w-5 h-5 mr-2" />
+                Start
+              </>
+            )}
           </DropdownMenuItem>
-          <ConfirmDelete>
+          <ConfirmDelete appName={props.appName}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Trash2Icon className="w-5 h-5 mr-2" />
               Delete

@@ -156,7 +156,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                   <TableCell key={`Act_${index}`}>
-                    <Actions appName={row.getValue('appName')} />
+                    <Actions appName={row.getValue('appName')} running={row.getValue('running')} />
                   </TableCell>
                 </TableRow>
               ))

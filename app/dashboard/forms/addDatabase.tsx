@@ -145,16 +145,16 @@ export function AddDatabase(props: {
         }
       });
 
-    console.log('variables', dbConfigs, variables);
-
     try {
       const payload = JSON.stringify({
-        // query: `mutation CreateApp($input: createApp!) {
-        //   createApp(input: $input) {
-        //     message
-        //   }
-        // }`,
-        variables,
+        query: `mutation CreateApp($input: createApp!) {
+          createApp(input: $input) {
+            message
+          }
+        }`,
+        variables: {
+          input: variables,
+        },
       });
       axios
         .post('/appManager', payload)
@@ -162,13 +162,17 @@ export function AddDatabase(props: {
           const { data, errors } = res.data;
           if (errors) {
             console.error(errors);
+            toast({
+              variant: 'destructive',
+              title: 'Error',
+              description: 'An error occurred while onboarding the database',
+            });
             return;
           }
           toast({
             title: 'Success',
             description: 'Database onboarded successfully',
             onOpenChange: () => {
-              console.log('onOpenChange');
               setDialogOpen(false);
             },
           });
@@ -250,11 +254,11 @@ export function AddDatabase(props: {
             </nav>
           </div>
           <div className="col-span-4 pl-4">
-            <div className="grid pt-4">
+            <div className="grid">
               <div className="grid grid-cols-4 items-center gap-4">
                 <div className="col-span-2">
                   <Label htmlFor="appName">Endpoint Name</Label>
-                  <Input id="appName" placeholder="TestApplication" onChange={handleValueChange} />
+                  <Input id="appName" className="mt-1" placeholder="TestApplication" onChange={handleValueChange} />
                 </div>
                 <div className="col-span-2">
                   <Label htmlFor="env">Environment</Label>
@@ -268,7 +272,7 @@ export function AddDatabase(props: {
                       })
                     }
                   >
-                    <SelectTrigger className="col-span-4">
+                    <SelectTrigger className="col-span-4 mt-1">
                       <SelectValue placeholder="Select Environment" />
                     </SelectTrigger>
                     <SelectContent>
