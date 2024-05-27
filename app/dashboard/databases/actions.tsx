@@ -56,7 +56,7 @@ const ConfirmRestart = (props: { children: any; appName: string }) => {
           toast({
             variant: 'default',
             title: 'Success',
-            description: 'App started successfully',
+            description: 'App started successfully. Please restart the application to see it in action.',
           });
         }
       })
