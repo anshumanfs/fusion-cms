@@ -29,7 +29,6 @@ import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Actions } from './actions';
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -46,9 +45,10 @@ const accessorKeyMap: any = {
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-  const [filterBy, setFilterBy] = React.useState('schemaName');
+  const [filterBy, setFilterBy] = React.useState('appName');
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
   const table = useReactTable({
     data,
     columns,
@@ -156,7 +156,7 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
                   <TableCell key={`Act_${index}`}>
-                    <Actions appName={row.getValue('appName')} />
+                    <Actions appName={row.getValue('appName')} running={row.getValue('running')} />
                   </TableCell>
                 </TableRow>
               ))

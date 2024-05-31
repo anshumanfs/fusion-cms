@@ -4,6 +4,7 @@ const Schema = gql`
   extend type Query {
     getDbCredential(appName: String!, env: environmentTypes!): dbCred
     getDbCredentials(filter: JSON): [dbCred]!
+    testConnection(dbType: String!, configs: JSON!): JSON
   }
 
   extend type Mutation {

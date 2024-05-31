@@ -2,5 +2,6 @@
 import React from 'react';
 export const defaultContextValues: any = {
   schemaFields: [],
+  dialogStates: {},
 };
 export const AppContext = React.createContext(defaultContextValues);
