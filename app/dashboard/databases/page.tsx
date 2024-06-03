@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { AddDatabase } from '../forms/addDatabase';
 import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
+import { Kafka } from 'kafkajs';
 
 import axios from '@/lib/axios';
 

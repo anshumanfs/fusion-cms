@@ -8,7 +8,7 @@
         "uri": {
           "type": "textarea",
           "label": "Connection URI",
-          "placeholder": "mongodb://localhost:27017",
+          "placeholder": "mongodb://127.0.0.1:27017",
           "required": true
         }
       },
@@ -55,7 +55,7 @@
         "uri": {
           "type": "textarea",
           "label": "Connection URI",
-          "placeholder": "postgres://localhost:5432",
+          "placeholder": "postgres://127.0.0.1:5432",
           "required": true
         }
       },
@@ -120,7 +120,7 @@
         "host": {
           "type": "text",
           "label": "Host",
-          "placeholder": "localhost",
+          "placeholder": "127.0.0.1",
           "required": true
         },
         "port": {
