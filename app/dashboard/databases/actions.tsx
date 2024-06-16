@@ -29,7 +29,7 @@ import { ConfirmDelete } from '../forms/confirmDelete';
 import { Trash2Icon, PlayCircleIcon, PauseCircleIcon, EyeIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
-const ConfirmRestart = (props: { children: any; appName: string }) => {
+const ConfirmEndpointAction = (props: { children: any; appName: string }) => {
   const { toast } = useToast();
 
   const startEndpoint = (appName: string) => {
@@ -74,12 +74,12 @@ const ConfirmRestart = (props: { children: any; appName: string }) => {
       <AlertDialogTrigger asChild>{props.children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure ?</AlertDialogTitle>
-          <AlertDialogDescription>This action will restart the application.</AlertDialogDescription>
+          <AlertDialogTitle>Are you sure to start this endpoint ?</AlertDialogTitle>
+          <AlertDialogDescription>You need to restart the application to make the endpoint visible.</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={() => startEndpoint(props.appName)}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

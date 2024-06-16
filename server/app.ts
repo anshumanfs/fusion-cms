@@ -3,7 +3,6 @@ import next from 'next';
 import path from 'path';
 import { runAsMicroService, runAsMonolith } from './appRunner';
 import logger from './libs/logger';
-import { Kafka } from 'kafkajs';
 import SecureConfig from '../.secure.json';
 
 require('dotenv').config({
@@ -18,20 +17,6 @@ const dev = node_env === 'development';
 const childProcess = require('child_process');
 const app: Express.Application = Express();
 const checkEnv = ['local', 'development'];
-
-const kafka = new Kafka({
-  ...SecureConfig.kafka,
-});
-
-const postMessage = async () => {
-  const producer = kafka.producer();
-  await producer.connect();
-  await producer.send({
-    topic: 'appStartup',
-    messages: [{ value: 'Server Started' }],
-  });
-  await producer.disconnect();
-};
 
 const startExpressApp = async () => {
   app.get('/test', (_req, res) => {
@@ -68,12 +53,10 @@ if (checkEnv.includes(node_env)) {
       app.all('*', (req, res) => {
         return handle(req, res);
       });
-      postMessage();
     })
     .catch((err: any) => {
       logger.error(err);
     });
 } else {
   startExpressApp();
-  postMessage();
 }
