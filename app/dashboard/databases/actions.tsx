@@ -71,11 +71,13 @@ const ConfirmEndpointAction = (props: { children: any; appName: string }) => {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{props.children}</AlertDialogTrigger>
+      <AlertDialogTrigger className='w-full'>{props.children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure to start this endpoint ?</AlertDialogTitle>
-          <AlertDialogDescription>You need to restart the application to make the endpoint visible.</AlertDialogDescription>
+          <AlertDialogDescription>
+            You need to restart the application to make the endpoint visible.
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -140,19 +142,23 @@ export function Actions(props: { appName: string; running: boolean }) {
             <EyeIcon className="w-5 h-5 mr-2" />
             View
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            {props.running ? (
-              <>
+
+          {props.running ? (
+            <ConfirmEndpointAction appName={props.appName}>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <PauseCircleIcon className="w-5 h-5 mr-2" />
                 Pause
-              </>
-            ) : (
-              <>
+              </DropdownMenuItem>
+            </ConfirmEndpointAction>
+          ) : (
+            <ConfirmEndpointAction appName={props.appName}>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <PlayCircleIcon className="w-5 h-5 mr-2" />
                 Start
-              </>
-            )}
-          </DropdownMenuItem>
+              </DropdownMenuItem>
+            </ConfirmEndpointAction>
+          )}
+
           <ConfirmDelete appName={props.appName}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Trash2Icon className="w-5 h-5 mr-2" />
