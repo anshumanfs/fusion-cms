@@ -120,7 +120,7 @@ export const columns: ColumnDef<SchemaDisplay>[] = [
   },
 ];
 
-export function SchemaTable() {
+export function SchemaTable({ data }: { data: SchemaDisplay[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [filterBy, setFilterBy] = React.useState('schemaName');

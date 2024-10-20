@@ -18,6 +18,8 @@ const schema = gql`
     pluralCollectionName: String
     originalCollectionName: String
     schema: JSON
+    createdAt: Date
+    updatedAt: Date
   }
 
   input appSchemaInput {
