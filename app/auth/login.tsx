@@ -3,14 +3,13 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
 import axios from '@/lib/axios';
 
-export default function Login() {
+export function Login() {
   const { toast } = useToast();
   const router = useRouter();
   const [formState, setFormState] = React.useState({
@@ -71,49 +70,39 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-screen">
-      <Card className="w-[480px] m-auto">
-        <CardHeader className="text-center">
-          <CardTitle className="text-lg">Login</CardTitle>
-          <CardDescription>Login to your fusion cms account</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form id="loginForm" onSubmit={handleSubmit}>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-2">
-                <Label htmlFor="framework">Email</Label>
-                <Input id="email" placeholder="admin@fusion-cms.io" onChange={handleValueChange} />
-              </div>
-              <div className="flex flex-col space-y-2">
-                <Label htmlFor="framework">Password</Label>
-                <Input id="password" type="password" placeholder="" onChange={handleValueChange} />
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="remember"
-                  onCheckedChange={() => {
-                    setFormState({
-                      ...formState,
-                      remember: !formState.remember,
-                    });
-                  }}
-                />
-                <label
-                  htmlFor="remember"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Remember me
-                </label>
-              </div>
-              <div className="flex flex-col space-y-2">
-                <Button className="w-full" type="submit">
-                  LogIn
-                </Button>
-              </div>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
+    <form id="loginForm" className="p-4" onSubmit={handleSubmit}>
+      <div className="grid w-full items-center gap-4">
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="framework">Email</Label>
+          <Input id="email" placeholder="admin@fusion-cms.io" onChange={handleValueChange} />
+        </div>
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="framework">Password</Label>
+          <Input id="password" type="password" placeholder="" onChange={handleValueChange} />
+        </div>
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="remember"
+            onCheckedChange={() => {
+              setFormState({
+                ...formState,
+                remember: !formState.remember,
+              });
+            }}
+          />
+          <label
+            htmlFor="remember"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Remember me
+          </label>
+        </div>
+        <div className="flex flex-col space-y-2">
+          <Button className="w-full" type="submit">
+            LogIn
+          </Button>
+        </div>
+      </div>
+    </form>
   );
 }
