@@ -1,5 +1,7 @@
 import lodash from 'lodash';
-import tempJson from '../../../data/.temp.json';
+import tempJsonData from '../../../data/.temp.json';
+
+const tempJson: TempJson = tempJsonData;
 
 const generateFederatedResolver = (
   appName: string,
@@ -99,6 +101,7 @@ const generateResolver = (
   const { translateFilter, translateOptions } = require('../utils/translators');
   const { checkPreAccess, checkPostAccess } = require('../../../middlewares/accessManager');
   const Errors = require('../../../libs/errors');
+const tempJson: TempJson = require('../../../data/.temp.json');
   ${federationImports}
 
   const resolvers = { 

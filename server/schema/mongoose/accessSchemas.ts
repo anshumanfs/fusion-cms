@@ -23,7 +23,7 @@ const QuerySchema: any = new Schema(
   }
 );
 
-const model = conn.model('cms_accessSchemas', QuerySchema, 'cms_accessSchemas');
+const model = conn.model('cms_access_schemas', QuerySchema, 'cms_access_schemas');
 const services = mongooseQueryServices(model);
 
 export { model, services };
