@@ -37,7 +37,7 @@ const registerUser = async (_: any, args: any) => {
     userData.role = 'admin'; // First user will be admin by default
   }
   const uniqueCode = encodeURIComponent(twoWayEncoder(email, Config.secrets.uniqueEmailSecret));
-  const uniqueAccountActivationLink = `${Config.DEPLOYMENT_URL}/activate-account/${uniqueCode}`;
+  const uniqueAccountActivationLink = `${Config.DEPLOYMENT_URL}/auth/validate?entity=user&token=${uniqueCode}`;
   await sendMail(
     email,
     `Activate your ${Config.APP_NAME} account`,

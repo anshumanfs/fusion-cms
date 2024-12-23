@@ -34,7 +34,7 @@ export default function Auth() {
     if (activeTab === 'register') {
       router.push('/auth?tab=register');
     }
-  }, [activeTab]);
+  }, [activeTab, tab, router]);
 
   return (
     <div className="flex h-screen">
