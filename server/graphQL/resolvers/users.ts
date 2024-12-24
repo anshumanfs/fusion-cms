@@ -20,6 +20,11 @@ const getUsers = async (_: any, args: any) => {
   return users;
 };
 
+const getUsersCount = async (_: any, args: any) => {
+  const count = await dbModels.users.countDocuments({});
+  return count || 0;
+};
+
 const registerUser = async (_: any, args: any) => {
   const { email, firstName, lastName, password } = args;
   const [user, userCount] = [await dbModels.users.findOne({ email }), await dbModels.users.countDocuments({})];
@@ -215,6 +220,7 @@ export {
   forgotPassword,
   getUser,
   getUsers,
+  getUsersCount,
   login,
   modifyUser,
   registerUser,

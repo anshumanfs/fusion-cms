@@ -4,6 +4,7 @@ const userSchema = gql`
   extend type Query {
     getUser(id: ID!): User
     getUsers(page: Int): [User]!
+    getUsersCount: Int!
   }
 
   extend type Mutation {

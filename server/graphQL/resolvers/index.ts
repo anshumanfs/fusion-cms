@@ -8,6 +8,7 @@ import {
   forgotPassword,
   getUser,
   getUsers,
+  getUsersCount,
   login,
   modifyUser,
   registerUser,
@@ -27,6 +28,7 @@ const Query = {
   getAppSchemas,
   getUser,
   getUsers,
+  getUsersCount,
 };
 
 const Mutation = {

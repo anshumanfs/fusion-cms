@@ -22,9 +22,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -32,7 +29,7 @@ import {
 import { Actions } from './actions';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import data from './data.json';
+import { fetchUsersCount, fetchUsersData } from './services';
 
 export type UsersDisplay = {
   id: string;
@@ -93,7 +90,16 @@ export const columns: ColumnDef<UsersDisplay>[] = [
   },
   {
     accessorKey: 'role',
-    header: () => <div>Role</div>,
+    header: ({ column }) => {
+      return (
+        <div
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+          className="inline-flex items-center cursor-pointer"
+        >
+          Role <CaretSortIcon className="ml-2 h-4 w-4" />
+        </div>
+      );
+    },
     cell: ({ row }) => <div>{row.getValue('role')}</div>,
   },
   {
@@ -122,21 +128,42 @@ export const columns: ColumnDef<UsersDisplay>[] = [
 ];
 
 export function UsersTable() {
+  const [usersState, setUsersState] = React.useState({
+    users: [] as UsersDisplay[],
+    count: 0,
+  });
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [filterBy, setFilterBy] = React.useState('name');
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  React.useEffect(() => {
+    if (pagination.pageIndex === 0) {
+      fetchUsersCount().then((count) => {
+        setUsersState((state) => ({ ...state, count }));
+      });
+    }
+    fetchUsersData(pagination.pageIndex).then((users) => {
+      setUsersState((state) => ({ ...state, users }));
+    });
+  }, [pagination.pageIndex]);
+
   const table = useReactTable({
-    data,
+    data: usersState.users,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    //getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    manualPagination: true,
+    rowCount: usersState.count,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
     state: {
@@ -144,8 +171,17 @@ export function UsersTable() {
       columnFilters,
       columnVisibility,
       rowSelection,
+      pagination,
     },
   });
+
+  const nextPage = () => {
+    setPagination((state) => ({ ...state, pageIndex: state.pageIndex + 1 }));
+  };
+
+  const previousPage = () => {
+    setPagination((state) => ({ ...state, pageIndex: state.pageIndex - 1 }));
+  };
 
   return (
     <div>
@@ -242,15 +278,10 @@ export function UsersTable() {
           Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
         </div>
         <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
+          <Button variant="outline" size="sm" onClick={() => previousPage()} disabled={!table.getCanPreviousPage()}>
             Previous
           </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+          <Button variant="outline" size="sm" onClick={() => nextPage()} disabled={!table.getCanNextPage()}>
             Next
           </Button>
         </div>
