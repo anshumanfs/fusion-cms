@@ -10,27 +10,23 @@ import { useToast } from '@/components/ui/use-toast';
 import axios from '@/lib/axios';
 import Link from 'next/link';
 
-export function Login() {
+export function ResetPassword() {
   const { toast } = useToast();
   const router = useRouter();
   const [formState, setFormState] = React.useState({
     email: '',
-    password: '',
-    remember: false,
   });
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     const data = JSON.stringify({
-      query: `mutation Login($email: String!, $password: String!) {
-        login(email: $email, password: $password) {
-          token
-          refreshToken
-        }
-      }`,
+      query: `mutation RequestPasswordChangeEmail($email: String!) {
+                requestPasswordChangeEmail(email: $email) {
+                    message
+                }
+            }`,
       variables: {
         email: formState.email,
-        password: formState.password,
       },
     });
     axios
@@ -41,7 +37,7 @@ export function Login() {
         if (errors) {
           toast({
             variant: 'destructive',
-            title: 'Login failed',
+            title: 'Failed!',
             description: errors[0].message,
             action: <ToastAction altText="Try again">Try again</ToastAction>,
           });
@@ -49,8 +45,8 @@ export function Login() {
         }
         toast({
           variant: 'default',
-          title: 'Login Successful!',
-          description: 'You have successfully logged in',
+          title: 'Sent!',
+          description: 'A password reset link has been sent to your email',
         });
         localStorage.setItem('token', data.login.token);
         localStorage.setItem('refreshToken', data.login.refreshToken);
@@ -79,29 +75,8 @@ export function Login() {
           <Input id="email" placeholder="admin@fusion-cms.io" onChange={handleValueChange} />
         </div>
         <div className="flex flex-col space-y-2">
-          <Label htmlFor="framework">Password</Label>
-          <Input id="password" type="password" placeholder="" onChange={handleValueChange} />
-        </div>
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="remember"
-            onCheckedChange={() => {
-              setFormState({
-                ...formState,
-                remember: !formState.remember,
-              });
-            }}
-          />
-          <label
-            htmlFor="remember"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            Remember me
-          </label>
-        </div>
-        <div className="flex flex-col space-y-2">
           <Button className="w-full" type="submit">
-            LogIn
+            Send Reset Link
           </Button>
         </div>
       </div>

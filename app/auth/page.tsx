@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Logo from '@/components/ui/logo';
 import { Login } from './login';
 import { Signup } from './signup';
+import { ResetPassword } from './resetPassword';
 
 export default function Auth() {
   const [activeTab, setActiveTab] = React.useState('');
@@ -24,6 +25,10 @@ export default function Auth() {
       setActiveTab('register');
       return;
     }
+    if (tab === 'reset') {
+      setActiveTab('reset');
+      return;
+    }
     router.push('/404');
   }, []);
 
@@ -33,6 +38,9 @@ export default function Auth() {
     }
     if (activeTab === 'register') {
       router.push('/auth?tab=register');
+    }
+    if (activeTab === 'reset') {
+      router.push('/auth?tab=reset');
     }
   }, [activeTab, tab, router]);
 
@@ -50,7 +58,7 @@ export default function Auth() {
             <TabsList>
               <TabsTrigger
                 value="register"
-                className="w-1/2"
+                className="w-1/3"
                 onClick={() => {
                   setActiveTab('register');
                 }}
@@ -59,12 +67,21 @@ export default function Auth() {
               </TabsTrigger>
               <TabsTrigger
                 value="login"
-                className="w-1/2"
+                className="w-1/3"
                 onClick={() => {
                   setActiveTab('login');
                 }}
               >
                 Login
+              </TabsTrigger>
+              <TabsTrigger
+                value="reset"
+                className="w-1/3"
+                onClick={() => {
+                  setActiveTab('reset');
+                }}
+              >
+                Reset
               </TabsTrigger>
             </TabsList>
           </CardHeader>
@@ -73,6 +90,9 @@ export default function Auth() {
           </TabsContent>
           <TabsContent value="login">
             <Login />
+          </TabsContent>
+          <TabsContent value="reset">
+            <ResetPassword />
           </TabsContent>
         </Tabs>
       </Card>

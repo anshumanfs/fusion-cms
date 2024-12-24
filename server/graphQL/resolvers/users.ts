@@ -36,7 +36,8 @@ const registerUser = async (_: any, args: any) => {
   if (userCount === 0) {
     userData.role = 'admin'; // First user will be admin by default
   }
-  const uniqueCode = encodeURIComponent(twoWayEncoder(email, Config.secrets.uniqueEmailSecret));
+  const dataToEncrypt = JSON.stringify({ email, date: new Date().toISOString() });
+  const uniqueCode = encodeURIComponent(twoWayEncoder(dataToEncrypt, Config.secrets.uniqueEmailSecret));
   const uniqueAccountActivationLink = `${Config.DEPLOYMENT_URL}/auth/validate?entity=user&token=${uniqueCode}`;
   await sendMail(
     email,
@@ -49,9 +50,11 @@ const registerUser = async (_: any, args: any) => {
 };
 
 const activateAccount = async (_: any, args: any) => {
+  const currentTime = new Date().getTime();
+  const allowedTime = Config.envConfigurations.uniqueEmailExpiration * 60 * 1000;
   const { uniqueCode } = args;
-  const email = twoWayDecoder(decodeURIComponent(uniqueCode), Config.secrets.uniqueEmailSecret);
-  if (!email) {
+  const { email, date } = JSON.parse(twoWayDecoder(decodeURIComponent(uniqueCode), Config.secrets.uniqueEmailSecret));
+  if (!date || !email || currentTime - new Date(date).getTime() > allowedTime) {
     throw Errors.BAD_REQUEST('Invalid code');
   }
   const user = await dbModels.users.findOne({ email });
@@ -166,7 +169,9 @@ const changePasswordByOldPass = async (_: any, args: any) => {
 const forgotPassword = async (_: any, args: any) => {
   const { uniqueCode, password } = args;
   const decodedCode = JSON.parse(twoWayDecoder(uniqueCode));
-  if (!decodedCode.email) {
+  const currentTime = new Date().getTime();
+  const allowedTime = Config.envConfigurations.uniqueEmailExpiration * 60 * 1000;
+  if (!decodedCode.email || !decodedCode.date || currentTime - new Date(decodedCode.date).getTime() > allowedTime) {
     throw Errors.BAD_REQUEST('Invalid code');
   }
   const updatedUser = await dbModels.users.findOneAndUpdate(
@@ -192,10 +197,11 @@ const requestPasswordChangeEmail = async (_: any, args: any) => {
   const uniqueCode = twoWayEncoder(
     JSON.stringify({
       id: user.id,
+      date: new Date().toISOString(),
     }),
     Config.secrets.twoWayEncryptionSecret
   );
-  const uniqueLink = `${Config.DEPLOYMENT_URL}/reset-password/${uniqueCode}`;
+  const uniqueLink = `${Config.DEPLOYMENT_URL}/auth/validate?entity=reset&token=${uniqueCode}`;
   // Send email with unique link
   await sendMail(email, `Reset Password ${Config.APP_NAME}`, '', ChangePasswordTemplate(uniqueLink));
   return { message: 'Email sent successfully' };

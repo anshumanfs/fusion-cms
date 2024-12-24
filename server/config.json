@@ -31,6 +31,7 @@
   "envConfigurations": {
     "toekenTimeDescription": "Times are in minutes",
     "tokenExpiration": 15,
-    "refreshTokenExpiration": 1440
+    "refreshTokenExpiration": 1440,
+    "uniqueEmailExpiration": 1440
   }
 }

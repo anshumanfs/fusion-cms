@@ -1,5 +1,3 @@
 export function ValidateEmail() {
-    return (
-        <></>
-    )
+  return <></>;
 }
