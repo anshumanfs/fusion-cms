@@ -20,6 +20,8 @@ const fetchUsersData = async (page: number = 0) => {
         lastName
         email
         role
+        isVerified
+        isBlocked
         createdAt
         updatedAt
       }
@@ -36,7 +38,8 @@ const fetchUsersData = async (page: number = 0) => {
       name: `${user.firstName} ${user.lastName}`,
       email: user.email,
       role: user.role,
-      active: true,
+      isVerified: user.isVerified,
+      isBlocked: user.isBlocked,
       createdAt: user.createdAt,
     });
   });
@@ -65,6 +68,8 @@ const fetchUserById = async (id: string | number) => {
         lastName
         email
         role
+        isVerified
+        isBlocked
         createdAt
         updatedAt
       }

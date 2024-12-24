@@ -134,12 +134,13 @@ const requestNewToken = async (_: any, args: any) => {
 };
 
 const modifyUser = async (_: any, args: any) => {
-  const { id, email, role, firstName, lastName } = args;
-  const user = await dbModels.users.findOne({ id });
+  const { _id } = args;
+  const user = await dbModels.users.findOne({ _id });
   if (!user) {
     throw new Error('User not found');
   }
-  const updatedUser = await user.update({ email, role, firstName, lastName });
+  delete args.id;
+  const updatedUser = await dbModels.users.findOneAndUpdate({ _id }, args);
   return updatedUser;
 };
 

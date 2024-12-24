@@ -37,7 +37,8 @@ export type UsersDisplay = {
   email: string;
   apiKey: string;
   role: string;
-  active: true | false;
+  isVerified: true | false;
+  isBlocked: true | false;
   createdAt: string;
 };
 
@@ -72,13 +73,16 @@ export const columns: ColumnDef<UsersDisplay>[] = [
     cell: ({ row }) => <div>{row.getValue('name')}</div>,
   },
   {
-    accessorKey: 'active',
-    header: 'Status',
+    accessorKey: 'isVerified',
+    header: 'Verified',
     cell: ({ row }) => {
-      const isActive = row.getValue('active');
+      const isVerified = row.getValue('isVerified');
+      console.log('isVerified', isVerified);
       return (
         <div>
-          <Badge className={isActive ? 'bg-green-500' : 'bg-rose-500'}>{isActive ? 'Active' : 'Inactive'}</Badge>
+          <Badge className={isVerified ? 'bg-green-500' : 'bg-rose-500'}>
+            {isVerified ? 'Verified' : 'Not-Verified'}
+          </Badge>
         </div>
       );
     },
@@ -101,6 +105,18 @@ export const columns: ColumnDef<UsersDisplay>[] = [
       );
     },
     cell: ({ row }) => <div>{row.getValue('role')}</div>,
+  },
+  {
+    accessorKey: 'isBlocked',
+    header: 'Blocked',
+    cell: ({ row }) => {
+      const isBlocked = row.getValue('isBlocked');
+      return (
+        <div>
+          <Badge className={isBlocked ? 'bg-red-500' : 'bg-green-500'}>{isBlocked ? 'Blocked' : 'Active'}</Badge>
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'createdAt',
