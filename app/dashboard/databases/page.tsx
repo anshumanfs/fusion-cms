@@ -41,7 +41,6 @@ export default function DatabasePage() {
       .post('/appManager', payload)
       .then((res) => {
         const { data, errors } = res.data;
-        alert(JSON.stringify(res.data));
         if (errors) {
           toast({
             variant: 'destructive',

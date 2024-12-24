@@ -13,7 +13,7 @@ import Link from 'next/link';
 
 export function Login() {
   const { toast } = useToast();
-  const [logInBtn, setLogInBtn] = React.useState(null as any);
+  const logInBtn = React.useRef(null as any);
   const [logInBtnText, setLogInBtnText] = React.useState('LogIn' as any);
   const router = useRouter();
   const [formState, setFormState] = React.useState({
