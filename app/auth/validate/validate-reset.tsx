@@ -10,8 +10,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { ToastAction } from '@/components/ui/toast';
 import axios from '@/lib/axios';
 
-
-
 export function ValidateReset() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
@@ -26,7 +24,11 @@ export function ValidateReset() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     resetBtn.current.setAttribute('disabled', 'true');
-    setResetBtnText(<><Loader2 className="w-6 h-6 animate-spin mr-2" /> Changing Password...</>);
+    setResetBtnText(
+      <>
+        <Loader2 className="w-6 h-6 animate-spin mr-2" /> Changing Password...
+      </>
+    );
     if (formState.password !== formState.confirmPassword) {
       toast({
         variant: 'destructive',
@@ -97,7 +99,7 @@ export function ValidateReset() {
           <CardHeader>
             <CardTitle>Reset Password</CardTitle>
             <CardDescription>
-              <span className='text-sm'>Fill details below to reset your password</span>
+              <span className="text-sm">Fill details below to reset your password</span>
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -118,7 +120,6 @@ export function ValidateReset() {
                 </div>
               </div>
             </form>
-
           </CardContent>
         </Card>
       </div>

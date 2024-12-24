@@ -13,7 +13,7 @@ import axios from '@/lib/axios';
 export function Signup() {
   const { toast } = useToast();
   const signUpBtn = React.useRef(null as any);
-  const [signUpBtnText, setSignUpBtnText] = React.useState('Let\'s Get Started' as any);
+  const [signUpBtnText, setSignUpBtnText] = React.useState("Let's Get Started" as any);
   const [formState, setFormState] = React.useState({
     firstName: '',
     lastName: '',
@@ -31,7 +31,11 @@ export function Signup() {
       message: 'Creating your account...',
     });
     signUpBtn.current.setAttribute('disabled', 'true');
-    setSignUpBtnText(<><Loader2 className="h-6 animate-spin mr-2" /> Creating your account...</>);
+    setSignUpBtnText(
+      <>
+        <Loader2 className="h-6 animate-spin mr-2" /> Creating your account...
+      </>
+    );
     if (formState.password !== formState.confirmPassword) {
       toast({
         variant: 'destructive',
@@ -40,7 +44,7 @@ export function Signup() {
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       signUpBtn.current.removeAttribute('disabled');
-      setSignUpBtnText('Let\'s Get Started');
+      setSignUpBtnText("Let's Get Started");
       return;
     }
 
@@ -52,7 +56,7 @@ export function Signup() {
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       signUpBtn.current.removeAttribute('disabled');
-      setSignUpBtnText('Let\'s Get Started');
+      setSignUpBtnText("Let's Get Started");
       return;
     }
     const data = JSON.stringify({
@@ -81,7 +85,7 @@ export function Signup() {
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         });
         signUpBtn.current.removeAttribute('disabled');
-        setSignUpBtnText('Let\'s Get Started');
+        setSignUpBtnText("Let's Get Started");
         return;
       }
       setFormState({
@@ -93,7 +97,7 @@ export function Signup() {
         terms: false,
       });
       signUpBtn.current.removeAttribute('disabled');
-      setSignUpBtnText('Let\'s Get Started');
+      setSignUpBtnText("Let's Get Started");
       toast({
         variant: 'default',
         title: 'Registration Successful!',

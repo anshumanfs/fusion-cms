@@ -25,7 +25,12 @@ export function Login() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     logInBtn.current.setAttribute('disabled', 'true');
-    setLogInBtnText(<><Loader2 className='w-6 h-6 mr-2 animate-spin' />Logging in...</>);
+    setLogInBtnText(
+      <>
+        <Loader2 className="w-6 h-6 mr-2 animate-spin" />
+        Logging in...
+      </>
+    );
     const data = JSON.stringify({
       query: `mutation Login($email: String!, $password: String!) {
         login(email: $email, password: $password) {
