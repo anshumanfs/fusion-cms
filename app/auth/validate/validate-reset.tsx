@@ -70,7 +70,7 @@ export function ValidateReset() {
         toast({
           variant: 'default',
           title: 'Success!',
-          description: 'Password reset link has been sent to your email',
+          description: 'Password reset successful',
         });
         setTimeout(() => {
           router.push('/auth?tab=login');
@@ -80,7 +80,7 @@ export function ValidateReset() {
         toast({
           variant: 'destructive',
           title: 'Failed',
-          description: 'Failed to send password reset link',
+          description: 'Failed to reset password',
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         });
         resetBtn.current.removeAttribute('disabled');

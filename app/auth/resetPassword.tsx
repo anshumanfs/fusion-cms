@@ -61,8 +61,8 @@ export function ResetPassword() {
       .catch((err) => {
         toast({
           variant: 'destructive',
-          title: 'Login failed',
-          description: 'An error occurred while trying to login',
+          title: 'Failed!',
+          description: 'An error occurred while sending the reset link',
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         });
         sendBtn.current.removeAttribute('disabled');

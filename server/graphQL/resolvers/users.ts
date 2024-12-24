@@ -168,7 +168,7 @@ const changePasswordByOldPass = async (_: any, args: any) => {
 
 const forgotPassword = async (_: any, args: any) => {
   const { uniqueCode, password } = args;
-  const decodedCode = JSON.parse(twoWayDecoder(uniqueCode));
+  const decodedCode = JSON.parse(twoWayDecoder(decodeURIComponent(uniqueCode)));
   const currentTime = new Date().getTime();
   const allowedTime = Config.envConfigurations.uniqueEmailExpiration * 60 * 1000;
   if (!decodedCode.email || !decodedCode.date || currentTime - new Date(decodedCode.date).getTime() > allowedTime) {
@@ -194,12 +194,14 @@ const requestPasswordChangeEmail = async (_: any, args: any) => {
   if (!user) {
     throw Errors.BAD_REQUEST('User not found');
   }
-  const uniqueCode = twoWayEncoder(
-    JSON.stringify({
-      id: user.id,
-      date: new Date().toISOString(),
-    }),
-    Config.secrets.twoWayEncryptionSecret
+  const uniqueCode = encodeURIComponent(
+    twoWayEncoder(
+      JSON.stringify({
+        email: user.email,
+        date: new Date().toISOString(),
+      }),
+      Config.secrets.twoWayEncryptionSecret
+    )
   );
   const uniqueLink = `${Config.DEPLOYMENT_URL}/auth/validate?entity=reset&token=${uniqueCode}`;
   // Send email with unique link
