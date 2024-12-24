@@ -6,11 +6,14 @@ import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import axios from '@/lib/axios';
 
 export function Signup() {
   const { toast } = useToast();
+  const signUpBtn = React.useRef(null as any);
+  const [signUpBtnText, setSignUpBtnText] = React.useState('Let\'s Get Started' as any);
   const [formState, setFormState] = React.useState({
     firstName: '',
     lastName: '',
@@ -27,6 +30,8 @@ export function Signup() {
       status: 'loading',
       message: 'Creating your account...',
     });
+    signUpBtn.current.setAttribute('disabled', 'true');
+    setSignUpBtnText(<><Loader2 className="h-6 animate-spin mr-2" /> Creating your account...</>);
     if (formState.password !== formState.confirmPassword) {
       toast({
         variant: 'destructive',
@@ -34,6 +39,8 @@ export function Signup() {
         description: 'Please make sure the password and confirm password are the same',
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
+      signUpBtn.current.removeAttribute('disabled');
+      setSignUpBtnText('Let\'s Get Started');
       return;
     }
 
@@ -44,6 +51,8 @@ export function Signup() {
         description: 'Please accept the terms and conditions',
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
+      signUpBtn.current.removeAttribute('disabled');
+      setSignUpBtnText('Let\'s Get Started');
       return;
     }
     const data = JSON.stringify({
@@ -71,8 +80,20 @@ export function Signup() {
           description: errors[0].message,
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         });
+        signUpBtn.current.removeAttribute('disabled');
+        setSignUpBtnText('Let\'s Get Started');
         return;
       }
+      setFormState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        terms: false,
+      });
+      signUpBtn.current.removeAttribute('disabled');
+      setSignUpBtnText('Let\'s Get Started');
       toast({
         variant: 'default',
         title: 'Registration Successful!',
@@ -83,6 +104,9 @@ export function Signup() {
           </Link>
         ),
       });
+      setTimeout(() => {
+        window.location.href = '/auth?tab=login';
+      }, 2000);
     });
   };
 
@@ -130,7 +154,7 @@ export function Signup() {
           </label>
         </div>
         <div className="flex flex-col space-y-2">
-          <Button className="w-full space-x-2" type="submit">
+          <Button className="w-full space-x-2" ref={signUpBtn} type="submit">
             Let&apos;s Get Started
           </Button>
         </div>

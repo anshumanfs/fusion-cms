@@ -4,7 +4,7 @@ import { useSearchParams, usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { ValidateUser } from './validate-user';
-import { ValidateEmail } from './validate-email';
+import { ValidateReset } from './validate-reset';
 
 const DefaultProgessBar = () => {
   return (
@@ -29,11 +29,9 @@ export default function Validate() {
       setPage(<ValidateUser />);
       return;
     }
-    if (entity === 'email') {
-      setPage(<ValidateEmail />);
+    if (entity === 'reset') {
+      setPage(<ValidateReset />);
       return;
-    }
-    if (entity === 'resetPassword') {
     }
     router.push('/404');
   }, [pathName, searchParams, router]);

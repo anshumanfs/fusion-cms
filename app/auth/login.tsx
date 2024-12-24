@@ -6,12 +6,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ToastAction } from '@/components/ui/toast';
+import { Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import axios from '@/lib/axios';
 import Link from 'next/link';
 
 export function Login() {
   const { toast } = useToast();
+  const [logInBtn, setLogInBtn] = React.useState(null as any);
+  const [logInBtnText, setLogInBtnText] = React.useState('LogIn' as any);
   const router = useRouter();
   const [formState, setFormState] = React.useState({
     email: '',
@@ -21,6 +24,8 @@ export function Login() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    logInBtn.current.setAttribute('disabled', 'true');
+    setLogInBtnText(<><Loader2 className='w-6 h-6 mr-2 animate-spin' />Logging in...</>);
     const data = JSON.stringify({
       query: `mutation Login($email: String!, $password: String!) {
         login(email: $email, password: $password) {
@@ -37,7 +42,6 @@ export function Login() {
       .post('/appManager', data)
       .then((res) => {
         const { data, errors } = res.data;
-        alert(JSON.stringify(res.data));
         if (errors) {
           toast({
             variant: 'destructive',
@@ -45,6 +49,8 @@ export function Login() {
             description: errors[0].message,
             action: <ToastAction altText="Try again">Try again</ToastAction>,
           });
+          logInBtn.current.removeAttribute('disabled');
+          setLogInBtnText('LogIn');
           return;
         }
         toast({
@@ -63,6 +69,8 @@ export function Login() {
           description: 'An error occurred while trying to login',
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         });
+        logInBtn.current.removeAttribute('disabled');
+        setLogInBtnText('LogIn');
       });
   };
 
@@ -100,8 +108,8 @@ export function Login() {
           </label>
         </div>
         <div className="flex flex-col space-y-2">
-          <Button className="w-full" type="submit">
-            LogIn
+          <Button className="w-full" ref={logInBtn} type="submit">
+            {logInBtnText}
           </Button>
         </div>
       </div>
