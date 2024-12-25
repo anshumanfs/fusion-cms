@@ -167,23 +167,27 @@ export function UsersTable() {
       loaderStates: true,
     });
     if (pagination.pageIndex === 0) {
-      fetchUsersCount().then((count) => {
-        setUsersState((state) => ({ ...state, count }));
-      }).finally(() => {
+      fetchUsersCount()
+        .then((count) => {
+          setUsersState((state) => ({ ...state, count }));
+        })
+        .finally(() => {
+          setAppContext({
+            ...appContext,
+            loaderStates: false,
+          });
+        });
+    }
+    fetchUsersData(pagination.pageIndex)
+      .then((users) => {
+        setUsersState((state) => ({ ...state, users }));
+      })
+      .finally(() => {
         setAppContext({
           ...appContext,
           loaderStates: false,
         });
       });
-    }
-    fetchUsersData(pagination.pageIndex).then((users) => {
-      setUsersState((state) => ({ ...state, users }));
-    }).finally(() => {
-      setAppContext({
-        ...appContext,
-        loaderStates: false,
-      });
-    });
   }, [pagination.pageIndex]);
 
   const table = useReactTable({

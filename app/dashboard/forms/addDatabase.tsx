@@ -225,8 +225,9 @@ export function AddDatabase(props: {
                   <div key={`${index}_available_db`}>
                     <Label
                       htmlFor={`${database.name.toLowerCase()}_id`}
-                      className={`flex flex-row items-center gap-2 rounded-md border-2 ${database.value === selectedDb ? 'border-primary' : 'border-muted'
-                        } bg-popover p-4 hover:bg-accent hover:text-accent-foreground`}
+                      className={`flex flex-row items-center gap-2 rounded-md border-2 ${
+                        database.value === selectedDb ? 'border-primary' : 'border-muted'
+                      } bg-popover p-4 hover:bg-accent hover:text-accent-foreground`}
                       onClick={() => {
                         handleDbTypeChange(database);
                       }}

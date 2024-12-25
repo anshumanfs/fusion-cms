@@ -1,10 +1,7 @@
 'use client';
 import * as React from 'react';
 import { Loader2 } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/loader-dialog";
+import { Dialog, DialogContent } from '@/components/ui/loader-dialog';
 
 export function Loader({ children, ...props }: any) {
   return (

@@ -1,10 +1,10 @@
 /**
  * custom dialog component
  * Edited by: Anshuman Nayak
- * Date: 2024-12-25 
+ * Date: 2024-12-25
  * Reason: To display loader dialog , with no close button, no title and no description,
  *       and transparent background with no shadow and no border
-*/
+ */
 'use client';
 
 import * as React from 'react';
