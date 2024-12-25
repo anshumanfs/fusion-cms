@@ -43,6 +43,6 @@ const QuerySchema: any = new Schema(
   }
 );
 
-const model = conn.model('cms_dbCredentials', QuerySchema, 'cms_dbCredentials');
+const model = conn.model('cms_db_credentials', QuerySchema, 'cms_db_credentials');
 const services = mongooseQueryServices(model);
 export { model, services };

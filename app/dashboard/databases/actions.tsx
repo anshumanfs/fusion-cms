@@ -29,10 +29,10 @@ import { ConfirmDelete } from '../forms/confirmDelete';
 import { Trash2Icon, PlayCircleIcon, PauseCircleIcon, EyeIcon } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
-const ConfirmRestart = (props: { children: any; appName: string }) => {
+const ConfirmEndpointAction = (props: { children: any; appName: string; action: string }) => {
   const { toast } = useToast();
 
-  const startEndpoint = (appName: string) => {
+  const startEndpoint = (appName: string, action: string) => {
     const payload = JSON.stringify({
       query: `mutation RunApp($appName: String!) {
         runApp(appName: $appName) {
@@ -56,7 +56,9 @@ const ConfirmRestart = (props: { children: any; appName: string }) => {
           toast({
             variant: 'default',
             title: 'Success',
-            description: 'App started successfully. Please restart the application to see it in action.',
+            description: `App ${
+              action === 'start' ? 'started' : 'stopped'
+            } successfully. Please restart the application to see it in action.`,
           });
         }
       })
@@ -71,15 +73,18 @@ const ConfirmRestart = (props: { children: any; appName: string }) => {
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>{props.children}</AlertDialogTrigger>
+      <AlertDialogTrigger className="w-full">{props.children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure ?</AlertDialogTitle>
-          <AlertDialogDescription>This action will restart the application.</AlertDialogDescription>
+          <AlertDialogTitle>Are you sure to {props.action} this endpoint ?</AlertDialogTitle>
+          <AlertDialogDescription>
+            You need to restart the application to {props.action === 'start' ? 'make' : 'disable'} the endpoint{' '}
+            {props.action === 'start' ? 'visible' : ''}.
+          </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={() => startEndpoint(props.appName, props.action)}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -140,19 +145,23 @@ export function Actions(props: { appName: string; running: boolean }) {
             <EyeIcon className="w-5 h-5 mr-2" />
             View
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            {props.running ? (
-              <>
+
+          {props.running ? (
+            <ConfirmEndpointAction appName={props.appName} action="pause">
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <PauseCircleIcon className="w-5 h-5 mr-2" />
                 Pause
-              </>
-            ) : (
-              <>
+              </DropdownMenuItem>
+            </ConfirmEndpointAction>
+          ) : (
+            <ConfirmEndpointAction appName={props.appName} action="start">
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                 <PlayCircleIcon className="w-5 h-5 mr-2" />
                 Start
-              </>
-            )}
-          </DropdownMenuItem>
+              </DropdownMenuItem>
+            </ConfirmEndpointAction>
+          )}
+
           <ConfirmDelete appName={props.appName}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Trash2Icon className="w-5 h-5 mr-2" />

@@ -22,9 +22,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
@@ -33,7 +30,6 @@ import { Actions } from './actions';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { AddSchema } from './addSchema';
-import data from './data/data.json';
 
 export type SchemaDisplay = {
   id: string;
@@ -120,7 +116,7 @@ export const columns: ColumnDef<SchemaDisplay>[] = [
   },
 ];
 
-export function SchemaTable() {
+export function SchemaTable({ data }: { data: SchemaDisplay[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [filterBy, setFilterBy] = React.useState('schemaName');

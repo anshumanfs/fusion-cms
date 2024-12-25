@@ -20,6 +20,11 @@ const getUsers = async (_: any, args: any) => {
   return users;
 };
 
+const getUsersCount = async (_: any, args: any) => {
+  const count = await dbModels.users.countDocuments({});
+  return count || 0;
+};
+
 const registerUser = async (_: any, args: any) => {
   const { email, firstName, lastName, password } = args;
   const [user, userCount] = [await dbModels.users.findOne({ email }), await dbModels.users.countDocuments({})];
@@ -36,8 +41,9 @@ const registerUser = async (_: any, args: any) => {
   if (userCount === 0) {
     userData.role = 'admin'; // First user will be admin by default
   }
-  const uniqueCode = encodeURIComponent(twoWayEncoder(email, Config.secrets.uniqueEmailSecret));
-  const uniqueAccountActivationLink = `${Config.DEPLOYMENT_URL}/activate-account/${uniqueCode}`;
+  const dataToEncrypt = JSON.stringify({ email, date: new Date().toISOString() });
+  const uniqueCode = encodeURIComponent(twoWayEncoder(dataToEncrypt, Config.secrets.uniqueEmailSecret));
+  const uniqueAccountActivationLink = `${Config.DEPLOYMENT_URL}/auth/validate?entity=user&token=${uniqueCode}`;
   await sendMail(
     email,
     `Activate your ${Config.APP_NAME} account`,
@@ -49,9 +55,11 @@ const registerUser = async (_: any, args: any) => {
 };
 
 const activateAccount = async (_: any, args: any) => {
+  const currentTime = new Date().getTime();
+  const allowedTime = Config.envConfigurations.uniqueEmailExpiration * 60 * 1000;
   const { uniqueCode } = args;
-  const email = twoWayDecoder(decodeURIComponent(uniqueCode), Config.secrets.uniqueEmailSecret);
-  if (!email) {
+  const { email, date } = JSON.parse(twoWayDecoder(decodeURIComponent(uniqueCode), Config.secrets.uniqueEmailSecret));
+  if (!date || !email || currentTime - new Date(date).getTime() > allowedTime) {
     throw Errors.BAD_REQUEST('Invalid code');
   }
   const user = await dbModels.users.findOne({ email });
@@ -126,12 +134,13 @@ const requestNewToken = async (_: any, args: any) => {
 };
 
 const modifyUser = async (_: any, args: any) => {
-  const { id, email, role, firstName, lastName } = args;
-  const user = await dbModels.users.findOne({ id });
+  const { _id } = args;
+  const user = await dbModels.users.findOne({ _id });
   if (!user) {
     throw new Error('User not found');
   }
-  const updatedUser = await user.update({ email, role, firstName, lastName });
+  delete args.id;
+  const updatedUser = await dbModels.users.findOneAndUpdate({ _id }, args);
   return updatedUser;
 };
 
@@ -165,8 +174,10 @@ const changePasswordByOldPass = async (_: any, args: any) => {
 
 const forgotPassword = async (_: any, args: any) => {
   const { uniqueCode, password } = args;
-  const decodedCode = JSON.parse(twoWayDecoder(uniqueCode));
-  if (!decodedCode.email) {
+  const decodedCode = JSON.parse(twoWayDecoder(decodeURIComponent(uniqueCode)));
+  const currentTime = new Date().getTime();
+  const allowedTime = Config.envConfigurations.uniqueEmailExpiration * 60 * 1000;
+  if (!decodedCode.email || !decodedCode.date || currentTime - new Date(decodedCode.date).getTime() > allowedTime) {
     throw Errors.BAD_REQUEST('Invalid code');
   }
   const updatedUser = await dbModels.users.findOneAndUpdate(
@@ -189,13 +200,16 @@ const requestPasswordChangeEmail = async (_: any, args: any) => {
   if (!user) {
     throw Errors.BAD_REQUEST('User not found');
   }
-  const uniqueCode = twoWayEncoder(
-    JSON.stringify({
-      id: user.id,
-    }),
-    Config.secrets.twoWayEncryptionSecret
+  const uniqueCode = encodeURIComponent(
+    twoWayEncoder(
+      JSON.stringify({
+        email: user.email,
+        date: new Date().toISOString(),
+      }),
+      Config.secrets.twoWayEncryptionSecret
+    )
   );
-  const uniqueLink = `${Config.DEPLOYMENT_URL}/reset-password/${uniqueCode}`;
+  const uniqueLink = `${Config.DEPLOYMENT_URL}/auth/validate?entity=reset&token=${uniqueCode}`;
   // Send email with unique link
   await sendMail(email, `Reset Password ${Config.APP_NAME}`, '', ChangePasswordTemplate(uniqueLink));
   return { message: 'Email sent successfully' };
@@ -207,6 +221,7 @@ export {
   forgotPassword,
   getUser,
   getUsers,
+  getUsersCount,
   login,
   modifyUser,
   registerUser,

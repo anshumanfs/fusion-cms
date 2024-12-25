@@ -14,7 +14,7 @@ const {
   Types,
 } = require('../../templates/mysql/utils/schemaHelper');
 const model: any = conn.define(
-  'cms_accessSchemas',
+  'cms_access_schemas',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
     email: Types.STRING(),
@@ -24,7 +24,7 @@ const model: any = conn.define(
     allowedInChain: addDefaultValue(Types.BOOLEAN(), false), // to check if previous resolver has allowed the access
   },
   {
-    tableName: 'cms_accessSchemas',
+    tableName: 'cms_access_schemas',
     timestamps: true,
     alter: true,
   }

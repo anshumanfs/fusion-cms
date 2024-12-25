@@ -1,5 +1,7 @@
 import lodash from 'lodash';
-import tempJson from '../../../../data/.temp.json';
+import tempJsonData from '../../../../data/.temp.json';
+
+const tempJson: TempJson = tempJsonData;
 
 const replaceAllParenthesis = (text: string, replacement: string) => {
   const pattern = /\([\w\W]*?\)/g;

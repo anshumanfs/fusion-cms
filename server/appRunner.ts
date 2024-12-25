@@ -17,6 +17,7 @@ import Application from './controllers/appStatus';
 import cmsConfig from './config.json';
 import fs from 'fs-extra';
 import { authMiddleware } from './middlewares/auth';
+import packageJson from '../package.json';
 
 const work_env = 'NODE_ENV' in process.env ? process.env.NODE_ENV.trim() : 'development';
 const ROOT = 'ROOT' in process.env ? process?.env?.ROOT?.trim() : '';
@@ -24,7 +25,7 @@ const GRAPHQL_MODULE = 'GRAPHQL_MODULE' in process.env ? process?.env?.GRAPHQL_M
 const checkEnv = ['production', 'performance'];
 
 const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; appName: string }) => {
-  return useSofa({
+  const sofa = useSofa({
     schema: makeExecutableSchema({
       resolvers: Resolver,
       typeDefs: Schema,
@@ -33,14 +34,19 @@ const getSofa = ({ Schema, Resolver, appName }: { Schema: any; Resolver: any; ap
     openAPI: {
       info: {
         title: `${appName} APIs`,
-        version: '3.0.0',
+        version: `${packageJson.version}`,
+        description: `Generated APIs for ${appName} by ${packageJson.name}`,
       },
-      endpoint: '/openapi.json',
+      endpoint: `/openapi.json`,
     },
     swaggerUI: {
       path: `/docs`,
     },
   });
+  logger.info(`✓ ${appName} :- REST running on /rest/${appName}`);
+  logger.info(`✓ ${appName} :- Swagger docs on /rest/${appName}/docs`);
+  logger.info(`✓ ${appName} :- OpenAPI on /rest/${appName}/openapi.json`);
+  return sofa;
 };
 
 const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boolean; subfolder: string }) => {

@@ -2,6 +2,8 @@ import { toJSON } from '../../libs/customLibs';
 import { conn } from '../../db';
 import { AES, enc } from 'crypto-js';
 import sequelizeQueryServices from '../services/sequelize';
+
+const appsSchema = require('./apps');
 const {
   addEnums,
   addGetter,
@@ -11,6 +13,7 @@ const {
   primaryKey,
   ObjArray,
   Optional,
+  references,
   autoIncrement,
   Nullable,
   Types,
@@ -38,18 +41,22 @@ const cipherSetter = (value: any) => {
 };
 
 const model: any = conn.define(
-  'cms_dbCredentials',
+  'cms_db_credentials',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
-    appName: Types.STRING(),
+    appName: references(Types.STRING(), { model: appsSchema.model, key: 'appName' }),
     env: Types.STRING(),
     credentials: addGetter(Types.JSON(), 'credentials', toJSON),
   },
   {
-    tableName: 'cms_dbCredentials',
+    tableName: 'cms_db_credentials',
     timestamps: true,
   }
 );
+
+model.belongsTo(appsSchema.model, { foreignKey: 'appName' });
+appsSchema.model.hasMany(model, { foreignKey: 'appName' });
+
 const services = sequelizeQueryServices(model);
 
 export { model, services };

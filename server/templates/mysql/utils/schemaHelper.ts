@@ -66,6 +66,12 @@ const unique = (obj: any, compositeIndex: any = false) => {
   return Obj;
 };
 
+const references = (obj: any, reference: { model: any; key: string }) => {
+  const Obj = lodash.cloneDeep(obj);
+  Obj.references = reference;
+  return Obj;
+};
+
 /**
  * Adds a setter method to an object.
  *
@@ -270,6 +276,7 @@ module.exports = {
   primaryKey,
   ObjArray,
   Optional,
+  references,
   autoIncrement,
   Nullable,
   Types,

@@ -22,7 +22,7 @@ function connector(appName: string, config: MySQLConnectionOptions) {
       host: config.host,
       port: config.port,
       dialect: 'mysql',
-      logging: false,
+      logging: process.env.ENABLE_SEQEULIZE_LOGGING === 'true',
     });
     conn.addHook('afterConnect', (connection: any) => {
       logger.log(`✓ ${appName} MySQL connected`);

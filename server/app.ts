@@ -3,13 +3,14 @@ import next from 'next';
 import path from 'path';
 import { runAsMicroService, runAsMonolith } from './appRunner';
 import logger from './libs/logger';
+import SecureConfig from '../.secure.json';
 
 require('dotenv').config({
   path: '../.env',
 });
 
 const port = parseInt(process.env.PORT || '3000');
-const host = 'localhost';
+const host = '127.0.0.1';
 const node_env = process?.env?.NODE_ENV?.trim() || 'development';
 const app_mode = process?.env?.APP_MODE?.trim() || 'monolith';
 const dev = node_env === 'development';

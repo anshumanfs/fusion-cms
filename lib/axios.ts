@@ -21,7 +21,7 @@ axios.interceptors.response.use(
       if (!refreshToken) {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
-        window.location.href = '/auth/login';
+        window.location.href = '/auth?tab=login';
       }
       const data = JSON.stringify({
         query: `mutation RefreshToken($refreshToken: String!) {
@@ -41,7 +41,7 @@ axios.interceptors.response.use(
           if (errors) {
             localStorage.removeItem('token');
             localStorage.removeItem('refreshToken');
-            window.location.href = '/auth/login';
+            window.location.href = '/auth?tab=login';
             return;
           }
           localStorage.setItem('token', data.requestNewToken.token);
@@ -51,7 +51,7 @@ axios.interceptors.response.use(
         .catch(() => {
           localStorage.removeItem('token');
           localStorage.removeItem('refreshToken');
-          window.location.href = '/auth/login';
+          window.location.href = '/auth?tab=login';
         });
     }
     return Promise.reject(error);

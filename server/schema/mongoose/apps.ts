@@ -23,13 +23,13 @@ const QuerySchema: any = new Schema(
   }
 );
 QuerySchema.virtual('creds', {
-  ref: 'gateway_dbCreds',
+  ref: 'cms_db_creds',
   localField: 'appName',
   foreignField: 'appName',
 });
 
 QuerySchema.virtual('schemas', {
-  ref: 'cms_dbSchemas',
+  ref: 'cms_db_schemas',
   localField: 'appName',
   foreignField: 'appName',
 });

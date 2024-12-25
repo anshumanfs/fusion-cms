@@ -1,6 +1,6 @@
 {
   "APP_NAME": "Fusion CMS",
-  "DEPLOYMENT_URL": "http://localhost:3001",
+  "DEPLOYMENT_URL": "http://127.0.0.1:3001",
   "LOGO_URL": {
     "light": "/logo/light/icons8-react-native-96.svg",
     "dark": "/logo/dark/icons8-react-native-96.svg"
@@ -11,10 +11,10 @@
     "type": "mysql",
     "orm": "sequelize",
     "configs": {
-      "host": "localhost",
+      "host": "127.0.0.1",
       "port": 3306,
       "username": "root",
-      "password": "root",
+      "password": "",
       "database": "cms_metadata"
     }
   },
@@ -31,6 +31,7 @@
   "envConfigurations": {
     "toekenTimeDescription": "Times are in minutes",
     "tokenExpiration": 15,
-    "refreshTokenExpiration": 1440
+    "refreshTokenExpiration": 1440,
+    "uniqueEmailExpiration": 1440
   }
 }

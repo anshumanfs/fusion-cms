@@ -22,9 +22,9 @@ const serverJSGenerator = (port: number | string, appName: string) => {
             plugins: [ApolloServerPluginDrainHttpServer({ httpServer: server })] 
         }); 
         await apollo.start();
-        console.log('✔ API is running on: http://localhost:${port}'); 
+        console.log('✔ API is running on: http://127.0.0.1:${port}'); 
         app.use('/graphql/${appName}', cors(), json(), expressMiddleware(apollo));
-        console.log('✔ ${appName} :- GraphQL running on http://localhost:${port}/graphql/${appName}');
+        console.log('✔ ${appName} :- GraphQL running on http://127.0.0.1:${port}/graphql/${appName}');
         server.listen(port);
     };
     startApolloServer(dev);`;
