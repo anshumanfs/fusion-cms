@@ -16,7 +16,7 @@ import {
 } from '@tanstack/react-table';
 
 import { Button } from '@/components/ui/button';
-
+import { AppContext } from '@/app/AppContextProvider';
 import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
@@ -48,6 +48,8 @@ const accessorKeyMap: any = {
   email: 'Email',
   apiKey: 'API Key',
   role: 'Role',
+  isVerified: 'Verified',
+  isBlocked: 'Blocked',
   active: 'Status',
   createdAt: 'Created',
 };
@@ -144,6 +146,7 @@ export const columns: ColumnDef<UsersDisplay>[] = [
 ];
 
 export function UsersTable() {
+  const [appContext, setAppContext] = React.useContext(AppContext);
   const [usersState, setUsersState] = React.useState({
     users: [] as UsersDisplay[],
     count: 0,
@@ -159,13 +162,27 @@ export function UsersTable() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   React.useEffect(() => {
+    setAppContext({
+      ...appContext,
+      loaderStates: true,
+    });
     if (pagination.pageIndex === 0) {
       fetchUsersCount().then((count) => {
         setUsersState((state) => ({ ...state, count }));
+      }).finally(() => {
+        setAppContext({
+          ...appContext,
+          loaderStates: false,
+        });
       });
     }
     fetchUsersData(pagination.pageIndex).then((users) => {
       setUsersState((state) => ({ ...state, users }));
+    }).finally(() => {
+      setAppContext({
+        ...appContext,
+        loaderStates: false,
+      });
     });
   }, [pagination.pageIndex]);
 

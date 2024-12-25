@@ -12,23 +12,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -238,9 +225,8 @@ export function AddDatabase(props: {
                   <div key={`${index}_available_db`}>
                     <Label
                       htmlFor={`${database.name.toLowerCase()}_id`}
-                      className={`flex flex-row items-center gap-2 rounded-md border-2 ${
-                        database.value === selectedDb ? 'border-primary' : 'border-muted'
-                      } bg-popover p-4 hover:bg-accent hover:text-accent-foreground`}
+                      className={`flex flex-row items-center gap-2 rounded-md border-2 ${database.value === selectedDb ? 'border-primary' : 'border-muted'
+                        } bg-popover p-4 hover:bg-accent hover:text-accent-foreground`}
                       onClick={() => {
                         handleDbTypeChange(database);
                       }}

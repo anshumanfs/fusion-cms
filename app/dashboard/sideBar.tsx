@@ -28,7 +28,7 @@ const elementStatesInitial: any = {
   },
   accesses: {
     variant: 'ghost',
-    route: '/users',
+    route: '/accesses',
   },
 };
 
