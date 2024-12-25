@@ -4,6 +4,7 @@ import sequelizeQueryServices from '../services/sequelize';
 
 const {
   addEnums,
+  index,
   unique,
   addDefaultValue,
   addGetter,
@@ -22,9 +23,9 @@ const model: any = conn.define(
   'cms_db_schemas',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
-    appName: references(Types.STRING(), { model: appsSchema.model, key: 'appName' }),
-    singularCollectionName: Types.STRING(),
-    originalCollectionName: Types.STRING(),
+    appName: index(references(Types.STRING(), { model: appsSchema.model, key: 'appName' })),
+    singularCollectionName: index(Types.STRING()),
+    originalCollectionName: index(Types.STRING()),
     pluralCollectionName: Types.STRING(),
     schema: addGetter(Types.JSON(), 'schema', toJSON),
   },

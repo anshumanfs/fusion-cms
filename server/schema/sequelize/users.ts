@@ -7,6 +7,7 @@ const {
   primaryKey,
   autoIncrement,
   Types,
+  index,
   Optional,
 } = require('../../templates/mysql/utils/schemaHelper');
 const additionalRoles = config.user.additionalRoles || [];
@@ -17,10 +18,10 @@ const model: any = conn.define(
     _id: autoIncrement(primaryKey(Types.INTEGER())),
     firstName: Types.STRING(),
     lastName: Optional(Types.STRING()),
-    email: Types.EMAIL(),
+    email: index(Types.EMAIL()),
     password: Types.STRING(),
-    apiKey: Types.STRING(),
-    role: addDefaultValue(addEnums(Types.STRING(), ['admin', 'user', ...additionalRoles]), 'user'),
+    apiKey: index(Types.STRING()),
+    role: index(addDefaultValue(addEnums(Types.STRING(), ['admin', 'user', ...additionalRoles]), 'user')),
     isVerified: addDefaultValue(Types.BOOLEAN(), false), // true if user has verified the email and account is active
     isBlocked: addDefaultValue(Types.BOOLEAN(), false), // true if user is blocked by admin
   },

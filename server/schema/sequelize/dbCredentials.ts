@@ -8,6 +8,7 @@ const {
   addEnums,
   addGetter,
   addSetter,
+  index,
   unique,
   addDefaultValue,
   primaryKey,
@@ -44,8 +45,8 @@ const model: any = conn.define(
   'cms_db_credentials',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
-    appName: references(Types.STRING(), { model: appsSchema.model, key: 'appName' }),
-    env: Types.STRING(),
+    appName: index(references(Types.STRING(), { model: appsSchema.model, key: 'appName' })),
+    env: index(Types.STRING()),
     credentials: addGetter(Types.JSON(), 'credentials', toJSON),
   },
   {

@@ -2,15 +2,15 @@ import { Schema } from 'mongoose';
 import { conn } from '../../db';
 import mongooseQueryServices from '../services/mongoose';
 
-const { Types, addEnums, unique } = require('../../templates/mongo/utils/schemaHelper');
+const { Types, addEnums, index, unique } = require('../../templates/mongo/utils/schemaHelper');
 const QuerySchema: any = new Schema(
   {
     _id: Types.ObjectId(),
-    appName: unique(Types.String()),
+    appName: index(unique(Types.String())),
     port: Types.Number(),
-    running: Types.Boolean(),
-    isAppCompleted: Types.Boolean(),
-    dbType: addEnums(Types.String(), ['mongo', 'mysql']),
+    running: index(Types.Boolean()),
+    isAppCompleted: index(Types.Boolean()),
+    dbType: index(addEnums(Types.String(), ['mongo', 'mysql'])),
   },
   {
     timestamps: true,
@@ -20,6 +20,7 @@ const QuerySchema: any = new Schema(
     toObject: {
       getters: true,
     },
+    autoIndex: true,
   }
 );
 QuerySchema.virtual('creds', {

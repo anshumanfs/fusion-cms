@@ -4,6 +4,7 @@ import sequelizeQueryServices from '../services/sequelize';
 const {
   addEnums,
   addGetter,
+  index,
   unique,
   addDefaultValue,
   primaryKey,
@@ -17,9 +18,9 @@ const model: any = conn.define(
   'cms_access_schemas',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
-    email: Types.STRING(),
-    appName: Types.STRING(),
-    endPointName: Types.STRING(),
+    email: index(Types.STRING()),
+    appName: index(Types.STRING()),
+    endPointName: index(Types.STRING()),
     isAllowed: addDefaultValue(Types.STRING(), 'false'),
     allowedInChain: addDefaultValue(Types.BOOLEAN(), false), // to check if previous resolver has allowed the access
   },
