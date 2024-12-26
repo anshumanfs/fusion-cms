@@ -7,6 +7,7 @@ import Errors from '../../libs/errors';
 import sendMail from '../../libs/mailer';
 import { dbModels } from '../../db';
 import { oneWayEncoder, twoWayDecoder, twoWayEncoder } from '../../libs/encoderDecoder';
+import { table } from 'node:console';
 
 const getUser = async (_: any, args: any) => {
   const { id } = args;
@@ -37,8 +38,16 @@ const getUsers = async (_: any, args: any) => {
 };
 
 const getUsersByMetadata = async (_: any, args: any) => {
-  const { key, value } = args;
-  const metadata = await dbModels.metadata.find({ key, value });
+  const { metaDataFilter } = args;
+  const metadata = await dbModels.metadata.find({
+    $or: [
+      ...Object.keys(metaDataFilter).map((metaKey: any) => ({
+        tableName: dbModels.users.getTableName(),
+        key: metaKey,
+        value: metaDataFilter[metaKey],
+      })),
+    ],
+  });
   const users = await dbModels.users.find({ _id: { $in: metadata.map((meta: any) => meta.referenceId) } });
   const parsedMetadata = metadata.reduce((acc: any, curr: any) => {
     if (!acc[curr.referenceId]) {
