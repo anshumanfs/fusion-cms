@@ -7,6 +7,7 @@ const model: any = conn.define(
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
     tableName: index(Types.STRING()),
+    referenceId: index(Types.INTEGER()),
     key: index(Types.STRING()),
     value: index(Types.STRING()),
   },

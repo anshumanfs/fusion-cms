@@ -18,6 +18,7 @@ const QuerySchema: any = new Schema(
   {
     _id: Types.ObjectId(),
     tableName: index(Types.String()),
+    referenceId: index(Types.ObjectId()),
     key: index(Types.String()),
     value: index(Types.String()),
   },

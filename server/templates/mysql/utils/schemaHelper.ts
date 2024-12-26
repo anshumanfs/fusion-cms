@@ -277,6 +277,7 @@ module.exports = {
   addEnums,
   addGetter,
   addSetter,
+  index,
   unique,
   addDefaultValue,
   primaryKey,

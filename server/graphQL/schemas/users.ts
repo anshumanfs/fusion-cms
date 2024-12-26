@@ -3,7 +3,8 @@ import { gql } from 'graphql-tag';
 const userSchema = gql`
   extend type Query {
     getUser(id: ID!): User
-    getUsers(page: Int): [User]!
+    getUsers(filters: JSON, page: Int): [User]!
+    getUsersByMetadata(metaDataFilter: JSON): [User]!
     getUsersCount: Int!
   }
 
@@ -13,7 +14,8 @@ const userSchema = gql`
     forgotPassword(uniqueCode: String!, password: String!): Response
     login(email: String!, password: String!): Token
     modifyUser(id: ID!, email: String, role: String, firstName: String, lastName: String, isBlocked: String): User
-    registerUser(email: String!, firstName: String!, lastName: String!, password: String!): User
+    modifyUserMetadata(id: ID!, metadata: JSON): User
+    registerUser(email: String!, firstName: String!, lastName: String!, password: String!, metadata: JSON): User
     requestNewToken(refreshToken: String!): Token
     requestPasswordChangeEmail(email: String!): Response
   }
@@ -26,6 +28,7 @@ const userSchema = gql`
     role: String
     isVerified: Boolean
     isBlocked: Boolean
+    metadata: JSON
     createdAt: DateTime
     updatedAt: DateTime
   }

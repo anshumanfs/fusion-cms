@@ -1,3 +1,4 @@
+import { create } from 'lodash';
 import sequelize from 'sequelize';
 
 const convertProjectionToAttribute = (projection: any, model: any) => {
@@ -41,6 +42,9 @@ const convertProjectionToAttribute = (projection: any, model: any) => {
 
 export default function sequelizeQueryServices(model: any) {
   return {
+    getTableName: () => {
+      return model.tableName;
+    },
     countDocuments: async (filter = {}) => {
       return model.count({ where: filter });
     },
@@ -93,6 +97,9 @@ export default function sequelizeQueryServices(model: any) {
     },
     create: async (data = {}) => {
       return model.create(data);
+    },
+    createMany: async (data = []) => {
+      return model.bulkCreate(data);
     },
     updateOne: async (filter: any, update = {}, options = {}) => {
       if (!filter) {
