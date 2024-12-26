@@ -2,7 +2,7 @@ import ActivateAccountTemplate from '../../libs/emailTemplates/activateAccount.t
 import ChangePasswordTemplate from '../../libs/emailTemplates/changePassword.template';
 import SendAPIKeyTemplate from '../../libs/emailTemplates/apiKey.template';
 import nodeCrypto from 'node:crypto';
-import Config from '../../config.json';
+import Config from '../../../config.json';
 import Errors from '../../libs/errors';
 import sendMail from '../../libs/mailer';
 import { dbModels } from '../../db';
@@ -11,12 +11,53 @@ import { oneWayEncoder, twoWayDecoder, twoWayEncoder } from '../../libs/encoderD
 const getUser = async (_: any, args: any) => {
   const { id } = args;
   const user = await dbModels.users.findOne({ id });
-  return user;
+  const metadata = (await dbModels.metadata.find({ referenceId: id })) || [];
+  const parsedMetadata = metadata.reduce((acc: any, curr: any) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {});
+  return { ...user, metadata: parsedMetadata };
 };
 
 const getUsers = async (_: any, args: any) => {
   const { page } = args;
-  const users = await dbModels.users.find({});
+  const users = await dbModels.users.find({}, {}, { skip: (page - 1) * 10, limit: 10 });
+  const metadata = await dbModels.metadata.find({ referenceId: { $in: users.map((user: any) => user._id) } });
+  const parsedMetadata = metadata.reduce((acc: any, curr: any) => {
+    if (!acc[curr.referenceId]) {
+      acc[curr.referenceId] = {};
+    }
+    acc[curr.referenceId][curr.key] = curr.value;
+    return acc;
+  }, {});
+  users.forEach((user: any) => {
+    user.metadata = parsedMetadata[user._id];
+  });
+  return users;
+};
+
+const getUsersByMetadata = async (_: any, args: any) => {
+  const { metaDataFilter } = args;
+  const metadata = await dbModels.metadata.find({
+    $or: [
+      ...Object.keys(metaDataFilter).map((metaKey: any) => ({
+        tableName: dbModels.users.getTableName(),
+        key: metaKey,
+        value: metaDataFilter[metaKey],
+      })),
+    ],
+  });
+  const users = await dbModels.users.find({ _id: { $in: metadata.map((meta: any) => meta.referenceId) } });
+  const parsedMetadata = metadata.reduce((acc: any, curr: any) => {
+    if (!acc[curr.referenceId]) {
+      acc[curr.referenceId] = {};
+    }
+    acc[curr.referenceId][curr.key] = curr.value;
+    return acc;
+  }, {});
+  users.forEach((user: any) => {
+    user.metadata = parsedMetadata[user._id];
+  });
   return users;
 };
 
@@ -26,7 +67,7 @@ const getUsersCount = async (_: any, args: any) => {
 };
 
 const registerUser = async (_: any, args: any) => {
-  const { email, firstName, lastName, password } = args;
+  const { email, firstName, lastName, password, metadata } = args;
   const [user, userCount] = [await dbModels.users.findOne({ email }), await dbModels.users.countDocuments({})];
   if (user) {
     throw Errors.BAD_REQUEST('User already exists !');
@@ -51,6 +92,25 @@ const registerUser = async (_: any, args: any) => {
     ActivateAccountTemplate(uniqueAccountActivationLink, firstName)
   );
   const result = await dbModels.users.create(userData);
+  if (!result) {
+    throw Errors.NOT_IMPLEMENTED('User not created');
+  }
+  if (metadata) {
+    const referenceId = result._id;
+    const metadatas = Object.keys(metadata).map((key) => ({
+      tableName: dbModels?.users?.getTableName() || 'default_table_users',
+      referenceId,
+      key,
+      value: metadata[key],
+    }));
+    if (metadatas.length > 0) {
+      const metaDataResult = await dbModels.metadata.createMany([...metadatas]);
+      if (!metaDataResult) {
+        throw Errors.NOT_IMPLEMENTED('Metadata not created');
+      }
+    }
+    result.metadata = metadata;
+  }
   return result;
 };
 
@@ -141,7 +201,33 @@ const modifyUser = async (_: any, args: any) => {
   }
   delete args.id;
   const updatedUser = await dbModels.users.findOneAndUpdate({ _id }, args);
-  return updatedUser;
+  const metadata = (await dbModels.metadata.find({ referenceId: _id })) || [];
+  return { ...updatedUser, metadata };
+};
+
+const modifyUserMetadata = async (_: any, args: any) => {
+  const { id, metadata } = args;
+  const user = await dbModels.users.findOne({ id });
+  if (!user) {
+    throw Errors.BAD_REQUEST('User not found');
+  }
+  const referenceId = id;
+  const metadatas = Object.keys(metadata).map((key) => ({
+    tableName: dbModels?.users?.getTableName() || 'default_table_users',
+    referenceId,
+    key,
+    value: metadata[key],
+  }));
+  const promiseArr = metadatas.map((meta) =>
+    dbModels.metadata.findOneAndUpdate({ tableName: meta.tableName, referenceId, key: meta.key }, meta, {
+      upsert: true,
+    })
+  );
+  const metaDataResult = await Promise.all(promiseArr);
+  if (!metaDataResult) {
+    throw Errors.NOT_IMPLEMENTED('Metadata not updated');
+  }
+  return { message: 'Metadata updated successfully' };
 };
 
 /**
@@ -221,9 +307,11 @@ export {
   forgotPassword,
   getUser,
   getUsers,
+  getUsersByMetadata,
   getUsersCount,
   login,
   modifyUser,
+  modifyUserMetadata,
   registerUser,
   requestNewToken,
   requestPasswordChangeEmail,

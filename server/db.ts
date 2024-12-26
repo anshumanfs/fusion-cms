@@ -1,4 +1,5 @@
-import cmsConfigs from './config.json';
+import cmsConfigs from '../config.json';
+import secureConfig from '../.secure.json';
 
 const connectorLocations = {
   mongo: './connectors/mongo',
@@ -24,12 +25,13 @@ const orms = {
 
 let conn: any;
 
-const dbType = cmsConfigs.metadataDb.type || 'sqlite';
+const dbType = secureConfig.db.metadataDb.type || 'sqlite';
 const { connector } = require(connectorLocations[dbType as keyof typeof connectorLocations]);
-conn = connector('metadata', cmsConfigs.metadataDb.configs);
+conn = connector('metadata', secureConfig.db.metadataDb.configs);
 const ormType = orms[dbType as keyof typeof connectorLocations];
 
 const users = require(`./schema/${ormType}/users`).services;
+const metadata = require(`./schema/${ormType}/metadata`).services;
 const dbSchemas = require(`./schema/${ormType}/dbSchemas`).services;
 const apps = require(`./schema/${ormType}/apps`).services;
 const configs = require(`./schema/${ormType}/configs`).services;
@@ -38,6 +40,7 @@ const accessSchema = require(`./schema/${ormType}/accessSchemas`).services;
 
 const dbModels = {
   users,
+  metadata,
   dbSchemas,
   apps,
   configs,

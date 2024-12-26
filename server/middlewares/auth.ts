@@ -1,4 +1,4 @@
-import Config from '../config.json';
+import Config from '../../config.json';
 import Errors from '../libs/errors';
 import lodash from 'lodash';
 import { Request, Response, NextFunction } from 'express';

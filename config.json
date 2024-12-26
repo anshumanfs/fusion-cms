@@ -7,17 +7,6 @@
   },
   "ENVS": ["development", "production"],
   "DEV_ENVS": ["development"],
-  "metadataDb": {
-    "type": "mysql",
-    "orm": "sequelize",
-    "configs": {
-      "host": "127.0.0.1",
-      "port": 3306,
-      "username": "root",
-      "password": "",
-      "database": "cms_metadata"
-    }
-  },
   "secrets": {
     "bearerSecret": "secret-token",
     "refreshTokenSecret": "refresh-token",
@@ -33,5 +22,26 @@
     "tokenExpiration": 15,
     "refreshTokenExpiration": 1440,
     "uniqueEmailExpiration": 1440
+  },
+  "security": {
+    "rateLimit": {
+      "windowMs": 60000,
+      "max": 500
+    },
+    "speedLimit": {
+      "windowMs": 900000,
+      "delayAfter": 100,
+      "delayMs": 1000
+    },
+    "cors": {
+      "origin": "*",
+      "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+      "preflightContinue": false,
+      "optionsSuccessStatus": 204
+    },
+    "ipFilter": {
+      "whitelist": ["127.12.20.21", "::1"],
+      "blacklist": []
+    }
   }
 }

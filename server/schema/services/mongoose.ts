@@ -1,5 +1,8 @@
 export default function mongooseQueryServices(model: any) {
   return {
+    getTableName: () => {
+      return model.collection.collectionName;
+    },
     countDocuments: async (filter = {}) => {
       return model.countDocuments(filter);
     },
@@ -17,6 +20,9 @@ export default function mongooseQueryServices(model: any) {
     },
     create: async (data = {}) => {
       return model.create(data);
+    },
+    createMany: async (data = []) => {
+      return model.insertMany(data);
     },
     updateOne: async (filter: any, update = {}, options = {}) => {
       if (!filter) {

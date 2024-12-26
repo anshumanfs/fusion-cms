@@ -31,6 +31,7 @@ describe('Testing dbModels translation', () => {
     const sequelize = require('../db.js');
     const {
       addEnums,
+      index,
       unique,
       addDefaultValue,
       primaryKey,
@@ -95,6 +96,7 @@ describe('Testing dbModels translation', () => {
         const sequelize = require('../db.js');
         const {
           addEnums,
+          index,
           unique,
           addDefaultValue,
           primaryKey,
@@ -175,6 +177,7 @@ describe('Testing dbModels translation', () => {
           const sequelize = require('../db.js');
           const {
             addEnums,
+            index,
             unique,
             addDefaultValue,
             primaryKey,
@@ -201,9 +204,9 @@ describe('Testing dbModels translation', () => {
             email:unique({
               type: DataTypes.STRING(10)
             }),
-            courseId:Optional({
+            courseId:index(Optional({
               type: DataTypes.INTEGER
-            }),
+            })),
           },
           {
             tableName : 'user',

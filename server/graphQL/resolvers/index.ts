@@ -8,9 +8,11 @@ import {
   forgotPassword,
   getUser,
   getUsers,
+  getUsersByMetadata,
   getUsersCount,
   login,
   modifyUser,
+  modifyUserMetadata,
   registerUser,
   requestNewToken,
   requestPasswordChangeEmail,
@@ -28,6 +30,7 @@ const Query = {
   getAppSchemas,
   getUser,
   getUsers,
+  getUsersByMetadata,
   getUsersCount,
 };
 
@@ -46,6 +49,7 @@ const Mutation = {
   forgotPassword,
   login,
   modifyUser,
+  modifyUserMetadata,
   registerUser,
   requestNewToken,
   requestPasswordChangeEmail,

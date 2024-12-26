@@ -3,6 +3,7 @@ import { conn } from '../../db';
 import sequelizeQueryServices from '../services/sequelize';
 const {
   addEnums,
+  index,
   unique,
   addDefaultValue,
   primaryKey,
@@ -19,9 +20,9 @@ const model: any = conn.define(
     _id: autoIncrement(primaryKey(Types.INTEGER())),
     appName: unique(Types.STRING()),
     port: Types.INTEGER(),
-    running: Types.BOOLEAN(),
+    running: index(Types.BOOLEAN()),
     isAppCompleted: Types.BOOLEAN(),
-    dbType: addEnums(Types.STRING(), ['mongo', 'mysql']),
+    dbType: index(addEnums(Types.STRING(), ['mongo', 'mysql'])),
   },
   {
     tableName: 'cms_apps',

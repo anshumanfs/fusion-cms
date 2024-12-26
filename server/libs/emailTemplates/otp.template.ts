@@ -1,4 +1,4 @@
-import Config from '../../config.json';
+import Config from '../../../config.json';
 
 const template = (otp: string) => `<!DOCTYPE html>
 <html lang="en">

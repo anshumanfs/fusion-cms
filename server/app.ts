@@ -3,7 +3,7 @@ import next from 'next';
 import path from 'path';
 import { runAsMicroService, runAsMonolith } from './appRunner';
 import logger from './libs/logger';
-import SecureConfig from '../.secure.json';
+import { applySentinel } from './libs/expressSentinel';
 
 require('dotenv').config({
   path: '../.env',
@@ -23,6 +23,7 @@ const startExpressApp = async () => {
     res.json({ status: 'All good', nodeVersion: childProcess.execSync('node -v').toString().trim() });
   });
   app.use(Express.json());
+  app.use(applySentinel);
 
   app.listen(port);
   logger.info(`✓ API is running on: http://${host}:${port}`);

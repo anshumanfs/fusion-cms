@@ -1,4 +1,5 @@
-import config from '../config.json';
+import config from '../../config.json';
+import secureConfig from '../../.secure.json';
 import logger from '../libs/logger';
 import lodash from 'lodash';
 import { z } from 'zod';
@@ -37,7 +38,7 @@ class Application {
   private checkIfMetadataDbConfigured(): void {
     const configJson = lodash.cloneDeep(config);
     try {
-      metaDataDbSchema.parse(configJson.metadataDb);
+      metaDataDbSchema.parse(secureConfig.db.metadataDb);
       this.isMetadataDbConfigured = true;
     } catch (error: string | any) {
       logger.error(error);

@@ -1,4 +1,6 @@
+import { create } from 'lodash';
 import sequelize from 'sequelize';
+import mongooseToSequelizeMapper from './mapper';
 
 const convertProjectionToAttribute = (projection: any, model: any) => {
   const allAttributes: string[] = Object.keys(model.rawAttributes);
@@ -41,6 +43,9 @@ const convertProjectionToAttribute = (projection: any, model: any) => {
 
 export default function sequelizeQueryServices(model: any) {
   return {
+    getTableName: () => {
+      return model.tableName;
+    },
     countDocuments: async (filter = {}) => {
       return model.count({ where: filter });
     },
@@ -49,20 +54,21 @@ export default function sequelizeQueryServices(model: any) {
       // modify filter to include $in functionality to sequelize
       const filterKeys = Object.keys(filter);
       const filterValues: any = Object.values(filter);
-      const newFilter: any = {};
-      filterKeys.forEach((key, index) => {
-        if (filterValues[index].$in) {
-          newFilter[key] = filterValues[index].$in;
-        } else {
-          newFilter[key] = filterValues[index];
-        }
-      });
+      const newFilter: any = mongooseToSequelizeMapper.find(filter);
+      // filterKeys.forEach((key, index) => {
+      //   if (filterValues[index].$in) {
+      //     newFilter[key] = filterValues[index].$in;
+      //   } else {
+      //     newFilter[key] = filterValues[index];
+      //   }
+      // });
 
       return model.findAll({ where: newFilter, attributes, ...options });
     },
     findOne: async (filter = {}, projection = {}, options = {}) => {
       const attributes = convertProjectionToAttribute(projection, model);
-      return model.findOne({ where: filter, attributes, ...options });
+      const newFilter = mongooseToSequelizeMapper.find(filter);
+      return model.findOne({ where: newFilter, attributes, ...options });
     },
     findOneAndUpdate: async (filter: any, update: any = {}, options: any = {}) => {
       if (!filter) {
@@ -93,6 +99,9 @@ export default function sequelizeQueryServices(model: any) {
     },
     create: async (data = {}) => {
       return model.create(data);
+    },
+    createMany: async (data = []) => {
+      return model.bulkCreate(data);
     },
     updateOne: async (filter: any, update = {}, options = {}) => {
       if (!filter) {

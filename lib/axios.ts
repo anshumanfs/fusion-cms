@@ -1,5 +1,5 @@
 import axois from 'axios';
-import ConfigJson from '../server/config.json';
+import ConfigJson from '../config.json';
 
 const axios = axois.create({
   baseURL: `${ConfigJson.DEPLOYMENT_URL}/appManager`,

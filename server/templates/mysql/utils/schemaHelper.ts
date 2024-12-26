@@ -66,6 +66,12 @@ const unique = (obj: any, compositeIndex: any = false) => {
   return Obj;
 };
 
+const index = (obj: any) => {
+  const Obj = lodash.cloneDeep(obj);
+  Obj.index = true;
+  return Obj;
+};
+
 const references = (obj: any, reference: { model: any; key: string }) => {
   const Obj = lodash.cloneDeep(obj);
   Obj.references = reference;
@@ -271,6 +277,7 @@ module.exports = {
   addEnums,
   addGetter,
   addSetter,
+  index,
   unique,
   addDefaultValue,
   primaryKey,

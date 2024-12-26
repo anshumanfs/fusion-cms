@@ -18,6 +18,7 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
       enums,
       defaultValue,
       isPrimaryKey,
+      isIndex,
       isUnique,
       autoIncrement,
     }: MySQLSchemaFields = value;
@@ -52,6 +53,9 @@ const jsonToSequelizeSchema = (schema: MySQLSchemaInput) => {
       } else {
         schemaPart = `unique(${schemaPart})`;
       }
+    }
+    if (isIndex) {
+      schemaPart = `index(${schemaPart})`;
     }
     if (autoIncrement) {
       schemaPart = `autoIncrement(${schemaPart})`;
@@ -117,7 +121,8 @@ const generateMySqlSchema = (
     const { DataTypes } = require('sequelize'); 
     const sequelize = require('../db.js'); 
     const { 
-      addEnums, 
+      addEnums,
+      index, 
       unique, 
       addDefaultValue, 
       primaryKey, 

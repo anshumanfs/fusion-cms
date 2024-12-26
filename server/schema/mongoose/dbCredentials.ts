@@ -3,7 +3,7 @@ import { conn } from '../../db';
 import { AES, enc } from 'crypto-js';
 import mongooseQueryServices from '../services/mongoose';
 
-const { Optional, Types } = require('../../templates/mongo/utils/schemaHelper');
+const { Optional, Types, index } = require('../../templates/mongo/utils/schemaHelper');
 require('dotenv').config();
 const CIPHER_KEY = process.env.CIPHER_KEY;
 
@@ -28,8 +28,8 @@ const cipherSetter = (value: any) => {
 const QuerySchema: any = new Schema(
   {
     _id: Optional(Types.ObjectId()),
-    appName: Types.String(),
-    env: Types.String(),
+    appName: index(Types.String()),
+    env: index(Types.String()),
     credentials: Types.Mixed(),
   },
   {
@@ -40,6 +40,7 @@ const QuerySchema: any = new Schema(
     toObject: {
       getters: true,
     },
+    autoIndex: true,
   }
 );
 
