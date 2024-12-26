@@ -14,7 +14,7 @@ const applySentinel = (req: any, res: any, next: any) => {
     rateLimiter(req, res, next);
   } else {
     if (config.security.ipFilter.whitelist.includes(ip)) {
-      next();
+      rateLimiter(req, res, next);
     } else {
       res.status(403).json({ message: 'Forbidden' });
     }
