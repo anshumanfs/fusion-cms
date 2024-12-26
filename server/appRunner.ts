@@ -287,19 +287,19 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
       await Promise.all(promiseArr);
     };
     if (secureConfig.db.metadataDb.orm === 'mongoose') {
-      conn.on('connected', async () => {
+      try {
+        writeAppJson();
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
+          await monolithFunctions();
           logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth/`);
         } else {
           await monolithFunctions();
         }
-        writeAppJson();
         resolve();
-      });
-      conn.on('disconnected', async () => {
-        reject(`✗ Metadata DB could not be connected`);
-      });
+      } catch (error) {
+        reject(`✗ Metadata DB could not be connected due to : ${error}`);
+      }
     }
 
     if (secureConfig.db.metadataDb.orm === 'sequelize') {
