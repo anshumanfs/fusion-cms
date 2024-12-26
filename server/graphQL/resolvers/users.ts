@@ -2,7 +2,7 @@ import ActivateAccountTemplate from '../../libs/emailTemplates/activateAccount.t
 import ChangePasswordTemplate from '../../libs/emailTemplates/changePassword.template';
 import SendAPIKeyTemplate from '../../libs/emailTemplates/apiKey.template';
 import nodeCrypto from 'node:crypto';
-import Config from '../../config.json';
+import Config from '../../../config.json';
 import Errors from '../../libs/errors';
 import sendMail from '../../libs/mailer';
 import { dbModels } from '../../db';

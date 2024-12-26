@@ -1,5 +1,5 @@
 import { conn } from '../../db';
-import config from '../../config.json';
+import config from '../../../config.json';
 import sequelizeQueryServices from '../services/sequelize';
 const {
   addEnums,

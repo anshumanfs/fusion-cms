@@ -9,7 +9,7 @@ interface metadataDbConfigs {
   configs: any;
 }
 
-const configJsonFile = path.resolve(__dirname, '../config.json');
+const configJsonFile = path.resolve(__dirname, '../../config.json');
 const defaultConfig = Object.freeze({
   metadataDb: {},
   secrets: {
@@ -41,15 +41,16 @@ const setMetaDataDbConfigs = (req: Request, res: Response) => {
     orm: '',
     configs: {},
   };
+  // set to .secure.json
   metadataDb.type = dbType;
   metadataDb.orm = defaultConfig.orms[dbName as keyof typeof defaultConfig.orms];
   metadataDb.configs = dbConfigs;
 };
 
 const resetAppStatus = () => {
-  const config = require('../config.json');
+  const config = require('../../config.json');
   if (!fs.existsSync(configJsonFile)) {
-    fs.ensureFileSync(path.resolve(__dirname, '../config.json'));
+    fs.ensureFileSync(path.resolve(__dirname, '../../config.json'));
     fs.writeJsonSync(configJsonFile, defaultConfig, { spaces: '\t' });
   } else {
     const newConfig = {
@@ -58,13 +59,13 @@ const resetAppStatus = () => {
         ...defaultConfig.appStatus,
       },
     };
-    fs.writeJsonSync(path.resolve(__dirname, '../config.json'), newConfig, { spaces: '\t' });
+    fs.writeJsonSync(path.resolve(__dirname, '../../config.json'), newConfig, { spaces: '\t' });
   }
   return;
 };
 
 const setAppStatus = (status: any) => {
-  const config = require('../config.json');
+  const config = require('../../config.json');
   const newConfig = {
     ...config,
     appStatus: {
@@ -72,5 +73,6 @@ const setAppStatus = (status: any) => {
       ...status,
     },
   };
-  fs.writeJsonSync(path.resolve(__dirname, '../config.json'), newConfig, { spaces: '\t' });
+  // set to .secure.json
+  fs.writeJsonSync(path.resolve(__dirname, '../../config.json'), newConfig, { spaces: '\t' });
 };

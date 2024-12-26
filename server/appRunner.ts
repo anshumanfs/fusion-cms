@@ -14,7 +14,8 @@ import { json } from 'body-parser';
 import cors from 'cors';
 import { customFileParser } from './libs/customFileParser';
 import Application from './controllers/appStatus';
-import cmsConfig from './config.json';
+import cmsConfig from '../config.json';
+import secureConfig from '../.secure.json';
 import fs from 'fs-extra';
 import { authMiddleware } from './middlewares/auth';
 import packageJson from '../package.json';
@@ -202,7 +203,7 @@ const runAsMicroService = async () => {
       pm2.disconnect();
     };
 
-    if (cmsConfig.metadataDb.orm === 'mongoose') {
+    if (secureConfig.db.metadataDb.orm === 'mongoose') {
       conn.on('connected', async () => {
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
@@ -218,7 +219,7 @@ const runAsMicroService = async () => {
       });
     }
 
-    if (cmsConfig.metadataDb.orm === 'sequelize') {
+    if (secureConfig.db.metadataDb.orm === 'sequelize') {
       try {
         await conn.sync();
         writeAppJson();
@@ -285,7 +286,7 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
 
       await Promise.all(promiseArr);
     };
-    if (cmsConfig.metadataDb.orm === 'mongoose') {
+    if (secureConfig.db.metadataDb.orm === 'mongoose') {
       conn.on('connected', async () => {
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
@@ -301,7 +302,7 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
       });
     }
 
-    if (cmsConfig.metadataDb.orm === 'sequelize') {
+    if (secureConfig.db.metadataDb.orm === 'sequelize') {
       try {
         await conn.sync();
         writeAppJson();

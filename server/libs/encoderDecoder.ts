@@ -1,5 +1,5 @@
 import CryptoJS from 'crypto-js';
-import Config from '../config.json';
+import Config from '../../config.json';
 
 const oneWayEncoder = (data: string): string => {
   return CryptoJS.SHA512(data).toString();

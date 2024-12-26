@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
 import { conn } from '../../db';
 import mongooseQueryServices from '../services/mongoose';
-import config from '../../config.json';
+import config from '../../../config.json';
 const { Types, addEnums, addDefaultValue, index, Optional } = require('../../templates/mongo/utils/schemaHelper');
 
 const additionalRoles = config.user.additionalRoles || [];
