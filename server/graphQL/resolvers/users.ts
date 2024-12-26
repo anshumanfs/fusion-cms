@@ -7,7 +7,6 @@ import Errors from '../../libs/errors';
 import sendMail from '../../libs/mailer';
 import { dbModels } from '../../db';
 import { oneWayEncoder, twoWayDecoder, twoWayEncoder } from '../../libs/encoderDecoder';
-import { table } from 'node:console';
 
 const getUser = async (_: any, args: any) => {
   const { id } = args;
