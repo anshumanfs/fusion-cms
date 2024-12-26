@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import { smtp } from '../../.secure.json';
 import logger from './logger';
+import config from '../../config.json';
 
 const transporter = nodemailer.createTransport({
   ...smtp,
@@ -8,7 +9,7 @@ const transporter = nodemailer.createTransport({
 
 const sendMail = (to: string | [string], subject: string, text: string = '', html: string = '') => {
   const mailOptions = {
-    from: `Fusion CMS <${smtp.auth.user}>`,
+    from: `${config.APP_NAME} <${smtp.auth.user}>`,
     to,
     subject,
     text,
