@@ -5,8 +5,13 @@
     "light": "/logo/light/icons8-react-native-96.svg",
     "dark": "/logo/dark/icons8-react-native-96.svg"
   },
-  "ENVS": ["development", "production"],
-  "DEV_ENVS": ["development"],
+  "ENVS": [
+    "development",
+    "production"
+  ],
+  "DEV_ENVS": [
+    "development"
+  ],
   "secrets": {
     "bearerSecret": "secret-token",
     "refreshTokenSecret": "refresh-token",
@@ -15,12 +20,38 @@
     "uniqueEmailSecret": "unique-email-secret"
   },
   "user": {
-    "additionalRoles": ["consumerGold"]
+    "additionalRoles": [
+      "consumerGold"
+    ]
   },
   "envConfigurations": {
     "toekenTimeDescription": "Times are in minutes",
     "tokenExpiration": 15,
     "refreshTokenExpiration": 1440,
     "uniqueEmailExpiration": 1440
+  },
+  "security": {
+    "rateLimit": {
+      "windowMs": 60000,
+      "max": 500
+    },
+    "speedLimit": {
+      "windowMs": 900000,
+      "delayAfter": 100,
+      "delayMs": 1000
+    },
+    "cors": {
+      "origin": "*",
+      "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+      "preflightContinue": false,
+      "optionsSuccessStatus": 204
+    },
+    "ipFilter": {
+      "whitelist": [
+        "127.12.20.21",
+        "::1"
+      ],
+      "blacklist": []
+    }
   }
 }

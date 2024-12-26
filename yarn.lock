@@ -3823,10 +3823,17 @@ expect@^29.0.0, expect@^29.6.4:
     jest-message-util "^29.6.3"
     jest-util "^29.6.3"
 
-express-rate-limit@^7.5.0:
+express-rate-limit@7, express-rate-limit@^7.5.0:
   version "7.5.0"
   resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-7.5.0.tgz#6a67990a724b4fbbc69119419feef50c51e8b28f"
   integrity sha512-eB5zbQh5h+VenMPM3fh+nw1YExi5nMr6HUCR62ELSP11huvxm/Uir1H1QEyTkk5QX6A58pX6NmaTMceKZ0Eodg==
+
+express-slow-down@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/express-slow-down/-/express-slow-down-2.0.3.tgz#7b953a15c95105386d78370f8d172d88bb225dd6"
+  integrity sha512-vATCiFd8uQHtTeK5/Q0nLUukhZh+RV5zkcHxLQr0X5dEFVEYqzVXEe48nW23Z49fwtR+ApD9zn9sZRisTCR99w==
+  dependencies:
+    express-rate-limit "7"
 
 express@^4.17.1, express@^4.19.2:
   version "4.19.2"
@@ -6457,6 +6464,11 @@ regexp.prototype.flags@^1.4.3, regexp.prototype.flags@^1.5.0:
     call-bind "^1.0.2"
     define-properties "^1.2.0"
     functions-have-names "^1.2.3"
+
+request-ip@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/request-ip/-/request-ip-3.3.0.tgz#863451e8fec03847d44f223e30a5d63e369fa611"
+  integrity sha512-cA6Xh6e0fDBBBwH77SLJaJPBmD3nWVAcF9/XAcsrIHdjhFzFiB5aNQFytdjCGPezU3ROwrR11IddKAM08vohxA==
 
 require-directory@^2.1.1:
   version "2.1.1"
