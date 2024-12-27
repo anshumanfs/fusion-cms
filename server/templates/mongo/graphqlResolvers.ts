@@ -101,7 +101,6 @@ const generateResolver = (
   const { translateFilter, translateOptions } = require('../utils/translators');
   const { checkPreAccess, checkPostAccess } = require('../../../middlewares/accessManager');
   const Errors = require('../../../libs/errors');
-const tempJson: TempJson = require('../../../data/.temp.json');
   ${federationImports}
 
   const resolvers = { 
