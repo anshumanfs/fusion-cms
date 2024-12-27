@@ -240,7 +240,7 @@ const runAsMicroService = async () => {
 
 const writeAppJson = async () => {
   try {
-    const tempJsonPath = path.resolve(__dirname, '../../data/.temp.json');
+    const tempJsonPath = path.resolve(__dirname, '../data/.temp.json');
     const env = work_env;
     const [apps, dbSchemas, dbCredentials] = await Promise.all([
       await dbModels.apps.find({}),
