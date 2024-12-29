@@ -35,12 +35,13 @@
     },
     "cors": {
       "origin": "*",
+      "allowedHeaders": ["Content-Type", "Authorization", "x-api-key"],
       "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
       "preflightContinue": false,
       "optionsSuccessStatus": 204
     },
     "ipFilter": {
-      "whitelist": ["127.12.20.21", "::1"],
+      "whitelist": ["127.12.20.21", "::1", "::ffff:127.0.0.1"],
       "blacklist": []
     }
   }
