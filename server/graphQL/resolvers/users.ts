@@ -115,7 +115,7 @@ const registerUser = async (_: any, args: any) => {
   }
   const dataToEncrypt = JSON.stringify({ email, date: new Date().toISOString() });
   const uniqueCode = encodeURIComponent(twoWayEncoder(dataToEncrypt, Config.secrets.uniqueEmailSecret));
-  const uniqueAccountActivationLink = `${Config.DEPLOYMENT_URL}/auth/validate?entity=user&token=${uniqueCode}`;
+  const uniqueAccountActivationLink = `${Config.FRONTEND_URL}/auth/validate?entity=user&token=${uniqueCode}`;
   await sendMail(
     email,
     `Activate your ${Config.APP_NAME} account`,
@@ -266,7 +266,7 @@ const inviteUsersToRegister = async (_: any, args: any) => {
   const authCodes: any = [];
   const promiseArr = validEmails.map(async (email: string) => {
     const inviteCode = generateUniqueRandomId(6);
-    const uniqueAccountRegistrationLink = `${Config.DEPLOYMENT_URL}/auth?tab=register&inviteCode=${encodeURIComponent(
+    const uniqueAccountRegistrationLink = `${Config.FRONTEND_URL}/auth?tab=register&inviteCode=${encodeURIComponent(
       inviteCode
     )}`;
     authCodes.push({
@@ -380,7 +380,7 @@ const requestPasswordChangeEmail = async (_: any, args: any) => {
       Config.secrets.twoWayEncryptionSecret
     )
   );
-  const uniqueLink = `${Config.DEPLOYMENT_URL}/auth/validate?entity=reset&token=${uniqueCode}`;
+  const uniqueLink = `${Config.FRONTEND_URL}/auth/validate?entity=reset&token=${uniqueCode}`;
   // Send email with unique link
   await sendMail(email, `Reset Password ${Config.APP_NAME}`, '', ChangePasswordTemplate(uniqueLink));
   return { message: 'Email sent successfully' };
