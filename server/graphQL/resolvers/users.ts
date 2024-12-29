@@ -6,6 +6,7 @@ import Config from '../../../config.json';
 import Errors from '../../libs/errors';
 import sendMail from '../../libs/mailer';
 import { dbModels } from '../../db';
+import * as disposableDomains from 'disposable-email-domains';
 import { oneWayEncoder, twoWayDecoder, twoWayEncoder } from '../../libs/encoderDecoder';
 
 const getUser = async (_: any, args: any) => {
@@ -68,6 +69,9 @@ const getUsersCount = async (_: any, args: any) => {
 
 const registerUser = async (_: any, args: any) => {
   const { email, firstName, lastName, password, metadata } = args;
+  if (disposableDomains.includes(email.split('@')[1])) {
+    throw Errors.BAD_REQUEST('Disposable emails are not allowed');
+  }
   const [user, userCount] = [await dbModels.users.findOne({ email }), await dbModels.users.countDocuments({})];
   if (user) {
     throw Errors.BAD_REQUEST('User already exists !');

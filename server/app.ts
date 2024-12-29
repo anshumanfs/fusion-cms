@@ -23,7 +23,7 @@ const startExpressApp = async () => {
     res.json({ status: 'All good', nodeVersion: childProcess.execSync('node -v').toString().trim() });
   });
   app.use(Express.json());
-  app.use(applySentinel);
+  applySentinel(app);
 
   app.listen(port);
   logger.info(`✓ API is running on: http://${host}:${port}`);
