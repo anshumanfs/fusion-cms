@@ -21,7 +21,7 @@ const helmetProtection = helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://*.apollographql.com'],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://unpkg.com', 'https://*.apollographql.com'],
       styleSrc: ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://*.apollographql.com'],
       imgSrc: ["'self'", 'data:', 'https://*.apollographql.com'],
       frameSrc: ["'self'", 'https://unpkg.com', 'https://*.apollographql.com'],

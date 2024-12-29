@@ -33,15 +33,7 @@ export default function Auth() {
   }, []);
 
   React.useEffect(() => {
-    if (activeTab === 'login') {
-      router.push('/auth?tab=login');
-    }
-    if (activeTab === 'register') {
-      router.push('/auth?tab=register');
-    }
-    if (activeTab === 'reset') {
-      router.push('/auth?tab=reset');
-    }
+    router.push(`/auth?${searchParams.toString()}`);
   }, [activeTab, tab, router]);
 
   return (

@@ -31,6 +31,7 @@ conn = connector('metadata', secureConfig.db.metadataDb.configs);
 const ormType = orms[dbType as keyof typeof connectorLocations];
 
 const users = require(`./schema/${ormType}/users`).services;
+const authCodes = require(`./schema/${ormType}/authCodes`).services;
 const metadata = require(`./schema/${ormType}/metadata`).services;
 const dbSchemas = require(`./schema/${ormType}/dbSchemas`).services;
 const apps = require(`./schema/${ormType}/apps`).services;
@@ -40,6 +41,7 @@ const accessSchema = require(`./schema/${ormType}/accessSchemas`).services;
 
 const dbModels = {
   users,
+  authCodes,
   metadata,
   dbSchemas,
   apps,

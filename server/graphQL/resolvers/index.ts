@@ -6,6 +6,7 @@ import {
   activateAccount,
   changePasswordByOldPass,
   forgotPassword,
+  inviteUsersToRegister,
   getUser,
   getUsers,
   getUsersByMetadata,
@@ -35,6 +36,7 @@ const Query = {
 };
 
 const Mutation = {
+  inviteUsersToRegister,
   createAccessSchema,
   removeAccessSchema,
   createApp,
