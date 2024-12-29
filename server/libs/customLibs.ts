@@ -1,4 +1,5 @@
 import lodash from 'lodash';
+import nodeCrypto from 'node:crypto';
 
 /**
  * Serializes and deserializes data to and from JSON.
@@ -27,4 +28,22 @@ const toJSON = (data: any) => {
   }
 };
 
-export { toJSON };
+const generateUniqueRandomId = (length: number = 6, useSpecialChars: boolean = false): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const specialChars = '!@#$%^&*()_+{}:"<>?|[];\',./`~';
+  const charSet = useSpecialChars ? chars + specialChars : chars;
+  const charSetLength = charSet.length;
+
+  // Generate a random string
+  const randomBytes = nodeCrypto.randomBytes(length);
+
+  // map random bytes to the character set
+  let uniqueId = '';
+  for (let i = 0; i < length; i++) {
+    uniqueId += charSet[randomBytes[i] % charSetLength];
+  }
+
+  return uniqueId;
+};
+
+export { toJSON, generateUniqueRandomId };

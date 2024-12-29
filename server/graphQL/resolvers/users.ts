@@ -1,13 +1,16 @@
 import ActivateAccountTemplate from '../../libs/emailTemplates/activateAccount.template';
 import ChangePasswordTemplate from '../../libs/emailTemplates/changePassword.template';
+import InviteUserTemplate from '../../libs/emailTemplates/inviteUser.template';
 import SendAPIKeyTemplate from '../../libs/emailTemplates/apiKey.template';
 import nodeCrypto from 'node:crypto';
 import Config from '../../../config.json';
 import Errors from '../../libs/errors';
 import sendMail from '../../libs/mailer';
 import { dbModels } from '../../db';
-import * as disposableDomains from 'disposable-email-domains';
+import disposableDomains from 'disposable-email-domains';
+import { generateUniqueRandomId } from '../../libs/customLibs';
 import { oneWayEncoder, twoWayDecoder, twoWayEncoder } from '../../libs/encoderDecoder';
+import lodash from 'lodash';
 
 const getUser = async (_: any, args: any) => {
   const { id } = args;
@@ -68,11 +71,35 @@ const getUsersCount = async (_: any, args: any) => {
 };
 
 const registerUser = async (_: any, args: any) => {
-  const { email, firstName, lastName, password, metadata } = args;
+  const { email, firstName, lastName, password, inviteCode, metadata } = args;
+  const [user, userCount] = [await dbModels.users.findOne({ email }), await dbModels.users.countDocuments({})];
+
   if (disposableDomains.includes(email.split('@')[1])) {
     throw Errors.BAD_REQUEST('Disposable emails are not allowed');
   }
-  const [user, userCount] = [await dbModels.users.findOne({ email }), await dbModels.users.countDocuments({})];
+  if (!Config.user.isOpenRegistrationAllowed && !Config.user.isInvitedRegistrationAllowed && userCount !== 0) {
+    throw Errors.BAD_REQUEST('Registration not allowed at the moment');
+  }
+  if (!Config.user.isOpenRegistrationAllowed && !inviteCode && userCount !== 0) {
+    throw Errors.BAD_REQUEST('Registration is not allowed without an invite code');
+  }
+  if (inviteCode && userCount !== 0) {
+    const authCode = await dbModels.authCodes.findOne(
+      { email, code: inviteCode, type: 'reg-inv', isUsed: false },
+      {},
+      {
+        sort: { createdAt: -1 },
+      }
+    );
+    if (!authCode) {
+      throw Errors.BAD_REQUEST('Invalid invite code');
+    }
+    const expiresAt = authCode.expiresAt;
+    if (new Date(expiresAt).getTime() < new Date().getTime()) {
+      throw Errors.BAD_REQUEST('Invite code expired');
+    }
+  }
+
   if (user) {
     throw Errors.BAD_REQUEST('User already exists !');
   }
@@ -114,6 +141,12 @@ const registerUser = async (_: any, args: any) => {
       }
     }
     result.metadata = metadata;
+  }
+  if (inviteCode) {
+    await dbModels.authCodes.findOneAndUpdate(
+      { email, code: inviteCode, type: 'reg-inv' },
+      { isUsed: true, usedAt: new Date() }
+    );
   }
   return result;
 };
@@ -207,6 +240,54 @@ const modifyUser = async (_: any, args: any) => {
   const updatedUser = await dbModels.users.findOneAndUpdate({ _id }, args);
   const metadata = (await dbModels.metadata.find({ referenceId: _id })) || [];
   return { ...updatedUser, metadata };
+};
+
+const inviteUsersToRegister = async (_: any, args: any) => {
+  const { emails } = args;
+  let validEmails = emails.filter((email: string) => !disposableDomains.includes(email.split('@')[1]));
+  if (!validEmails || validEmails.length === 0) {
+    throw Errors.BAD_REQUEST('Emails not found');
+  }
+  const users = await dbModels.users.find({ email: { $in: validEmails } });
+  if (users && users.length > 0) {
+    let userEmails = users.map((u: any) => u.email);
+    validEmails = lodash.difference(validEmails, userEmails);
+  }
+  // if email is already invited within 24 hours, then don't send the email again
+  const invitedEmails = await dbModels.authCodes.find({
+    email: { $in: validEmails },
+    expiresAt: { $gt: new Date().getTime() },
+    type: 'reg-inv',
+  });
+  if (invitedEmails && invitedEmails.length > 0) {
+    let invitedEmailsList = invitedEmails.map((u: any) => u.email);
+    validEmails = lodash.difference(validEmails, invitedEmailsList);
+  }
+  const authCodes: any = [];
+  const promiseArr = validEmails.map(async (email: string) => {
+    const inviteCode = generateUniqueRandomId(6);
+    const uniqueAccountRegistrationLink = `${Config.DEPLOYMENT_URL}/auth?tab=register&inviteCode=${encodeURIComponent(
+      inviteCode
+    )}`;
+    authCodes.push({
+      email,
+      code: inviteCode,
+      type: 'reg-inv',
+      isUsed: false,
+      expiresAt: new Date(new Date().getTime() + Config.envConfigurations.uniqueEmailExpiration * 60 * 1000),
+    });
+    return sendMail(
+      email,
+      `Create your ${Config.APP_NAME} account`,
+      '',
+      InviteUserTemplate(inviteCode, uniqueAccountRegistrationLink)
+    );
+  });
+  await Promise.allSettled(promiseArr);
+  if (authCodes.length !== 0) {
+    await dbModels.authCodes.createMany(authCodes);
+  }
+  return { message: 'Email sent successfully' };
 };
 
 const modifyUserMetadata = async (_: any, args: any) => {
@@ -309,6 +390,7 @@ export {
   activateAccount,
   changePasswordByOldPass,
   forgotPassword,
+  inviteUsersToRegister,
   getUser,
   getUsers,
   getUsersByMetadata,

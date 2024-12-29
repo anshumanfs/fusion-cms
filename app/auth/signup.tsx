@@ -7,11 +7,13 @@ import { useToast } from '@/components/ui/use-toast';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Loader2 } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import axios from '@/lib/axios';
 
 export function Signup() {
   const { toast } = useToast();
+  const searchParams = useSearchParams();
   const signUpBtn = React.useRef(null as any);
   const [signUpBtnText, setSignUpBtnText] = React.useState("Let's Get Started" as any);
   const [formState, setFormState] = React.useState({
@@ -21,6 +23,7 @@ export function Signup() {
     password: '',
     confirmPassword: '',
     terms: false,
+    inviteCode: null as any,
   });
   const [registrationStatus, setRegistrationStatus] = React.useState({});
 
@@ -60,8 +63,12 @@ export function Signup() {
       return;
     }
     const data = JSON.stringify({
-      query: `mutation RegisterUser($email: String!, $firstName: String!, $lastName: String!, $password: String!) {
-        registerUser(email: $email, firstName: $firstName, lastName: $lastName, password: $password) {
+      query: `mutation RegisterUser($email: String!, $firstName: String!, $lastName: String!, $password: String! ${
+        formState.inviteCode ? ', $inviteCode: String' : ''
+      }) {
+        registerUser(email: $email, firstName: $firstName, lastName: $lastName, password: $password ${
+          formState.inviteCode ? ', inviteCode: $inviteCode' : ''
+        }) {
           email
           firstName
           lastName
@@ -73,6 +80,7 @@ export function Signup() {
         firstName: formState.firstName,
         lastName: formState.lastName,
         password: formState.password,
+        ...(formState.inviteCode ? { inviteCode: formState.inviteCode } : {}),
       },
     });
     axios.post('/appManager', data).then((res) => {
@@ -95,6 +103,7 @@ export function Signup() {
         password: '',
         confirmPassword: '',
         terms: false,
+        inviteCode: null,
       });
       signUpBtn.current.removeAttribute('disabled');
       setSignUpBtnText("Let's Get Started");
@@ -120,6 +129,18 @@ export function Signup() {
       [e.target.id]: e.target.value,
     });
   };
+
+  React.useEffect(() => {
+    const inviteCode = searchParams.get('inviteCode');
+    console.log('inviteCode', inviteCode);
+    if (inviteCode) {
+      setFormState({
+        ...formState,
+        inviteCode,
+      });
+    }
+  }, []);
+
   return (
     <form id="registrationForm" className="p-4" onSubmit={handleSubmit}>
       <div className="grid w-full items-center gap-4">
@@ -139,6 +160,17 @@ export function Signup() {
         <div className="flex flex-col space-y-2">
           <Label htmlFor="framework">Confirm Password</Label>
           <Input id="confirmPassword" type="password" placeholder="" onChange={handleValueChange} />
+        </div>
+        <div className="flex flex-col space-y-2">
+          <Label htmlFor="framework">Invite Code</Label>
+          <Input
+            id="inviteCode"
+            type="text"
+            placeholder=""
+            value={formState.inviteCode}
+            onChange={handleValueChange}
+            maxLength={8}
+          />
         </div>
         <div className="flex items-center space-x-2">
           <Checkbox

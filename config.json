@@ -15,10 +15,13 @@
     "uniqueEmailSecret": "unique-email-secret"
   },
   "user": {
-    "additionalRoles": ["consumerGold"]
+    "isOpenRegistrationAllowed": false,
+    "isInvitedRegistrationAllowed": true,
+    "additionalRoles": ["consumerGold"],
+    "defaultRole": "user"
   },
   "envConfigurations": {
-    "toekenTimeDescription": "Times are in minutes",
+    "tokenTimeDescription": "Times are in minutes",
     "tokenExpiration": 15,
     "refreshTokenExpiration": 1440,
     "uniqueEmailExpiration": 1440
