@@ -14,8 +14,8 @@ const model: any = conn.define(
   'cms_auth_codes',
   {
     _id: autoIncrement(primaryKey(Types.INTEGER())),
-    email: index(Types.EMAIL()),
-    phone: index(Types.STRING()),
+    email: Optional(index(Types.EMAIL())),
+    phone: Optional(index(Types.STRING())),
     code: Types.STRING(),
     type: index(addEnums(Types.STRING(), ['otp', 'reg-inv'])),
     isUsed: addDefaultValue(Types.BOOLEAN(), false),

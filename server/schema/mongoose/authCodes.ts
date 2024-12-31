@@ -6,8 +6,8 @@ const { Types, addEnums, addDefaultValue, index, Optional } = require('../../tem
 const authCodesSchema: any = new Schema(
   {
     _id: Types.ObjectId(),
-    email: index(Types.Email()),
-    phone: index(Types.String()),
+    email: Optional(index(Types.Email())),
+    phone: Optional(index(Types.String())),
     code: Types.String(),
     type: index(addEnums(Types.String(), ['otp', 'reg-inv'])),
     isUsed: addDefaultValue(Types.Boolean(), false),
