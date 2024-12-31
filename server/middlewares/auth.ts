@@ -33,7 +33,12 @@ const excludedEndpoints = [
   '__schema',
 ];
 
-const tokenBasedAuth = async (req: Request) => {
+const endpointsAllowedForPublicAfterLogin = ['getOwnDetails', 'modifyOwnDetails', 'changePasswordByOldPass'];
+
+const tokenBasedAuth = async (req: Request, requestedFields: any) => {
+  const isEndpointAllowedForPublicAfterLogin = lodash.every(requestedFields, (element) =>
+    lodash.includes(endpointsAllowedForPublicAfterLogin, element)
+  );
   const path = req.baseUrl;
   const token = req.headers.authorization;
   const bearerToken = token?.split(' ')[1];
@@ -58,13 +63,22 @@ const tokenBasedAuth = async (req: Request) => {
   if (!user || user.isBlocked || !user.isVerified) {
     throw Errors.UNAUTHORIZED('User is either not verified or blocked by the admin');
   }
-  if (path === '/appManager' && user.role !== 'admin') {
+  if (path === '/appManager' && user.role !== 'admin' && !isEndpointAllowedForPublicAfterLogin) {
     throw Errors.UNAUTHORIZED('Unauthorized access');
   }
+  const metadata = (await dbModels.metadata.find({ referenceId: user._id })) || [];
+  const parsedMetadata = metadata.reduce((acc: any, curr: any) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {});
+  user.metadata = parsedMetadata;
   req.body.user = user || {};
 };
 
-const apiKeyBasedAuth = async (req: Request) => {
+const apiKeyBasedAuth = async (req: Request, requestedFields: any) => {
+  const isEndpointAllowedForPublicAfterLogin = lodash.every(requestedFields, (element) =>
+    lodash.includes(endpointsAllowedForPublicAfterLogin, element)
+  );
   const apiKey = req.headers['x-api-key'];
   const path = req.baseUrl;
   if (!apiKey) {
@@ -75,9 +89,15 @@ const apiKeyBasedAuth = async (req: Request) => {
   if (!user) {
     throw Errors.UNAUTHORIZED('Invalid API key');
   }
-  if (path === '/appManager' && user.role !== 'admin') {
+  if (path === '/appManager' && user.role !== 'admin' && !isEndpointAllowedForPublicAfterLogin) {
     throw Errors.UNAUTHORIZED('Unauthorized access');
   }
+  const metadata = (await dbModels.metadata.find({ referenceId: user._id })) || [];
+  const parsedMetadata = metadata.reduce((acc: any, curr: any) => {
+    acc[curr.key] = curr.value;
+    return acc;
+  }, {});
+  user.metadata = parsedMetadata;
   req.body.user = user || {};
 };
 
@@ -91,9 +111,9 @@ const authMiddleware = async (req: Request) => {
   }
 
   if (req.headers.authorization) {
-    await tokenBasedAuth(req);
+    await tokenBasedAuth(req, requestedFields);
   } else if (req.headers['x-api-key']) {
-    await apiKeyBasedAuth(req);
+    await apiKeyBasedAuth(req, requestedFields);
   } else {
     throw Errors.UNAUTHORIZED('API key or token not found');
   }
