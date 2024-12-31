@@ -40,6 +40,11 @@ const getUsers = async (_: any, args: any) => {
   return users;
 };
 
+const getOwnDetails = async (_: any, args: any, context: any) => {
+  const { user } = context.req.body;
+  return user;
+};
+
 const getUsersByMetadata = async (_: any, args: any) => {
   const { metaDataFilter } = args;
   const metadata = await dbModels.metadata.find({
@@ -230,16 +235,58 @@ const requestNewToken = async (_: any, args: any) => {
   return { token, refreshToken: newRefreshToken };
 };
 
+const modifyOwnDetails = async (_: any, args: any, context: any) => {
+  const { user } = context.req.body;
+  const { _id } = user;
+  const userDetails = await dbModels.users.findOne({ _id });
+  if (!userDetails) {
+    throw new Error('User not found');
+  }
+  delete args._id;
+  const updatedUser = await dbModels.users.findOneAndUpdate({ _id }, args);
+  const metadata = (await dbModels.metadata.find({ referenceId: _id })) || [];
+  updatedUser.metadata = metadata;
+  return updatedUser;
+};
+
+const modifyOwnMetadata = async (_: any, args: any, context: any) => {
+  const { user } = context.req.body;
+  const { _id } = user;
+  const { metadata } = args;
+  const userDetails = await dbModels.users.findOne({ _id });
+  if (!userDetails) {
+    throw Errors.BAD_REQUEST('User not found');
+  }
+  const referenceId = _id;
+  const metadatas = Object.keys(metadata).map((key) => ({
+    tableName: dbModels?.users?.getTableName() || 'default_table_users',
+    referenceId,
+    key,
+    value: metadata[key],
+  }));
+  const promiseArr = metadatas.map((meta) =>
+    dbModels.metadata.findOneAndUpdate({ tableName: meta.tableName, referenceId, key: meta.key }, meta, {
+      upsert: true,
+    })
+  );
+  const metaDataResult = await Promise.all(promiseArr);
+  if (!metaDataResult) {
+    throw Errors.NOT_IMPLEMENTED('Metadata not updated');
+  }
+  return { message: 'Metadata updated successfully' };
+};
+
 const modifyUser = async (_: any, args: any) => {
   const { _id } = args;
   const user = await dbModels.users.findOne({ _id });
   if (!user) {
     throw new Error('User not found');
   }
-  delete args.id;
+  delete args._id;
   const updatedUser = await dbModels.users.findOneAndUpdate({ _id }, args);
   const metadata = (await dbModels.metadata.find({ referenceId: _id })) || [];
-  return { ...updatedUser, metadata };
+  updatedUser.metadata = metadata;
+  return updatedUser;
 };
 
 const inviteUsersToRegister = async (_: any, args: any) => {
@@ -291,12 +338,12 @@ const inviteUsersToRegister = async (_: any, args: any) => {
 };
 
 const modifyUserMetadata = async (_: any, args: any) => {
-  const { id, metadata } = args;
-  const user = await dbModels.users.findOne({ id });
+  const { _id, metadata } = args;
+  const user = await dbModels.users.findOne({ _id });
   if (!user) {
     throw Errors.BAD_REQUEST('User not found');
   }
-  const referenceId = id;
+  const referenceId = _id;
   const metadatas = Object.keys(metadata).map((key) => ({
     tableName: dbModels?.users?.getTableName() || 'default_table_users',
     referenceId,
@@ -393,10 +440,12 @@ export {
   inviteUsersToRegister,
   getUser,
   getUsers,
+  getOwnDetails,
   getUsersByMetadata,
   getUsersCount,
   login,
   modifyUser,
+  modifyOwnDetails,
   modifyUserMetadata,
   registerUser,
   requestNewToken,

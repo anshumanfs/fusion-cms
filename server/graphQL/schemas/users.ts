@@ -4,6 +4,7 @@ const userSchema = gql`
   extend type Query {
     getUser(id: ID!): User
     getUsers(filters: JSON, page: Int): [User]!
+    getOwnDetails: User
     getUsersByMetadata(metaDataFilter: JSON): [User]!
     getUsersCount: Int!
   }
@@ -14,6 +15,7 @@ const userSchema = gql`
     changePasswordByOldPass(id: ID!, oldPassword: String!, newPassword: String!): Response
     forgotPassword(uniqueCode: String!, password: String!): Response
     login(email: String!, password: String!): Token
+    modifyOwnDetails(firstName: String, lastName: String): User
     modifyUser(id: ID!, email: String, role: String, firstName: String, lastName: String, isBlocked: String): User
     modifyUserMetadata(id: ID!, metadata: JSON): User
     registerUser(
