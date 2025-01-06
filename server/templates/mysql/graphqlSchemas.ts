@@ -9,7 +9,7 @@ const createIndexSchema = () => {
   const indexSchemaContent = `  
       const fs = require('fs-extra'); 
       const path = require('path'); 
-      const directory = path.resolve(__dirname,'./graphQlSchemas');
+      const directory = path.resolve(__dirname,'./graphqlSchemas');
       const { typeDefs: scalarTypeDefs } = require('graphql-scalars');
       const { customScalarTypeDefs } = require('./utils/customScalar');
       const mongoCustomScalarTypeDefs = require('../../templates/mongo/utils/customScalar'); 

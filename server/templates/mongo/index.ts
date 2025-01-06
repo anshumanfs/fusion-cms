@@ -46,14 +46,14 @@ const createDbModels = async (options: DbModelsInput) => {
   const appDir = path.resolve(__dirname, '../../apps/' + appName);
   const appJsonFile = appDir + '/app.json';
   const dbModelsDir = path.resolve(__dirname, '../../apps/' + appName + '/dbModels');
-  const graphQlSchemaDir = path.resolve(__dirname, '../../apps/' + appName + '/graphQlSchemas');
+  const graphQlSchemaDir = path.resolve(__dirname, '../../apps/' + appName + '/graphqlSchemas');
   const resolverDir = path.resolve(__dirname, '../../apps/' + appName + '/graphqlResolvers');
   const middlewareFile = path.resolve(
     __dirname,
     `../../../../data/files/middleware/${appName}/${pluralCollectionName}.js`
   );
 
-  const subDirs = ['/middleware', '/dbModels', '/graphQlSchemas', '/graphqlResolvers'];
+  const subDirs = ['/middleware', '/dbModels', '/graphqlSchemas', '/graphqlResolvers'];
   let dirPromises = subDirs.map((e) => {
     fs.ensureDirSync(appDir + e);
   });
