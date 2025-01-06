@@ -31,7 +31,8 @@ const helmetProtection = helmet({
 
 const ipSentinel = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
   const ip = requestIp.getClientIp(req);
-  if (ip === '*') {
+  const allowedIps = config.security.ipFilter.whitelist;
+  if (allowedIps.includes('*')) {
     next();
   } else {
     if (config.security.ipFilter.whitelist.includes(ip)) {

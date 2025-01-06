@@ -95,7 +95,7 @@ const startApolloServer = async ({ app, dev, subfolder }: { app: any; dev: boole
 
 const appManagerApolloServer = async ({ app }: { app: any }) => {
   const Resolver = require('./graphQL/resolvers/index');
-  const Schema = require('./graphQl/schemas/index');
+  const Schema = require('./graphQL/schemas/index');
 
   if (GRAPHQL_MODULE === 'yoga') {
     const yoga = createYoga({
