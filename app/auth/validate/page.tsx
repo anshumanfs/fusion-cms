@@ -1,12 +1,12 @@
 'use client';
 import * as React from 'react';
-import { useSearchParams, usePathname } from 'next/navigation';
-import { useRouter } from 'next/navigation';
+import { Suspense } from 'react';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { Loader2 } from 'lucide-react';
 import { ValidateUser } from './validate-user';
 import { ValidateReset } from './validate-reset';
 
-const DefaultProgessBar = () => {
+const DefaultProgressBar = () => {
   return (
     <div className="flex h-screen">
       <div className="m-auto flex items-center space-x-2">
@@ -17,23 +17,34 @@ const DefaultProgessBar = () => {
   );
 };
 
-export default function Validate() {
-  const [page, setPage] = React.useState(DefaultProgessBar);
+function ValidateContent() {
+  const [page, setPage] = React.useState<React.ReactNode>(<DefaultProgressBar />);
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
-  const [] = React.useState(DefaultProgessBar);
+
   React.useEffect(() => {
     const entity = searchParams.get('entity');
+
     if (entity === 'user') {
-      setPage(<ValidateUser />);
+      setPage(() => <ValidateUser />);
       return;
     }
     if (entity === 'reset') {
-      setPage(<ValidateReset />);
+      setPage(() => <ValidateReset />);
       return;
     }
+
     router.push('/404');
   }, [pathName, searchParams, router]);
+
   return <>{page}</>;
+}
+
+export default function Validate() {
+  return (
+    <Suspense fallback={<DefaultProgressBar />}>
+      <ValidateContent />
+    </Suspense>
+  );
 }
