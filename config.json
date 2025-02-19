@@ -16,8 +16,8 @@
     "uniqueEmailSecret": "unique-email-secret"
   },
   "user": {
-    "isOpenRegistrationAllowed": false,
-    "isInvitedRegistrationAllowed": true,
+    "isOpenRegistrationAllowed": true,
+    "isInvitedRegistrationAllowed": false,
     "additionalRoles": ["consumerGold"],
     "defaultRole": "user"
   },
