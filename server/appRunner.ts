@@ -209,7 +209,7 @@ const runAsMicroService = async () => {
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
           await microservicesFunctions();
-          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth`);
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth?tab=register`);
         } else {
           await microservicesFunctions();
         }
@@ -226,7 +226,7 @@ const runAsMicroService = async () => {
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
           await microservicesFunctions();
-          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth`);
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth?tab=register`);
         } else {
           await microservicesFunctions();
         }
@@ -292,7 +292,7 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
           await monolithFunctions();
-          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth/`);
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth?tab=register`);
         } else {
           await monolithFunctions();
         }
@@ -309,7 +309,7 @@ const runAsMonolith = async ({ app, dev }: { app: any; dev: boolean }) => {
         const checkIfAdminRegistered = await appStatus.checkIfAdminRegistered();
         if (!checkIfAdminRegistered) {
           await monolithFunctions();
-          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth`);
+          logger.error(`✗ Admin user not registered. Register admin at ${ROOT}/auth?tab=register`);
         } else {
           await monolithFunctions();
         }

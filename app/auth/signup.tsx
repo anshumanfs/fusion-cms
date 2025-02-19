@@ -23,7 +23,7 @@ export function Signup() {
     password: '',
     confirmPassword: '',
     terms: false,
-    inviteCode: null as any,
+    inviteCode: '' as any,
   });
   const [registrationStatus, setRegistrationStatus] = React.useState({});
 
@@ -63,11 +63,9 @@ export function Signup() {
       return;
     }
     const data = JSON.stringify({
-      query: `mutation RegisterUser($email: String!, $firstName: String!, $lastName: String!, $password: String! ${
-        formState.inviteCode ? ', $inviteCode: String' : ''
-      }) {
-        registerUser(email: $email, firstName: $firstName, lastName: $lastName, password: $password ${
-          formState.inviteCode ? ', inviteCode: $inviteCode' : ''
+      query: `mutation RegisterUser($email: String!, $firstName: String!, $lastName: String!, $password: String! ${formState.inviteCode ? ', $inviteCode: String' : ''
+        }) {
+        registerUser(email: $email, firstName: $firstName, lastName: $lastName, password: $password ${formState.inviteCode ? ', inviteCode: $inviteCode' : ''
         }) {
           email
           firstName
