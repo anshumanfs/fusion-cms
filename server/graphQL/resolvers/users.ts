@@ -11,6 +11,7 @@ import disposableDomains from 'disposable-email-domains';
 import { generateUniqueRandomId } from '../../libs/customLibs';
 import { oneWayEncoder, twoWayDecoder, twoWayEncoder } from '../../libs/encoderDecoder';
 import lodash from 'lodash';
+import { use } from 'react';
 
 const getUser = async (_: any, args: any) => {
   const { id } = args;
@@ -117,6 +118,8 @@ const registerUser = async (_: any, args: any) => {
   };
   if (userCount === 0) {
     userData.role = 'admin'; // First user will be admin by default
+    userData.isActive = true; // First user will be active by default
+    userData.isVerified = true; // First user will be verified by default
   }
   const dataToEncrypt = JSON.stringify({ email, date: new Date().toISOString() });
   const uniqueCode = encodeURIComponent(twoWayEncoder(dataToEncrypt, Config.secrets.uniqueEmailSecret));
