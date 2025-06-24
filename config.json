@@ -44,8 +44,39 @@
       "preflightContinue": false,
       "optionsSuccessStatus": 204
     },
+    "contentSecurityPolicy": {
+      "directives": {
+        "defaultSrc": ["'self'", "http: //localhost:3001", "http://127.0.0.1:3001"],
+        "scriptSrc": [
+          "'self'",
+          "'unsafe-inline'",
+          "'unsafe-eval'",
+          "https: //unpkg.com",
+          "https: //*.apollographql.com",
+          "http: //localhost",
+          "http: //127.0.0.1"
+        ],
+        "styleSrc": [
+          "'self'",
+          "'unsafe-inline'",
+          "https: //unpkg.com",
+          "https: //*.apollographql.com",
+          "https: //*.jsdelivr.net",
+          "http: //localhost",
+          "http: //127.0.0.1"
+        ],
+        "imgSrc": ["'self'", "data:", "https: //*.apollographql.com", "http://localhost", "http://127.0.0.1"],
+        "frameSrc": [
+          "'self'",
+          "https: //unpkg.com",
+          "https://*.apollographql.com",
+          "http://localhost",
+          "http://127.0.0.1"
+        ]
+      }
+    },
     "ipFilter": {
-      "whitelist": ["127.12.20.21", "::1", "::ffff:127.0.0.1"],
+      "whitelist": ["127.12.20.21", "::1", "::ffff:127.0.0.1", "127.0.0.1"],
       "blacklist": []
     }
   }

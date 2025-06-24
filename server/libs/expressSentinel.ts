@@ -33,6 +33,7 @@ const helmetProtection = helmet({
       frameSrc: ["'self'", 'https://unpkg.com', 'https://*.apollographql.com'],
     },
   },
+  ...config.security.contentSecurityPolicy,
 });
 
 const ipSentinel = (req: Express.Request, res: Express.Response, next: Express.NextFunction) => {
