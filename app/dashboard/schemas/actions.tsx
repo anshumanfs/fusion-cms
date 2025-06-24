@@ -80,7 +80,7 @@ export function Actions() {
             </svg>
             Pause
           </DropdownMenuItem>
-          <ConfirmDelete appName=''>
+          <ConfirmDelete appName="">
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"

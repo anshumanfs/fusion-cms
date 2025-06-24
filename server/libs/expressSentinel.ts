@@ -22,7 +22,13 @@ const helmetProtection = helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://unpkg.com', 'https://*.apollographql.com'],
-      styleSrc: ["'self'", "'unsafe-inline'", 'https://unpkg.com', 'https://*.apollographql.com', 'https://*.jsdelivr.net'],
+      styleSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        'https://unpkg.com',
+        'https://*.apollographql.com',
+        'https://*.jsdelivr.net',
+      ],
       imgSrc: ["'self'", 'data:', 'https://*.apollographql.com'],
       frameSrc: ["'self'", 'https://unpkg.com', 'https://*.apollographql.com'],
     },
