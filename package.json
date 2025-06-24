@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@apollo/server": "^4.9.0",
+    "@aws-sdk/client-s3": "^3.721.0",
+    "@aws-sdk/s3-request-presigner": "^3.721.0",
     "@envelop/apollo-server-errors": "^6.0.0",
     "@graphql-tools/schema": "^10.0.0",
     "@hookform/resolvers": "^3.3.0",
@@ -63,6 +65,7 @@
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.5.0",
     "express-slow-down": "^2.0.3",
+    "firebase": "^11.1.0",
     "formidable": "^3.5.0",
     "fs-extra": "^11.1.1",
     "graphql": "^16.8.1",

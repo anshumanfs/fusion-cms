@@ -7,7 +7,7 @@ const { Types, addEnums, addDefaultValue, index, Optional } = require('../../tem
 const additionalRoles = config.user.additionalRoles || [];
 const QuerySchema: any = new Schema(
   {
-    _id: Types.ObjectId(),
+    _id: Types.UUID(),
     firstName: Types.String(),
     lastName: Optional(Types.String()),
     email: index(Types.Email()),
