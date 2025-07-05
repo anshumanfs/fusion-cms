@@ -1,0 +1,90 @@
+<section id="Page-Header" class="polka-v2-bg">
+
+  <div class="container mx-auto flex px-5 pt-24 items-center justify-center flex-col">
+    <div class="text-center lg:w-2/3 w-full">
+      <span class="text-5xl font-medium">Don't waste effort in building APIs</span>
+      <span class="m-4 text-gray-500 text-2xl">Define your schema and expose apis in minutes</span>
+    </div>
+    <div class="container mx-auto flex px-5 pt-24 items-center justify-center flex-col">
+      <div class="mb-4 mt-12 inline-flex flex-col items-center space-x-0 space-y-4 text-center sm:flex-row sm:space-x-4 sm:space-y-0">
+        <% for (let i = 0; i < commands.length; i++) { %>
+          <div class="code-block rounded-lg bg-slate-100 px-4 py-2 dark:bg-slate-800">
+            <span class="flex-1">
+              <span class="dark:text-white text-slate-800"><%= commands[i] %></span>
+              <span class="dark:text-yellow-500 text-violet-700 ml-2">fusion-cms</span>
+            </span>
+          </div>
+          <% if (i !== commands.length - 1) { %>
+            <span class="bg-slate-800 dark:bg-white hidden h-5 w-px md:inline-flex"></span>
+          <% } %>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="Page-Features">
+  <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+    <div class="mx-auto max-w-lg text-center">
+      <h2 class="text-3xl font-bold sm:text-4xl">Kickstart your API Journey</h2>
+      <p class="mt-4 text-gray-500 dark:text-gray-300">
+        Get started with Fusion CMS in minutes. Fusion CMS is a headless CMS that provides everything you need to
+        build powerful GraphQL and RESTful APIs.
+      </p>
+    </div>
+
+    <div class="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <% features.forEach(function(feature) { %>
+        <a class="block rounded-xl p-8 shadow-xl transition hover:shadow-violet-500/50" href="/services/digital-campaigns">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-violet-500">
+            <% /* Render the SVG based on feature.icon - simplified for example */ %>
+            <path d="M12 3v18"></path>
+            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+          </svg>
+          <h2 class="mt-4 text-xl font-bold"><%= feature.title %></h2>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-300"><%= feature.description %></p>
+        </a>
+      <% }); %>
+    </div>
+
+    <div class="mt-12 text-center">
+      <a href="/dashboard" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4">
+        Get started
+      </a>
+    </div>
+  </div>
+</section>
+
+<section id="Page-Manifesto">
+  <div class="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+    <div class="mx-auto max-w-lg text-center">
+      <h2 class="text-3xl font-bold sm:text-4xl">Our Manifesto</h2>
+    </div>
+    <div class="mt-12 mx-auto ml-32 mr-32">
+      <a href="#" class="relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8">
+        <span class="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
+
+        <div class="sm:flex sm:justify-between sm:gap-4">
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-200 sm:text-xl">
+              Building a CMS as a software developer
+            </h3>
+            <p class="mt-1 text-xs font-medium text-gray-600">By Anshuman Nayak</p>
+          </div>
+
+          <div class="hidden sm:block sm:shrink-0">
+            <img src="https://anshumanfs.github.io/images/avatar.jpg" alt="Anshuman Nayak" class="h-16 w-16 rounded-lg object-cover shadow-sm" />
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <p class="max-w-[40ch] text-sm text-gray-500">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat dolores iure fugit eligendi, quaerat adipisci cum veritatis similique odio consequuntur impedit soluta quibusdam, tempora voluptates pariatur totam officiis autem? Veritatis?
+          </p>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

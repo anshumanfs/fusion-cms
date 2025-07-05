@@ -1,0 +1,151 @@
+/* Custom styles for Fusion CMS */
+
+/* Base styles */
+body {
+  font-family: 'Inter', sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* Animation for transitions */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* Toast notifications */
+#toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toast {
+  transition: all 0.3s ease;
+}
+
+.toast.opacity-0 {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+/* Modal transitions */
+.modal-overlay {
+  transition: opacity 0.3s ease;
+}
+
+/* Card hover effects */
+.card-hover {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Dashboard sidebar */
+.sidebar {
+  transition:
+    width 0.3s ease,
+    transform 0.3s ease;
+}
+
+.sidebar.collapsed {
+  width: 5rem;
+}
+
+.sidebar.collapsed .sidebar-text {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-icon {
+  margin: 0 auto;
+}
+
+/* Form elements */
+.form-input:focus,
+.form-select:focus {
+  outline: 2px solid rgba(99, 102, 241, 0.5);
+  outline-offset: 2px;
+}
+
+/* Table styles */
+.data-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* Dark mode overrides */
+.dark .card-hover:hover {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.3),
+    0 4px 6px -2px rgba(0, 0, 0, 0.2);
+}
+
+/* Button styles */
+.btn {
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Helper classes */
+.text-balance {
+  text-wrap: balance;
+}
+
+/* Status indicators */
+.status-dot {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+}
+
+.status-active {
+  background-color: #10b981;
+}
+
+.status-inactive {
+  background-color: #6b7280;
+}
+
+.status-error {
+  background-color: #ef4444;
+}
+
+/* Schema field container */
+.schema-field {
+  transition: background-color 0.3s ease;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+}
+
+.schema-field:hover {
+  background-color: rgba(243, 244, 246, 0.5);
+}
+
+.dark .schema-field:hover {
+  background-color: rgba(55, 65, 81, 0.3);
+}

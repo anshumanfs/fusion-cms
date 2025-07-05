@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+
+<div class="grid grid-cols-12 gap-2">
+  <div class="col-span-3">
+    <%- include('../partials/sidebar') %>
+  </div>
+  <div class="col-span-9">
+    <div class="h-[8%]">
+      <div class="float-right mr-2 mt-2">
+        <%- include('../partials/theme-toggle') %>
+      </div>
+    </div>
+    
+    <%- body %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

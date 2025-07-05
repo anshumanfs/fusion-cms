@@ -4,6 +4,7 @@
     "typeRoots": ["@types/*"],
     "target": "es2016",
     "module": "commonjs",
+    "moduleResolution": "node",
     "jsx": "preserve",
     "allowJs": true,
     "esModuleInterop": true,

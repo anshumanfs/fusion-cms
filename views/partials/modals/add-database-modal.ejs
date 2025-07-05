@@ -1,0 +1,68 @@
+<!-- Add Database Modal -->
+<div id="add-database-modal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
+  <div class="bg-background max-w-lg w-full rounded-lg shadow-lg p-6">
+    <div class="flex flex-col space-y-1.5 text-center sm:text-left">
+      <h3 class="text-lg font-semibold leading-none tracking-tight">Add Database</h3>
+      <p class="text-sm text-muted-foreground">Please add the details below to onboard a new database.</p>
+    </div>
+    
+    <form action="/api/databases" method="POST" class="mt-4 space-y-4">
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="dbName" class="text-right text-sm font-medium">Database Name</label>
+        <input type="text" id="dbName" name="dbName" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="My Database" required />
+      </div>
+      
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="dbType" class="text-right text-sm font-medium">Database Type</label>
+        <select id="dbType" name="dbType" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" required>
+          <option value="">Select database type</option>
+          <option value="mysql">MySQL</option>
+          <option value="postgres">PostgreSQL</option>
+          <option value="mongodb">MongoDB</option>
+          <option value="sqlite">SQLite</option>
+          <option value="mariadb">MariaDB</option>
+          <option value="oracle">Oracle</option>
+          <option value="mssql">SQL Server</option>
+          <option value="db2">DB2</option>
+        </select>
+      </div>
+      
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="dbHost" class="text-right text-sm font-medium">Host</label>
+        <input type="text" id="dbHost" name="dbHost" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="localhost" />
+      </div>
+      
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="dbPort" class="text-right text-sm font-medium">Port</label>
+        <input type="text" id="dbPort" name="dbPort" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="3306" />
+      </div>
+      
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="dbUser" class="text-right text-sm font-medium">Username</label>
+        <input type="text" id="dbUser" name="dbUser" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="root" />
+      </div>
+      
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="dbPassword" class="text-right text-sm font-medium">Password</label>
+        <input type="password" id="dbPassword" name="dbPassword" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="••••••••" />
+      </div>
+      
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="dbName" class="text-right text-sm font-medium">Database Name</label>
+        <input type="text" id="dbName" name="dbName" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="my_database" />
+      </div>
+      
+      <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6">
+        <button type="button" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-10 py-2 px-4" data-modal-hide="add-database-modal">
+          Cancel
+        </button>
+        <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+          Proceed
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

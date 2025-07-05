@@ -1,0 +1,16 @@
+<!-- Header partial -->
+<header class="body-font">
+  <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
+    <a class="flex title-font font-medium items-center mb-4 md:mb-0" href="/">
+      <img src="/logo/light/logo.svg" alt="Fusion CMS Logo" width="50" height="50" class="hidden dark:block" />
+      <img src="/logo/dark/logo.svg" alt="Fusion CMS Logo" width="50" height="50" class="block dark:hidden" />
+      <span class="ml-3 text-xl">Fusion CMS</span>
+    </a>
+    <nav class="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
+      <a class="mr-5 hover:text-gray-500 cursor-pointer" href="/documentation">Documentation</a>
+      <a class="mr-5 hover:text-gray-500 cursor-pointer" href="/support">Support</a>
+      <a class="mr-5 hover:text-gray-500 cursor-pointer" href="/donate">Donate</a>
+    </nav>
+    <%- include('./theme-toggle') %>
+  </div>
+</header>

@@ -1,0 +1,85 @@
+<!-- Title is passed via render function -->
+
+<div class="m-auto">
+  <div class="flex flex-col items-center">
+    <img src="/logo/light/logo.svg" alt="Fusion CMS Logo" width="120" height="120" class="hidden dark:block" />
+    <img src="/logo/dark/logo.svg" alt="Fusion CMS Logo" width="120" height="120" class="block dark:hidden" />
+    <span class="text-3xl mx-auto">Fusion CMS</span>
+    <span>The Most Advanced and Generic Headless-CMS</span>
+  </div>
+</div>
+
+<div class="card m-auto rounded-xl border bg-card text-card-foreground shadow w-[400px]">
+  <div class="tabs">
+    <div class="flex flex-col space-y-1.5 p-6">
+      <div class="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground">
+        <a href="/auth?tab=register" class="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 <%= activeTab === 'register' ? 'bg-background text-foreground shadow' : '' %> w-1/3">
+          Register
+        </a>
+        <a href="/auth?tab=login" class="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 <%= activeTab === 'login' ? 'bg-background text-foreground shadow' : '' %> w-1/3">
+          Login
+        </a>
+        <a href="/auth?tab=reset" class="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 <%= activeTab === 'reset' ? 'bg-background text-foreground shadow' : '' %> w-1/3">
+          Reset
+        </a>
+      </div>
+    </div>
+    
+    <div class="tab-content p-6 pt-0">
+      <% if (activeTab === 'register') { %>
+        <form action="/api/auth/register" method="POST" class="space-y-4">
+          <div class="space-y-2">
+            <label for="name" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Name</label>
+            <input type="text" id="name" name="name" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+          </div>
+          
+          <div class="space-y-2">
+            <label for="email" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email</label>
+            <input type="email" id="email" name="email" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+          </div>
+          
+          <div class="space-y-2">
+            <label for="password" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Password</label>
+            <input type="password" id="password" name="password" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+          </div>
+          
+          <div class="space-y-2">
+            <label for="confirmPassword" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Confirm Password</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+          </div>
+          
+          <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4 w-full">
+            Register
+          </button>
+        </form>
+      <% } else if (activeTab === 'login') { %>
+        <form action="/api/auth/login" method="POST" class="space-y-4">
+          <div class="space-y-2">
+            <label for="email" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email</label>
+            <input type="email" id="email" name="email" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+          </div>
+          
+          <div class="space-y-2">
+            <label for="password" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Password</label>
+            <input type="password" id="password" name="password" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+          </div>
+          
+          <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4 w-full">
+            Login
+          </button>
+        </form>
+      <% } else if (activeTab === 'reset') { %>
+        <form action="/api/auth/reset" method="POST" class="space-y-4">
+          <div class="space-y-2">
+            <label for="email" class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Email</label>
+            <input type="email" id="email" name="email" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
+          </div>
+          
+          <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4 w-full">
+            Reset Password
+          </button>
+        </form>
+      <% } %>
+    </div>
+  </div>
+</div>

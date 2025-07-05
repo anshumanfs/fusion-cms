@@ -1,0 +1,130 @@
+<!-- Title is passed via render function -->
+
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Users</h1>
+    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4" data-modal-toggle="add-user-modal">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      Add User
+    </button>
+  </div>
+
+  <div class="bg-card text-card-foreground rounded-lg border shadow">
+    <div class="overflow-x-auto">
+      <table class="w-full caption-bottom text-sm">
+        <thead class="[&_tr]:border-b">
+          <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">#</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Name</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Email</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Role</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Status</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Created</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="[&_tr:last-child]:border-0">
+          <% if (users && users.length > 0) { %>
+            <% users.forEach(function(user, index) { %>
+              <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                <td class="p-4 align-middle"><%= index + 1 %></td>
+                <td class="p-4 align-middle">
+                  <div class="flex items-center">
+                    <span class="inline-flex items-center justify-center rounded-full h-8 w-8 bg-muted mr-2">
+                      <span class="font-medium text-xs text-foreground"><%= user.initials %></span>
+                    </span>
+                    <%= user.name %>
+                  </div>
+                </td>
+                <td class="p-4 align-middle"><%= user.email %></td>
+                <td class="p-4 align-middle">
+                  <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-purple-700 dark:text-purple-400 border-purple-700 dark:border-purple-400">
+                    <%= user.role %>
+                  </span>
+                </td>
+                <td class="p-4 align-middle">
+                  <span class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 <%= user.status === 'active' ? 'text-green-700 dark:text-green-400 border-green-700 dark:border-green-400' : 'text-red-700 dark:text-red-400 border-red-700 dark:border-red-400' %>">
+                    <%= user.status %>
+                  </span>
+                </td>
+                <td class="p-4 align-middle"><%= user.createdAt %></td>
+                <td class="p-4 align-middle">
+                  <div class="flex space-x-2">
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-9 px-3" data-modal-toggle="view-user-modal" data-user-id="<%= user.id %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-9 px-3" data-modal-toggle="edit-user-modal" data-user-id="<%= user.id %>">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                        <path d="m15 5 4 4"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="p-4 text-center text-muted-foreground">No users found</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- View User Modal -->
+<div id="view-user-modal" class="hidden fixed inset-0 z-50 bg-black/50 items-center justify-center">
+  <div class="bg-background max-w-md w-full rounded-lg shadow-lg p-6">
+    <div class="flex flex-col space-y-1.5 text-center sm:text-left">
+      <h3 class="text-lg font-semibold leading-none tracking-tight">User Details</h3>
+      <p class="text-sm text-muted-foreground">View user information</p>
+    </div>
+    
+    <div class="mt-4 space-y-4">
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="firstName" class="text-right text-sm font-medium">First Name</label>
+        <input type="text" id="firstName" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" disabled />
+      </div>
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="lastName" class="text-right text-sm font-medium">Last Name</label>
+        <input type="text" id="lastName" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" disabled />
+      </div>
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="email" class="text-right text-sm font-medium">Email</label>
+        <input type="email" id="email" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" disabled />
+      </div>
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="blocked" class="text-right text-sm font-medium">Blocked</label>
+        <select id="blocked" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" disabled>
+          <option value="blocked">Blocked</option>
+          <option value="active">Active</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="apiKey" class="text-right text-sm font-medium">API Key</label>
+        <div class="relative col-span-3">
+          <input type="text" id="apiKey" class="w-full rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" disabled />
+          <button class="absolute right-0 top-0 inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-10 px-3" onclick="copyApiKey()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+              <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6">
+      <button type="button" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-10 py-2 px-4" data-modal-hide="view-user-modal">
+        Close
+      </button>
+    </div>
+  </div>
+</div>

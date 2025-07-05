@@ -11,7 +11,6 @@ import disposableDomains from 'disposable-email-domains';
 import { generateUniqueRandomId } from '../../libs/customLibs';
 import { oneWayEncoder, twoWayDecoder, twoWayEncoder } from '../../libs/encoderDecoder';
 import lodash from 'lodash';
-import { use } from 'react';
 
 const getUser = async (_: any, args: any) => {
   const { id } = args;

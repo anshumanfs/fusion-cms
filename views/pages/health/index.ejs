@@ -1,0 +1,135 @@
+<!-- Health Check Page -->
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold mb-8">System Health</h1>
+  
+  <!-- System Status -->
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+    <div class="flex items-center mb-4">
+      <div class="flex-shrink-0">
+        <% if (healthInfo.status === 'healthy') { %>
+          <div class="w-6 h-6 rounded-full bg-green-500"></div>
+        <% } else { %>
+          <div class="w-6 h-6 rounded-full bg-red-500"></div>
+        <% } %>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-lg font-medium">
+          System Status: <%= healthInfo.status === 'healthy' ? 'Healthy' : 'Issues Detected' %>
+        </h3>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+      <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+        <div class="text-sm text-gray-500 dark:text-gray-400">Uptime</div>
+        <div class="text-lg font-medium mt-1">
+          <%= Math.floor(healthInfo.uptime / 86400) %> days <%= Math.floor((healthInfo.uptime % 86400) / 3600) %>h <%= Math.floor((healthInfo.uptime % 3600) / 60) %>m
+        </div>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+        <div class="text-sm text-gray-500 dark:text-gray-400">Memory Usage</div>
+        <div class="text-lg font-medium mt-1">
+          <%= healthInfo.memory.used %>MB / <%= healthInfo.memory.total %>MB
+        </div>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+        <div class="text-sm text-gray-500 dark:text-gray-400">RSS Memory</div>
+        <div class="text-lg font-medium mt-1">
+          <%= healthInfo.memory.rss %>MB
+        </div>
+      </div>
+      
+      <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+        <div class="text-sm text-gray-500 dark:text-gray-400">Last Check</div>
+        <div class="text-lg font-medium mt-1">
+          <%= new Date(healthInfo.timestamp).toLocaleString() %>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Database Connections -->
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-6">
+    <h2 class="text-xl font-semibold mb-4">Database Connections</h2>
+    
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+        <thead>
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Database</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Type</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Ping</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium">Metadata DB</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm">MongoDB</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                Connected
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+              5ms
+            </td>
+          </tr>
+          <tr>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm font-medium">Customer Database</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="text-sm">MySQL</div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                Connected
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm">
+              12ms
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+  <!-- API Health -->
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
+    <h2 class="text-xl font-semibold mb-4">API Health</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="border border-gray-200 dark:border-gray-700 rounded-md p-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="font-medium">GraphQL API</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">/appManager</p>
+          </div>
+          <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+            Operational
+          </span>
+        </div>
+      </div>
+      
+      <div class="border border-gray-200 dark:border-gray-700 rounded-md p-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="font-medium">REST API</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">/rest/appManager</p>
+          </div>
+          <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+            Operational
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

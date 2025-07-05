@@ -1,0 +1,90 @@
+<!-- Add Schema Modal -->
+<div id="add-schema-modal" class="hidden fixed inset-0 z-50 bg-black/50 items-center justify-center">
+  <div class="bg-background max-w-lg w-full rounded-lg shadow-lg p-6 max-h-[80vh] overflow-y-auto">
+    <div class="flex flex-col space-y-1.5 text-center sm:text-left">
+      <h3 class="text-lg font-semibold leading-none tracking-tight">Add Schema</h3>
+      <p class="text-sm text-muted-foreground">Please add the details below to onboard a new schema.</p>
+    </div>
+    
+    <form action="/api/schemas" method="POST" class="mt-4 space-y-4">
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="schemaName" class="text-right text-sm font-medium">Schema Name</label>
+        <input type="text" id="schemaName" name="schemaName" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" placeholder="User" required />
+      </div>
+      
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="dbConnection" class="text-right text-sm font-medium">Database Connection</label>
+        <select id="dbConnection" name="dbConnection" class="col-span-3 rounded border bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" required>
+          <option value="">Select database connection</option>
+          <% if (locals.databases && databases.length > 0) { %>
+            <% databases.forEach(function(db) { %>
+              <option value="<%= db.id %>"><%= db.name %> (<%= db.type %>)</option>
+            <% }); %>
+          <% } else { %>
+            <option value="none" disabled>No databases available</option>
+          <% } %>
+        </select>
+      </div>
+      
+      <div class="grid grid-cols-4 items-center gap-4">
+        <label for="schemaType" class="text-right text-sm font-medium">Schema Type</label>
+        <div class="col-span-3">
+          <div class="flex items-center space-x-2">
+            <input type="radio" id="schemaType-table" name="schemaType" value="table" class="h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" checked />
+            <label for="schemaType-table">Table</label>
+          </div>
+          <div class="flex items-center space-x-2">
+            <input type="radio" id="schemaType-collection" name="schemaType" value="collection" class="h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" />
+            <label for="schemaType-collection">Collection</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border-t pt-4 mt-4">
+        <h4 class="font-medium mb-2">Schema Fields</h4>
+        <div id="schema-fields" class="space-y-4">
+          <div class="schema-field grid grid-cols-4 gap-2">
+            <input type="text" name="fields[0][name]" placeholder="Field name" class="rounded border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" required />
+            <select name="fields[0][type]" class="rounded border bg-transparent px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50" required>
+              <option value="">Type</option>
+              <option value="string">String</option>
+              <option value="number">Number</option>
+              <option value="boolean">Boolean</option>
+              <option value="date">Date</option>
+              <option value="object">Object</option>
+              <option value="array">Array</option>
+            </select>
+            <div class="flex items-center space-x-2">
+              <input type="checkbox" id="fields[0][required]" name="fields[0][required]" class="h-4 w-4 rounded border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" />
+              <label for="fields[0][required]">Required</label>
+            </div>
+            <button type="button" class="remove-field inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background hover:bg-accent hover:text-accent-foreground h-10 py-2 px-2">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <button type="button" id="add-field-btn" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background hover:bg-accent hover:text-accent-foreground h-10 py-2 px-4 mt-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Add Field
+        </button>
+      </div>
+      
+      <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-6">
+        <button type="button" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-10 py-2 px-4" data-modal-hide="add-schema-modal">
+          Cancel
+        </button>
+        <button type="submit" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+          </svg>
+          Proceed
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

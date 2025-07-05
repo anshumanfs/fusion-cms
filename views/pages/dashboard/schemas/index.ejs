@@ -1,0 +1,72 @@
+<!-- Title is passed via render function -->
+
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Schemas</h1>
+    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background bg-primary text-primary-foreground hover:bg-primary/90 h-10 py-2 px-4" data-modal-toggle="add-schema-modal">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mr-2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      Add Schema
+    </button>
+  </div>
+
+  <div class="bg-card text-card-foreground rounded-lg border shadow">
+    <div class="overflow-x-auto">
+      <table class="w-full caption-bottom text-sm">
+        <thead class="[&_tr]:border-b">
+          <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">#</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Schema Name</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Database</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Type</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Fields</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Created</th>
+            <th class="h-10 px-4 text-left align-middle font-medium text-muted-foreground">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="[&_tr:last-child]:border-0">
+          <% if (schemas && schemas.length > 0) { %>
+            <% schemas.forEach(function(schema, index) { %>
+              <tr class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
+                <td class="p-4 align-middle"><%= index + 1 %></td>
+                <td class="p-4 align-middle font-medium"><%= schema.name %></td>
+                <td class="p-4 align-middle"><%= schema.database %></td>
+                <td class="p-4 align-middle"><%= schema.type %></td>
+                <td class="p-4 align-middle"><%= schema.fieldCount %></td>
+                <td class="p-4 align-middle"><%= schema.createdAt %></td>
+                <td class="p-4 align-middle">
+                  <div class="flex space-x-2">
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
+                    </button>
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                        <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                        <path d="m15 5 4 4"></path>
+                      </svg>
+                    </button>
+                    <button class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background border border-input hover:bg-accent hover:text-accent-foreground h-9 px-3">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                        <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="7" class="p-4 text-center text-muted-foreground">No schemas found</td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
