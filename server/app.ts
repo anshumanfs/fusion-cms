@@ -19,8 +19,9 @@ require('dotenv').config({
   path: '../.env',
 });
 
-const port = parseInt(process.env.PORT || '3002');
-const host = '127.0.0.1';
+const port = parseInt(process.env.PORT || '3001');
+// Use '0.0.0.0' to listen on all network interfaces instead of just localhost
+const host = '0.0.0.0';
 const node_env = process?.env?.NODE_ENV?.trim() || 'development';
 const app_mode = process?.env?.APP_MODE?.trim() || 'monolith';
 const dev = node_env === 'development';
@@ -111,8 +112,9 @@ app.get('/ping', (_req, res) => {
 
 // Start server
 const startExpressApp = async () => {
-  app.listen(port, () => {
-    logger.info(`✓ Fusion CMS is running on: http://${host}:${port}`);
+  app.listen(port, host, () => {
+    logger.info(`✓ Fusion CMS is running on: http://localhost:${port}`);
+    logger.info(`Access from other devices on local network: http://<your-ip-address>:${port}`);
   });
 
   if (app_mode === 'monolith') {
