@@ -132,8 +132,8 @@ export default function Home() {
                   </div>
                   <h3 className="text-3xl font-bold mb-4">Building for Developers</h3>
                   <p className="text-muted-foreground mb-6">
-                    "We believe that backend development should be accessible, fast, and scalable without sacrificing
-                    control. Fusion CMS is our answer to the repetitive boilerplate."
+                    &quot; We believe that backend development should be accessible, fast, and scalable without
+                    sacrificing control. Fusion CMS is our answer to the repetitive boilerplate.&quot;
                   </p>
                   <div className="flex items-center gap-4">
                     <Image
