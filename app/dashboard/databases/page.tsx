@@ -75,14 +75,16 @@ export default function DatabasePage() {
   }, []);
 
   return (
-    <>
-      <div className="container mx-auto">
-        <Label className="semi-bold text-xl">Databases</Label>
-        <br />
-        <div className="pt-2">
-          <DataTable columns={columns} data={data} />
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold tracking-tight">Databases</h2>
+          <p className="text-sm text-muted-foreground">
+            Manage your connected databases and their configurations.
+          </p>
         </div>
       </div>
-    </>
+      <DataTable columns={columns} data={data} />
+    </div>
   );
 }
