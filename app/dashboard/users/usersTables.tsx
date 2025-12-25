@@ -56,10 +56,6 @@ const accessorKeyMap: any = {
 
 export const columns: ColumnDef<UsersDisplay>[] = [
   {
-    accessorKey: 'id',
-    header: '',
-  },
-  {
     accessorKey: 'name',
     header: ({ column }) => {
       return (
