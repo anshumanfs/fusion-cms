@@ -1,388 +1,272 @@
+// app/page.tsx
 'use client';
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ModeToggle } from '@/components/themeToggle';
 import { CodeBlock } from '@/components/ui/codeBlock';
+import { CommandCopy } from '@/components/home/CommandCopy';
 import Logo from '@/components/ui/logo';
 import data from './data.json';
-import { FacebookIcon, GithubIcon, InstagramIcon } from 'lucide-react';
+import {
+  FacebookIcon,
+  GithubIcon,
+  InstagramIcon,
+  ArrowRight,
+  Database,
+  Layout,
+  Server,
+  Terminal,
+  Cpu,
+  Globe,
+} from 'lucide-react';
 
-function Feature() {
+function FeatureCard({ feature, index }: { feature: any; index: number }) {
   const LucidReact = require('lucide-react');
-  return data.page.Features.map((feature, index) => {
-    const IconElement = LucidReact[feature.icon];
-    return (
-      <a
-        className="block rounded-xl p-8 shadow-xl transition hover:shadow-violet-500/50"
-        href="/services/digital-campaigns"
-        key={`Feature-page-${index}`}
-      >
-        <IconElement className="h-6 w-6 text-violet-500" />
+  const IconElement = LucidReact[feature.icon] || Cpu;
 
-        <h2 className="mt-4 text-xl font-bold">{feature.title}</h2>
-
-        <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">{feature.description}</p>
-      </a>
-    );
-  });
+  return (
+    <div className="group relative overflow-hidden rounded-2xl border bg-card/50 p-8 transition-all hover:bg-card hover:shadow-2xl hover:shadow-violet-500/10">
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 to-blue-500/5 opacity-0 transition-opacity group-hover:opacity-100" />
+      <div className="relative z-10">
+        <div className="mb-4 inline-flex items-center justify-center rounded-lg bg-violet-500/10 p-3 text-violet-500 group-hover:bg-violet-500 group-hover:text-white transition-colors">
+          <IconElement className="h-6 w-6" />
+        </div>
+        <h3 className="mb-2 text-xl font-bold">{feature.title}</h3>
+        <p className="text-muted-foreground">{feature.description}</p>
+      </div>
+    </div>
+  );
 }
 
 export default function Home() {
   return (
-    <>
-      <section id="Page-Header" className="polka-v2-bg">
-        <header className="body-font">
-          <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-            <a className="flex title-font font-medium items-center mb-4 md:mb-0">
-              <Logo width={50} height={50} />
-              <span className="ml-3 text-xl">Fusion CMS</span>
-            </a>
-            <nav className="md:ml-auto md:mr-auto flex flex-wrap items-center text-base justify-center">
-              <a className="mr-5 hover:text-gray-500 cursor-pointer">Documentation</a>
-              <a className="mr-5 hover:text-gray-500 cursor-pointer">Support</a>
-              <a className="mr-5 hover:text-gray-500 cursor-pointer">Donate</a>
-            </nav>
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Navbar */}
+      <header className="fixed top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+          <Link href="/" className="flex items-center gap-2 font-bold text-xl">
+            <Logo width={32} height={32} />
+            <span>Fusion CMS</span>
+          </Link>
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
+              Documentation
+            </Link>
+            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
+              Support
+            </Link>
+            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
+              Donate
+            </Link>
             <ModeToggle />
-          </div>
-        </header>
-
-        <div className="container mx-auto flex px-5 pt-24 items-center justify-center flex-col">
-          <span className="text-5xl font-medium">Don&apos;t waste effort in building APIs</span>
-          <span className="m-4 text-gray-500 text-2xl">Define your schema and expose apis in minutes</span>
+          </nav>
         </div>
-        <div className="container mx-auto flex px-5 pt-24 items-center justify-center flex-col">
-          <div className="mb-4 mt-12 inline-flex flex-col items-center space-x-0 space-y-4 text-center sm:flex-row sm:space-x-4 sm:space-y-0">
-            {data.page.commands.map((command, index) => (
-              <React.Fragment key={`CodeBlock-Page-${index}`}>
-                <CodeBlock command={`${command} fusion-cms`}>
-                  <span className="flex-1">
-                    <span className="dark:text-white text-slate-800">{command}</span>
-                    <span className="dark:text-yellow-500 text-violet-700 ml-2">fusion-cms</span>
-                  </span>
-                </CodeBlock>
-                {index !== data.page.commands.length - 1 && (
-                  <span className="bg-slate-800 dark:bg-white  hidden h-5 w-px md:inline-flex"></span>
-                )}
-              </React.Fragment>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div className="absolute inset-0 grid-bg -z-10" />
+        <div className="container mx-auto px-4 text-center">
+          <div className="inline-flex items-center rounded-full border bg-muted/50 px-3 py-1 text-sm font-medium text-muted-foreground mb-8 backdrop-blur-sm">
+            <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse" />
+            v0.1.0 Beta is now available
+          </div>
+          <h1 className="mx-auto max-w-4xl text-5xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl mb-6">
+            Build APIs faster than <br />
+            <span className="text-gradient">you can imagine</span>
+          </h1>
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground mb-10">
+            Fusion CMS is an open-source headless CMS that auto-generates powerful GraphQL and REST APIs from your
+            schema definition. Connect multiple databases instantly.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <Button size="lg" className="h-12 px-8 text-lg rounded-full">
+              Get Started <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <Button size="lg" variant="outline" className="h-12 px-8 text-lg rounded-full">
+              View Documentation
+            </Button>
+          </div>
+
+          {/* Terminal Demo */}
+          {/* Interactive Terminal */}
+          <CommandCopy />
+
+          <div className="mt-8 flex items-center justify-center gap-2 text-sm text-zinc-500">
+            <Terminal className="h-4 w-4" />
+            <span>Works with any package manager</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 lg:py-32">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Everything you need</h2>
+            <p className="text-muted-foreground text-lg">
+              Fusion CMS abstracts the complexity of backend development so you can focus on building great products.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {data.page.Features.map((feature, i) => (
+              <FeatureCard key={i} feature={feature} index={i} />
             ))}
           </div>
         </div>
       </section>
-      <section id="Page-Features">
-        <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-          <div className="mx-auto max-w-lg text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl">Kickstart your API Journey</h2>
 
-            <p className="mt-4 text-gray-500 dark:text-gray-300">
-              Get started with Fusion CMS in minutes. Fusion CMS is a headless CMS that provides everything you need to
-              build powerful GraphQL and RESTful APIs.
-            </p>
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <Feature />
-          </div>
-
-          <div className="mt-12 text-center">
-            <Button variant="default" size="lg">
-              Get started
-            </Button>
-          </div>
-        </div>
-      </section>
-      <section id="Page-Manifesto">
-        <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
-          <div className="mx-auto max-w-lg text-center">
-            <h2 className="text-3xl font-bold sm:text-4xl">Our Manifesto</h2>
-          </div>
-          <div className="mt-12 mx-auto ml-32 mr-32">
-            <a href="#" className="relative block overflow-hidden rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8">
-              <span className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-green-300 via-blue-500 to-purple-600"></span>
-
-              <div className="sm:flex sm:justify-between sm:gap-4">
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-200 sm:text-xl">
-                    Building a CMS as a software developer
-                  </h3>
-
-                  <p className="mt-1 text-xs font-medium text-gray-600">By Anshuman Nayak</p>
-                </div>
-
-                <div className="hidden sm:block sm:shrink-0">
-                  <Image
-                    src="https://anshumanfs.github.io/images/avatar.jpg"
-                    alt="Anshuman Nayak"
-                    className="h-16 w-16 rounded-lg object-cover shadow-sm"
-                    width={100}
-                    height={100}
-                  />
-                </div>
-              </div>
-
-              <div className="mt-4">
-                <p className="max-w-[40ch] text-sm text-gray-500">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quibusdam. Lorem ipsum dolor sit amet
-                  consectetur adipisicing elit. Quasi, quibusdam. Lorem ipsum dolor sit amet consectetur adipisicing
-                  elit. Quasi, quibusdam. Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quibusdam.
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, quibusdam.
-                </p>
-              </div>
-
-              <dl className="mt-6 flex gap-4 sm:gap-6">
-                <div className="flex flex-col-reverse">
-                  <dt className="text-sm font-medium text-gray-600">Published</dt>
-                  <dd className="text-xs text-gray-500">31st June, 2021</dd>
-                </div>
-
-                <div className="flex flex-col-reverse">
-                  <dt className="text-sm font-medium text-gray-600">Reading time</dt>
-                  <dd className="text-xs text-gray-500">3 minute</dd>
-                </div>
-              </dl>
-            </a>
-          </div>
-        </div>
-      </section>
-      <section id="Page-Footer">
-        <footer>
-          <div className="mx-auto max-w px-2 py-16 sm:px-6 lg:px-8">
-            <div className="lg:flex lg:items-start lg:gap-8">
-              <div className="text-teal-600">
-                <Logo width={100} height={100} />
-              </div>
-
-              <div className="mt-8 grid grid-cols-2 gap-8 lg:mt-0 lg:grid-cols-5 lg:gap-y-16">
-                <div className="col-span-2">
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Get the latest news!</h2>
-
-                    <p className="mt-4 text-gray-500">
-                      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Esse non cupiditate quae nam molestias.
-                    </p>
+      {/* Manifesto Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-4xl">
+            <div className="overflow-hidden rounded-2xl border bg-card shadow-xl">
+              <div className="grid md:grid-cols-2">
+                <div className="p-8 md:p-12 flex flex-col justify-center">
+                  <div className="inline-flex items-center gap-2 text-violet-500 font-bold mb-4">
+                    <Terminal className="h-5 w-5" />
+                    <span>The Manifesto</span>
+                  </div>
+                  <h3 className="text-3xl font-bold mb-4">Building for Developers</h3>
+                  <p className="text-muted-foreground mb-6">
+                    "We believe that backend development should be accessible, fast, and scalable without sacrificing
+                    control. Fusion CMS is our answer to the repetitive boilerplate."
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src="https://anshumanfs.github.io/images/avatar.jpeg"
+                      alt="Anshuman Nayak"
+                      width={48}
+                      height={48}
+                      className="rounded-full ring-2 ring-background"
+                    />
+                    <div>
+                      <div className="font-bold">Anshuman Nayak</div>
+                      <div className="text-xs text-muted-foreground">Creator, Fusion CMS</div>
+                    </div>
                   </div>
                 </div>
-
-                <div className="col-span-2 lg:col-span-3 lg:flex lg:items-end">
-                  <form className="w-full">
-                    <div className="flex w-full max-w-sm space-x-2 float-right">
-                      <Input type="email" className="w-[100%]" placeholder="Email" />
-                      <Button type="submit">Subscribe</Button>
-                    </div>
-                  </form>
+                <div className="relative h-64 md:h-auto bg-gradient-to-br from-violet-600 to-blue-600 p-8 flex items-center justify-center text-white">
+                  <div className="text-center">
+                    <Database className="h-16 w-16 mx-auto mb-4 opacity-80" />
+                    <div className="text-2xl font-bold">Open Source</div>
+                    <div className="text-white/80">MIT Licensed</div>
+                  </div>
                 </div>
-
-                <div className="col-span-2 sm:col-span-1">
-                  <p className="font-medium text-gray-900 dark:text-white">Services</p>
-
-                  <ul className="mt-6 space-y-4 text-sm">
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        1on1 Coaching{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Company Review{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Accounts Review{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        HR Consulting{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        SEO Optimisation{' '}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="col-span-2 sm:col-span-1">
-                  <p className="font-medium text-gray-900 dark:text-white">Company</p>
-
-                  <ul className="mt-6 space-y-4 text-sm">
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        About{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Meet the Team{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Accounts Review{' '}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="col-span-2 sm:col-span-1">
-                  <p className="font-medium text-gray-900 dark:text-white">Helpful Links</p>
-
-                  <ul className="mt-6 space-y-4 text-sm">
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Contact{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        FAQs{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Live Chat{' '}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="col-span-2 sm:col-span-1">
-                  <p className="font-medium text-gray-900 dark:text-white">Legal</p>
-
-                  <ul className="mt-6 space-y-4 text-sm">
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Accessibility{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Returns Policy{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Refund Policy{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Hiring Statistics{' '}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div className="col-span-2 sm:col-span-1">
-                  <p className="font-medium text-gray-900 dark:text-white">Downloads</p>
-
-                  <ul className="mt-6 space-y-4 text-sm">
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        Marketing Calendar{' '}
-                      </a>
-                    </li>
-
-                    <li>
-                      <a href="#" className="text-gray-700 transition hover:opacity-75">
-                        {' '}
-                        SEO Infographics{' '}
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                <ul className="col-span-2 flex justify-start gap-6 lg:col-span-5 lg:justify-end">
-                  <li>
-                    <a href="/" rel="noreferrer" target="_blank" className="text-gray-700 transition hover:opacity-75">
-                      <span className="sr-only">Facebook</span>
-
-                      <FacebookIcon className="h-6 w-6" />
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="/" rel="noreferrer" target="_blank" className="text-gray-700 transition hover:opacity-75">
-                      <span className="sr-only">Instagram</span>
-
-                      <InstagramIcon className="h-6 w-6" />
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="/" rel="noreferrer" target="_blank" className="text-gray-700 transition hover:opacity-75">
-                      <span className="sr-only">GitHub</span>
-
-                      <GithubIcon className="h-6 w-6" />
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="mt-8 border-t border-gray-300 pt-8">
-              <div className="sm:flex sm:justify-between">
-                <p className="text-xs text-gray-500">
-                  &copy; {new Date().getFullYear()}. Fusion CMS. All rights reserved.
-                </p>
-
-                <ul className="mt-8 flex flex-wrap justify-start gap-4 text-xs sm:mt-0 lg:justify-end">
-                  <li>
-                    <a href="#" className="text-gray-500 transition hover:opacity-75">
-                      {' '}
-                      Terms & Conditions{' '}
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="#" className="text-gray-500 transition hover:opacity-75">
-                      {' '}
-                      Privacy Policy{' '}
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="#" className="text-gray-500 transition hover:opacity-75">
-                      {' '}
-                      Cookies{' '}
-                    </a>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
-        </footer>
+        </div>
       </section>
-    </>
+
+      {/* Footer */}
+      <footer className="border-t bg-background py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+            <div className="col-span-2 lg:col-span-2">
+              <div className="flex items-center gap-2 font-bold text-xl mb-4">
+                <Logo width={32} height={32} />
+                <span>Fusion CMS</span>
+              </div>
+              <p className="text-muted-foreground max-w-xs mb-6">
+                The open-source API development platform for modern engineering teams.
+              </p>
+              <div className="flex gap-4">
+                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                  <GithubIcon className="h-5 w-5" />
+                </Link>
+                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                  <InstagramIcon className="h-5 w-5" />
+                </Link>
+                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                  <FacebookIcon className="h-5 w-5" />
+                </Link>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Product</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Integrations
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Changelog
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Resources</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Documentation
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    API Reference
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Community
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Blog
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Careers
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Legal
+                  </Link>
+                </li>
+                <li>
+                  <Link href="#" className="hover:text-foreground">
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t pt-8 text-center text-sm text-muted-foreground">
+            &copy; {new Date().getFullYear()} Fusion CMS. All rights reserved.
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }

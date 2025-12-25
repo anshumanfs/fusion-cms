@@ -6,7 +6,7 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'anshumanfs.github.io',
         port: '',
-        pathname: '/images/avatar.jpg',
+        pathname: '/images/avatar.jpeg',
       },
     ],
   },
