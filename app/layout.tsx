@@ -13,7 +13,7 @@ const inter = Inter({ subsets: ['latin'] });
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [appContext, setAppContext] = useState(defaultContextValues);
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <AppContext.Provider value={[appContext, setAppContext]}>
           <Loader loaderDisplay={appContext.loaderStates}>
