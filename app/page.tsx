@@ -55,6 +55,7 @@ export default function Home() {
             <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
               Documentation
             </Link>
+
             <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
               Support
             </Link>
