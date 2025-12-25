@@ -53,7 +53,7 @@ const ipSentinel = (req: Express.Request, res: Express.Response, next: Express.N
 const applySentinel = (app: Express.Application) => {
   app.use(ipSentinel);
   app.use(corsProtection);
-  app.use(helmetProtection);
+  app.use(helmetProtection as unknown as Express.RequestHandler);
   app.use(xss());
   app.use(rateLimiter);
 };
