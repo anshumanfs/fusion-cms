@@ -31,8 +31,8 @@ export function Login() {
       </>
     );
     const data = JSON.stringify({
-      query: `mutation Login($email: String!, $password: String!) {
-        login(email: $email, password: $password) {
+      query: `mutation Login($email: String!, $password: String!, $rememberMe: Boolean) {
+        login(email: $email, password: $password, rememberMe: $rememberMe) {
           token
           refreshToken
         }
@@ -40,6 +40,7 @@ export function Login() {
       variables: {
         email: formState.email,
         password: formState.password,
+        rememberMe: formState.remember,
       },
     });
     axios

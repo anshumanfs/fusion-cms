@@ -14,7 +14,7 @@ const userSchema = gql`
     inviteUsersToRegister(emails: [String!]): Response
     changePasswordByOldPass(id: ID!, oldPassword: String!, newPassword: String!): Response
     forgotPassword(uniqueCode: String!, password: String!): Response
-    login(email: String!, password: String!): Token
+    login(email: String!, password: String!, rememberMe: Boolean): Token
     modifyOwnDetails(firstName: String, lastName: String): User
     modifyUser(id: ID!, email: String, role: String, firstName: String, lastName: String, isBlocked: String): User
     modifyUserMetadata(id: ID!, metadata: JSON): User

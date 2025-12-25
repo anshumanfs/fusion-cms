@@ -184,7 +184,7 @@ const activateAccount = async (_: any, args: any) => {
 };
 
 const login = async (_: any, args: any) => {
-  const { email, password } = args;
+  const { email, password, rememberMe } = args;
   const encodedPassword = oneWayEncoder(password);
   const user = await dbModels.users.findOne({ email, password: encodedPassword });
   if (!user) {
@@ -192,6 +192,7 @@ const login = async (_: any, args: any) => {
   }
   const tokenCredentials = {
     email,
+    rememberMe,
     createdAt: new Date().toISOString(),
   };
   const token = twoWayEncoder(JSON.stringify({ ...tokenCredentials, type: 'token' }), Config.secrets.bearerSecret);
@@ -213,9 +214,16 @@ const requestNewToken = async (_: any, args: any) => {
   const refreshTokenCreatedAt = new Date(decryptedRefreshToken.createdAt).getTime();
   const currentTime = new Date().getTime();
 
-  if (currentTime - refreshTokenCreatedAt > refreshTokenValidityInMs) {
+  if (currentTime - refreshTokenCreatedAt > refreshTokenValidityInMs && !decryptedRefreshToken.rememberMe) {
     throw Errors.UNAUTHORIZED('Refresh token expired');
   }
+
+  // If rememberMe is true, allow for 30 days (43200 minutes)
+  const extendedValidityInMs = 43200 * 60 * 1000;
+  if (decryptedRefreshToken.rememberMe && currentTime - refreshTokenCreatedAt > extendedValidityInMs) {
+    throw Errors.UNAUTHORIZED('Refresh token expired');
+  }
+
   const user = await dbModels.users.findOne({ email: decryptedRefreshToken.email });
   if (!user) {
     throw Errors.UNAUTHORIZED('Invalid refresh token');
@@ -226,6 +234,7 @@ const requestNewToken = async (_: any, args: any) => {
 
   const tokenCredentials = {
     email: decryptedRefreshToken.email,
+    rememberMe: decryptedRefreshToken.rememberMe,
     createdAt: new Date().toISOString(),
   };
 
