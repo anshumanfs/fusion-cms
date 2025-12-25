@@ -63,9 +63,7 @@ export default function Schemas() {
       <div className="flex items-center justify-between">
         <div className="space-y-1">
           <h2 className="text-2xl font-semibold tracking-tight">Schemas</h2>
-          <p className="text-sm text-muted-foreground">
-            View and manage your database schemas and collections.
-          </p>
+          <p className="text-sm text-muted-foreground">View and manage your database schemas and collections.</p>
         </div>
       </div>
       <SchemaTable data={appsData} />

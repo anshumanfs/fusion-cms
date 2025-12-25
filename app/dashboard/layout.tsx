@@ -14,9 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="flex-1" />
             <ModeToggle />
           </header>
-          <main className="flex-1 p-6">
-            {children}
-          </main>
+          <main className="flex-1 p-6">{children}</main>
         </div>
       </div>
     </div>

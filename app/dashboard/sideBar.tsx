@@ -8,17 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import Logo from '@/components/ui/logo';
 import { AddDatabase } from './forms/addDatabase';
-import {
-  Database,
-  FileCode,
-  Users,
-  Lock,
-  Settings,
-  FileText,
-  Plus,
-  RefreshCw,
-  Trash2,
-} from 'lucide-react';
+import { Database, FileCode, Users, Lock, Settings, FileText, Plus, RefreshCw, Trash2 } from 'lucide-react';
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
@@ -48,7 +38,7 @@ export function SideBar({ className }: SidebarProps) {
             <Logo width={40} height={40} />
             <span className="ml-2 text-xl font-bold tracking-tight">Fusion CMS</span>
           </Link>
-          
+
           <div className="space-y-1">
             {mainNavItems.map((item) => (
               <Button
