@@ -8,8 +8,6 @@ import { AppContext, defaultContextValues } from './AppContextProvider';
 import { useState } from 'react';
 import { Loader } from '@/components/loader';
 
-import { AccessControlProvider } from './auth/AccessControlContext';
-
 const inter = Inter({ subsets: ['latin'] });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -20,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AppContext.Provider value={[appContext, setAppContext]}>
           <Loader loaderDisplay={appContext.loaderStates}>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-              <AccessControlProvider>{children}</AccessControlProvider>
+              {children}
             </ThemeProvider>
           </Loader>
         </AppContext.Provider>
