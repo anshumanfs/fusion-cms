@@ -6,10 +6,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'anshumanfs.github.io',
         port: '',
-        pathname: '/images/avatar.jpg',
+        pathname: '/images/avatar.jpeg',
       },
     ],
   },
+  allowedDevOrigins: ['localhost', '127.0.0.1'],
 };
 
 module.exports = nextConfig;

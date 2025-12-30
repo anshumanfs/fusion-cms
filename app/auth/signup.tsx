@@ -6,7 +6,7 @@ import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Mail, Lock, User, Ticket } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import axios from '@/lib/axios';
@@ -15,7 +15,7 @@ export function Signup() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
   const signUpBtn = React.useRef(null as any);
-  const [signUpBtnText, setSignUpBtnText] = React.useState("Let's Get Started" as any);
+  const [signUpBtnText, setSignUpBtnText] = React.useState('Create Account' as any);
   const [formState, setFormState] = React.useState({
     firstName: '',
     lastName: '',
@@ -36,7 +36,7 @@ export function Signup() {
     signUpBtn.current.setAttribute('disabled', 'true');
     setSignUpBtnText(
       <>
-        <Loader2 className="h-6 animate-spin mr-2" /> Creating your account...
+        <Loader2 className="h-5 animate-spin mr-2" /> Creating account...
       </>
     );
     if (formState.password !== formState.confirmPassword) {
@@ -47,7 +47,7 @@ export function Signup() {
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       signUpBtn.current.removeAttribute('disabled');
-      setSignUpBtnText("Let's Get Started");
+      setSignUpBtnText('Create Account');
       return;
     }
 
@@ -59,7 +59,7 @@ export function Signup() {
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       signUpBtn.current.removeAttribute('disabled');
-      setSignUpBtnText("Let's Get Started");
+      setSignUpBtnText('Create Account');
       return;
     }
     const data = JSON.stringify({
@@ -93,7 +93,7 @@ export function Signup() {
           action: <ToastAction altText="Try again">Try again</ToastAction>,
         });
         signUpBtn.current.removeAttribute('disabled');
-        setSignUpBtnText("Let's Get Started");
+        setSignUpBtnText('Create Account');
         return;
       }
       setFormState({
@@ -106,7 +106,7 @@ export function Signup() {
         inviteCode: null,
       });
       signUpBtn.current.removeAttribute('disabled');
-      setSignUpBtnText("Let's Get Started");
+      setSignUpBtnText('Create Account');
       toast({
         variant: 'default',
         title: 'Registration Successful!',
@@ -142,37 +142,102 @@ export function Signup() {
   }, []);
 
   return (
-    <form id="registrationForm" className="p-4" onSubmit={handleSubmit}>
+    <form id="registrationForm" className="p-1" onSubmit={handleSubmit}>
       <div className="grid w-full items-center gap-4">
-        <Label htmlFor="framework">Name</Label>
-        <div className="flex w-full items-center space-x-2">
-          <Input id="firstName" type="text" placeholder="First Name" onChange={handleValueChange} />
-          <Input id="lastName" type="text" placeholder="Last Name" onChange={handleValueChange} />
-        </div>
         <div className="flex flex-col space-y-2">
-          <Label htmlFor="framework">Email</Label>
-          <Input id="email" type="email" placeholder="admin@fusion-cms.io" onChange={handleValueChange} />
+          <Label className="text-muted-foreground/80">Full Name</Label>
+          <div className="flex w-full items-center space-x-2">
+            <div className="relative w-full">
+              <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="firstName"
+                type="text"
+                placeholder="First Name"
+                onChange={handleValueChange}
+                className="pl-10 h-10 bg-muted/50 border-input/50"
+              />
+            </div>
+            <div className="relative w-full">
+              <User className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="lastName"
+                type="text"
+                placeholder="Last Name"
+                onChange={handleValueChange}
+                className="pl-10 h-10 bg-muted/50 border-input/50"
+              />
+            </div>
+          </div>
         </div>
+
         <div className="flex flex-col space-y-2">
-          <Label htmlFor="framework">Password</Label>
-          <Input id="password" type="password" placeholder="" onChange={handleValueChange} />
+          <Label htmlFor="email" className="text-muted-foreground/80">
+            Email Address
+          </Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="email"
+              type="email"
+              placeholder="name@example.com"
+              onChange={handleValueChange}
+              className="pl-10 h-10 bg-muted/50 border-input/50"
+            />
+          </div>
         </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor="password" className="text-muted-foreground/80">
+              Password
+            </Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                onChange={handleValueChange}
+                className="pl-10 h-10 bg-muted/50 border-input/50"
+              />
+            </div>
+          </div>
+          <div className="flex flex-col space-y-2">
+            <Label htmlFor="confirmPassword" className="text-muted-foreground/80">
+              Confirm
+            </Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="••••••••"
+                onChange={handleValueChange}
+                className="pl-10 h-10 bg-muted/50 border-input/50"
+              />
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-col space-y-2">
-          <Label htmlFor="framework">Confirm Password</Label>
-          <Input id="confirmPassword" type="password" placeholder="" onChange={handleValueChange} />
+          <Label htmlFor="inviteCode" className="text-muted-foreground/80">
+            Invite Code <span className="text-xs text-muted-foreground opacity-50">(Optional)</span>
+          </Label>
+          <div className="relative">
+            <Ticket className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="inviteCode"
+              type="text"
+              placeholder="INVITE-CODE"
+              value={formState.inviteCode}
+              onChange={handleValueChange}
+              maxLength={8}
+              className="pl-10 h-10 bg-muted/50 border-input/50 font-mono tracking-wider"
+            />
+          </div>
         </div>
-        <div className="flex flex-col space-y-2">
-          <Label htmlFor="framework">Invite Code</Label>
-          <Input
-            id="inviteCode"
-            type="text"
-            placeholder=""
-            value={formState.inviteCode}
-            onChange={handleValueChange}
-            maxLength={8}
-          />
-        </div>
-        <div className="flex items-center space-x-2">
+
+        <div className="flex items-center space-x-2 mt-2">
           <Checkbox
             id="terms"
             onCheckedChange={() => {
@@ -184,14 +249,16 @@ export function Signup() {
           />
           <label
             htmlFor="terms"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-muted-foreground"
           >
-            Agree to the terms and conditions
+            I agree to the <span className="text-primary hover:underline cursor-pointer">Terms</span> and{' '}
+            <span className="text-primary hover:underline cursor-pointer">Privacy Policy</span>
           </label>
         </div>
-        <div className="flex flex-col space-y-2">
-          <Button className="w-full space-x-2" ref={signUpBtn} type="submit">
-            Let&apos;s Get Started
+
+        <div className="flex flex-col space-y-2 mt-2">
+          <Button className="w-full h-11 text-base shadow-lg shadow-primary/20" ref={signUpBtn} type="submit">
+            {signUpBtnText}
           </Button>
         </div>
       </div>

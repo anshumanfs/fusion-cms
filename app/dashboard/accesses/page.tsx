@@ -1,37 +1,25 @@
 'use client';
-import { useState, useEffect, useContext } from 'react';
-import { Apps, columns } from './columns';
+import { useState, useEffect } from 'react';
+import { columns } from './columns';
 import { DataTable } from './data-table';
-import { Label } from '@/components/ui/label';
-import { AddDatabase } from '../forms/addDatabase';
 import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
 
 import axios from '@/lib/axios';
 
-export default function DatabasePage() {
+export default function AccessesPage() {
   const [data, setData] = useState([]);
   const { toast } = useToast();
 
   function fetchData() {
-    // Fetch data from your API here.
     const payload = JSON.stringify({
-      query: `query GetAppsData {
-        getAppsData {
-          _id
+      query: `query GetAccessSchemas {
+        getAccessSchemas {
+          email
           appName
-          dbType
-          isAppCompleted
-          port
-          running
-          schemas {
-            _id
-            appName
-            singularCollectionName
-            pluralCollectionName
-            originalCollectionName
-            schema
-          }
+          endPointName
+          isAllowed
+          allowedInChain
         }
       }`,
       variables: {},
@@ -54,7 +42,7 @@ export default function DatabasePage() {
           });
           return;
         }
-        setData(data.getAppsData);
+        setData(data.getAccessSchemas);
       })
       .catch((err) => {
         toast({
@@ -78,11 +66,11 @@ export default function DatabasePage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-2xl font-semibold tracking-tight">Databases</h2>
-          <p className="text-sm text-muted-foreground">Manage your connected databases and their configurations.</p>
+          <h2 className="text-2xl font-semibold tracking-tight">Accesses</h2>
+          <p className="text-sm text-muted-foreground">Manage user access permissions and schemas.</p>
         </div>
       </div>
-      <DataTable columns={columns} data={data} />
+      <DataTable columns={columns} data={data} onRefresh={fetchData} />
     </div>
   );
 }

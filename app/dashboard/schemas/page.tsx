@@ -59,14 +59,14 @@ export default function Schemas() {
   }, []);
 
   return (
-    <>
-      <div className="container">
-        <Label className="semi-bold text-xl">Schemas</Label>
-        <span className="text-small"></span>
-        <div>
-          <SchemaTable data={appsData} />
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold tracking-tight">Schemas</h2>
+          <p className="text-sm text-muted-foreground">View and manage your database schemas and collections.</p>
         </div>
       </div>
-    </>
+      <SchemaTable data={appsData} />
+    </div>
   );
 }

@@ -2,22 +2,25 @@
 import React from 'react';
 import { SideBar } from './sideBar';
 import { ModeToggle } from '@/components/themeToggle';
+import { AccessControlProvider } from '@/app/auth/AccessControlContext';
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-3">
-          <SideBar />
+    <AccessControlProvider>
+      <div className="flex h-screen overflow-hidden bg-background">
+        <div className="w-64 flex-shrink-0 border-r">
+          <SideBar className="h-full" />
         </div>
-        <div className="col-span-9">
-          <div className="h-[8%]">
-            <div className="float-right mr-2 mt-2">
+        <div className="flex-1 overflow-y-auto">
+          <div className="flex flex-col h-full">
+            <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-6">
+              <div className="flex-1" />
               <ModeToggle />
-            </div>
+            </header>
+            <main className="flex-1 p-6">{children}</main>
           </div>
-          {children}
         </div>
       </div>
-    </>
+    </AccessControlProvider>
   );
 }
