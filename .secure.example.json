@@ -1,0 +1,23 @@
+{
+  "smtp": {
+    "host": "",
+    "auth": {
+      "user": "",
+      "pass": ""
+    },
+    "port": 465
+  },
+  "kafka": {
+    "clientId": "fusion-cms",
+    "brokers": ["127.0.0.1:9092"]
+  },
+  "db": {
+    "metadataDb": {
+      "type": "sqlite",
+      "orm": "sequelize",
+      "configs": {
+        "storage": ".temp/fusion-cms-metadata.sqlite"
+      }
+    }
+  }
+}

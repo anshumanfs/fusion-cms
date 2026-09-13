@@ -1,0 +1,110 @@
+{
+  "name": "MySQL Commerce",
+  "description": "A relational customers and orders sample for Sequelize-backed generated APIs.",
+  "dbType": "mysql",
+  "app": {
+    "appName": "betaCommerce",
+    "dbType": "mysql",
+    "env": "development"
+  },
+  "schemas": [
+    {
+      "appName": "betaCommerce",
+      "originalCollectionName": "customers",
+      "singularCollectionName": "customer",
+      "pluralCollectionName": "customers",
+      "schema": {
+        "id": {
+          "type": "INTEGER",
+          "required": true,
+          "isPrimaryKey": true,
+          "autoIncrement": true
+        },
+        "email": {
+          "type": "EMAIL",
+          "required": true,
+          "isUnique": true
+        },
+        "name": {
+          "type": "STRING",
+          "required": true,
+          "isIndex": true
+        },
+        "status": {
+          "type": "STRING",
+          "required": true,
+          "enums": "['active', 'paused', 'blocked']",
+          "defaultValue": "'active'"
+        },
+        "metadata": {
+          "type": "JSON",
+          "required": false,
+          "isNullable": true
+        }
+      }
+    },
+    {
+      "appName": "betaCommerce",
+      "originalCollectionName": "orders",
+      "singularCollectionName": "order",
+      "pluralCollectionName": "orders",
+      "schema": {
+        "id": {
+          "type": "INTEGER",
+          "required": true,
+          "isPrimaryKey": true,
+          "autoIncrement": true
+        },
+        "customerId": {
+          "type": "INTEGER",
+          "required": true,
+          "isIndex": true,
+          "ref": {
+            "to": "customers",
+            "type": "belongsTo",
+            "options": {
+              "foreignKey": "customerId"
+            }
+          }
+        },
+        "orderNumber": {
+          "type": "STRING",
+          "required": true,
+          "isUnique": true
+        },
+        "total": {
+          "type": "DECIMAL",
+          "required": true
+        },
+        "status": {
+          "type": "STRING",
+          "required": true,
+          "enums": "['draft', 'paid', 'fulfilled', 'cancelled']",
+          "defaultValue": "'draft'"
+        },
+        "placedAt": {
+          "type": "DATE",
+          "required": false,
+          "isNullable": true
+        }
+      }
+    }
+  ],
+  "accessSchemas": [
+    {
+      "email": "admin@example.com",
+      "appName": "betaCommerce",
+      "endPointName": "orders",
+      "isAllowed": "true",
+      "allowedInChain": true
+    },
+    {
+      "email": "support@example.com",
+      "appName": "betaCommerce",
+      "endPointName": "update_order",
+      "isAllowed": "false",
+      "allowedInChain": false
+    }
+  ]
+}
+

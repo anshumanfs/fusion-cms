@@ -1,0 +1,33 @@
+{
+  "description": "Safe beta auth users for local Jest simulations. Passwords are plaintext test inputs only.",
+  "users": [
+    {
+      "email": "admin@example.com",
+      "firstName": "Beta",
+      "lastName": "Admin",
+      "password": "AdminPass123!",
+      "role": "admin",
+      "isVerified": true,
+      "isBlocked": false
+    },
+    {
+      "email": "viewer@example.com",
+      "firstName": "Beta",
+      "lastName": "Viewer",
+      "password": "ViewerPass123!",
+      "role": "user",
+      "isVerified": true,
+      "isBlocked": false
+    },
+    {
+      "email": "blocked@example.com",
+      "firstName": "Blocked",
+      "lastName": "User",
+      "password": "BlockedPass123!",
+      "role": "user",
+      "isVerified": true,
+      "isBlocked": true
+    }
+  ]
+}
+

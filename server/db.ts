@@ -1,5 +1,4 @@
-import cmsConfigs from '../config.json';
-import secureConfig from '../.secure.json';
+import secureConfig from './libs/secureConfig';
 
 const connectorLocations = {
   mongo: './connectors/mongo',

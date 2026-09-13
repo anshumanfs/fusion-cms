@@ -37,10 +37,15 @@ const sequelizeConfigSchema = z.object({
   logging: z.optional(z.boolean()),
 });
 
+const sqliteConfigSchema = z.object({
+  storage: z.string().min(1),
+  logging: z.optional(z.boolean()),
+});
+
 const metaDataDbSchema = z.object({
   type: z.string(),
   orm: z.string(),
-  configs: z.union([mongooseConfigSchema, sequelizeConfigSchema]),
+  configs: z.union([mongooseConfigSchema, sequelizeConfigSchema, sqliteConfigSchema]),
 });
 
 const secretSchema = z.object({

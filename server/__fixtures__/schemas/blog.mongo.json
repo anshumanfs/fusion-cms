@@ -1,0 +1,139 @@
+{
+  "name": "Mongo Blog",
+  "description": "A MongoDB-backed blog with authors, posts, and comments.",
+  "dbType": "mongo",
+  "app": {
+    "appName": "betaBlog",
+    "dbType": "mongo",
+    "env": "development"
+  },
+  "schemas": [
+    {
+      "appName": "betaBlog",
+      "originalCollectionName": "authors",
+      "singularCollectionName": "author",
+      "pluralCollectionName": "authors",
+      "schema": {
+        "displayName": {
+          "type": "String",
+          "required": true,
+          "isIndex": true
+        },
+        "email": {
+          "type": "Email",
+          "required": true,
+          "isUnique": true
+        },
+        "bio": {
+          "type": "String",
+          "required": false,
+          "isNullable": true
+        },
+        "createdAt": {
+          "type": "DateTime",
+          "required": false,
+          "isNullable": true
+        }
+      }
+    },
+    {
+      "appName": "betaBlog",
+      "originalCollectionName": "posts",
+      "singularCollectionName": "post",
+      "pluralCollectionName": "posts",
+      "schema": {
+        "title": {
+          "type": "String",
+          "required": true,
+          "isIndex": true
+        },
+        "slug": {
+          "type": "String",
+          "required": true,
+          "isUnique": true
+        },
+        "body": {
+          "type": "String",
+          "required": true
+        },
+        "status": {
+          "type": "String",
+          "required": true,
+          "enums": "['draft', 'published', 'archived']",
+          "defaultValue": "'draft'"
+        },
+        "tags": {
+          "type": "String",
+          "required": false,
+          "isArray": true,
+          "isNullable": true
+        },
+        "authorId": {
+          "type": "ObjectId",
+          "required": true,
+          "ref": "authors",
+          "foreignField": "_id"
+        },
+        "publishedAt": {
+          "type": "DateTime",
+          "required": false,
+          "isNullable": true
+        },
+        "viewCount": {
+          "type": "PositiveNumber",
+          "required": false,
+          "defaultValue": 0
+        }
+      }
+    },
+    {
+      "appName": "betaBlog",
+      "originalCollectionName": "comments",
+      "singularCollectionName": "comment",
+      "pluralCollectionName": "comments",
+      "schema": {
+        "postId": {
+          "type": "ObjectId",
+          "required": true,
+          "ref": "posts",
+          "foreignField": "_id"
+        },
+        "authorName": {
+          "type": "String",
+          "required": true
+        },
+        "authorEmail": {
+          "type": "Email",
+          "required": false,
+          "isNullable": true
+        },
+        "body": {
+          "type": "String",
+          "required": true
+        },
+        "approved": {
+          "type": "Boolean",
+          "required": false,
+          "defaultValue": false
+        }
+      }
+    }
+  ],
+  "accessSchemas": [
+    {
+      "email": "admin@example.com",
+      "appName": "betaBlog",
+      "endPointName": "posts",
+      "isAllowed": "true",
+      "allowedInChain": true
+    },
+    {
+      "email": "editor@example.com",
+      "appName": "betaBlog",
+      "endPointName": "create_post",
+      "isAllowed": "true",
+      "allowedInChain": true
+    }
+  ]
+}
+

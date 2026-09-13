@@ -1,10 +1,27 @@
 'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import { SideBar } from './sideBar';
 import { ModeToggle } from '@/components/themeToggle';
 import { AccessControlProvider } from '@/app/auth/AccessControlContext';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const [isAuthChecked, setIsAuthChecked] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!localStorage.getItem('token')) {
+      router.replace('/auth?tab=login');
+      return;
+    }
+
+    setIsAuthChecked(true);
+  }, [router]);
+
+  if (!isAuthChecked) {
+    return null;
+  }
+
   return (
     <AccessControlProvider>
       <div className="flex h-screen overflow-hidden bg-background">

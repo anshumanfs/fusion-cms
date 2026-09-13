@@ -4,28 +4,44 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ModeToggle } from '@/components/themeToggle';
-import { CodeBlock } from '@/components/ui/codeBlock';
 import { CommandCopy } from '@/components/home/CommandCopy';
 import Logo from '@/components/ui/logo';
 import data from './data.json';
 import {
-  FacebookIcon,
   GithubIcon,
-  InstagramIcon,
   ArrowRight,
   Database,
-  Layout,
-  Server,
   Terminal,
   Cpu,
-  Globe,
+  Webhook,
+  ShieldCheck,
+  Settings,
+  Scale,
+  FlaskConical,
+  Code,
+  MailCheck,
+  FileText,
+  type LucideIcon,
 } from 'lucide-react';
 
+const featureIcons: Record<string, LucideIcon> = {
+  Code,
+  Database,
+  FileText,
+  FlaskConical,
+  MailCheck,
+  Scale,
+  Settings,
+  ShieldCheck,
+  Webhook,
+};
+
+const docsUrl = 'https://github.com/anshumanfs/fusion-cms/tree/main/fusion-cms-docs';
+const repoUrl = 'https://github.com/anshumanfs/fusion-cms';
+
 function FeatureCard({ feature, index }: { feature: any; index: number }) {
-  const LucidReact = require('lucide-react');
-  const IconElement = LucidReact[feature.icon] || Cpu;
+  const IconElement = featureIcons[feature.icon] || Cpu;
 
   return (
     <div className="group relative overflow-hidden rounded-2xl border bg-card/50 p-8 transition-all hover:bg-card hover:shadow-2xl hover:shadow-violet-500/10">
@@ -52,15 +68,12 @@ export default function Home() {
             <span>Fusion CMS</span>
           </Link>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link href={docsUrl} className="text-sm font-medium hover:text-primary transition-colors">
               Documentation
             </Link>
 
-            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
+            <Link href={`${repoUrl}/issues`} className="text-sm font-medium hover:text-primary transition-colors">
               Support
-            </Link>
-            <Link href="#" className="text-sm font-medium hover:text-primary transition-colors">
-              Donate
             </Link>
             <ModeToggle />
           </nav>
@@ -84,11 +97,13 @@ export default function Home() {
             schema definition. Connect multiple databases instantly.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Button size="lg" className="h-12 px-8 text-lg rounded-full">
-              Get Started <ArrowRight className="ml-2 h-5 w-5" />
+            <Button asChild size="lg" className="h-12 px-8 text-lg rounded-full">
+              <Link href={`${docsUrl}/docs/getting-started/installation.md`}>
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+              </Link>
             </Button>
-            <Button size="lg" variant="outline" className="h-12 px-8 text-lg rounded-full">
-              View Documentation
+            <Button asChild size="lg" variant="outline" className="h-12 px-8 text-lg rounded-full">
+              <Link href={docsUrl}>View Documentation</Link>
             </Button>
           </div>
 
@@ -176,14 +191,8 @@ export default function Home() {
                 The open-source API development platform for modern engineering teams.
               </p>
               <div className="flex gap-4">
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
+                <Link href={repoUrl} aria-label="Fusion CMS on GitHub" className="text-muted-foreground hover:text-foreground">
                   <GithubIcon className="h-5 w-5" />
-                </Link>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
-                  <InstagramIcon className="h-5 w-5" />
-                </Link>
-                <Link href="#" className="text-muted-foreground hover:text-foreground">
-                  <FacebookIcon className="h-5 w-5" />
                 </Link>
               </div>
             </div>
@@ -191,23 +200,18 @@ export default function Home() {
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href={`${docsUrl}/docs/intro.md`} className="hover:text-foreground">
                     Features
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href={`${docsUrl}/docs/core-concepts/databases.md`} className="hover:text-foreground">
                     Integrations
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-foreground">
-                    Changelog
+                  <Link href={`${docsUrl}/docs/advanced/beta-limitations.md`} className="hover:text-foreground">
+                    Beta Limitations
                   </Link>
                 </li>
               </ul>
@@ -216,23 +220,23 @@ export default function Home() {
               <h4 className="font-semibold mb-4">Resources</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href={docsUrl} className="hover:text-foreground">
                     Documentation
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href={`${docsUrl}/docs/api/exposing-apis.md`} className="hover:text-foreground">
                     API Reference
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href={`${repoUrl}/issues`} className="hover:text-foreground">
                     Community
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground">
-                    Blog
+                  <Link href={`${docsUrl}/docs/getting-started/troubleshooting.md`} className="hover:text-foreground">
+                    Troubleshooting
                   </Link>
                 </li>
               </ul>
@@ -241,22 +245,17 @@ export default function Home() {
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href={repoUrl} className="hover:text-foreground">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground">
-                    Careers
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href={`${repoUrl}/blob/main/LICENSE`} className="hover:text-foreground">
                     Legal
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground">
+                  <Link href={`${repoUrl}/issues`} className="hover:text-foreground">
                     Contact
                   </Link>
                 </li>

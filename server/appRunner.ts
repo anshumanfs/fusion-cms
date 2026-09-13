@@ -15,7 +15,7 @@ import cors from 'cors';
 import { customFileParser } from './libs/customFileParser';
 import Application from './controllers/appStatus';
 import cmsConfig from '../config.json';
-import secureConfig from '../.secure.json';
+import secureConfig from './libs/secureConfig';
 import fs from 'fs-extra';
 import { authMiddleware } from './middlewares/auth';
 import packageJson from '../package.json';

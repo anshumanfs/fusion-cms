@@ -1,0 +1,42 @@
+{
+  "name": "Access Control Examples",
+  "description": "Endpoint-level access records for beta dashboard testing.",
+  "records": [
+    {
+      "email": "admin@example.com",
+      "appName": "betaBlog",
+      "endPointName": "posts",
+      "isAllowed": "true",
+      "allowedInChain": true
+    },
+    {
+      "email": "admin@example.com",
+      "appName": "betaBlog",
+      "endPointName": "create_post",
+      "isAllowed": "true",
+      "allowedInChain": true
+    },
+    {
+      "email": "viewer@example.com",
+      "appName": "betaBlog",
+      "endPointName": "delete_post",
+      "isAllowed": "false",
+      "allowedInChain": false
+    },
+    {
+      "email": "support@example.com",
+      "appName": "betaCommerce",
+      "endPointName": "orders",
+      "isAllowed": "true",
+      "allowedInChain": true
+    },
+    {
+      "email": "support@example.com",
+      "appName": "betaCommerce",
+      "endPointName": "delete_order",
+      "isAllowed": "false",
+      "allowedInChain": false
+    }
+  ]
+}
+

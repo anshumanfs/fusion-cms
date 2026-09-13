@@ -1,15 +1,14 @@
 import nodemailer from 'nodemailer';
-import { smtp } from '../../.secure.json';
 import logger from './logger';
 import config from '../../config.json';
+import secureConfig from './secureConfig';
 
-const transporter = nodemailer.createTransport({
-  ...smtp,
-});
+const smtp = secureConfig.smtp;
+const transporter = nodemailer.createTransport(smtp || { jsonTransport: true });
 
 const sendMail = (to: string | [string], subject: string, text: string = '', html: string = '') => {
   const mailOptions = {
-    from: `${config.APP_NAME} <${smtp.auth.user}>`,
+    from: `${config.APP_NAME} <${smtp?.auth?.user || 'no-reply@localhost'}>`,
     to,
     subject,
     text,

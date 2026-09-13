@@ -9,11 +9,11 @@
   "ENVS": ["development", "production"],
   "DEV_ENVS": ["development"],
   "secrets": {
-    "bearerSecret": "secret-token",
-    "refreshTokenSecret": "refresh-token",
-    "apiKeySecret": "api-key-secret",
-    "twoWayEncryptionSecret": "twoWay-encryption-secret",
-    "uniqueEmailSecret": "unique-email-secret"
+    "bearerSecret": "dev-only-change-me-bearer-secret",
+    "refreshTokenSecret": "dev-only-change-me-refresh-token-secret",
+    "apiKeySecret": "dev-only-change-me-api-key-secret",
+    "twoWayEncryptionSecret": "dev-only-change-me-two-way-encryption-secret",
+    "uniqueEmailSecret": "dev-only-change-me-unique-email-secret"
   },
   "user": {
     "isOpenRegistrationAllowed": true,
