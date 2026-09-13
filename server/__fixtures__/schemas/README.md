@@ -9,4 +9,3 @@ Each file contains:
 - `accessSchemas`: optional access-control records that can be created with `createAccessSchema`.
 
 The `schema` field mirrors the current generator format. Values such as `enums` and `defaultValue` are code fragments consumed by the existing template compiler, so string defaults intentionally include quotes.
-

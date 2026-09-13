@@ -77,13 +77,16 @@ const ConfirmDeleteSchema = (props: { children: any; appName: string; schemaName
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to delete this schema?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the schema "{props.schemaName}" from database "{props.appName}".
-            This action cannot be undone.
+            This will permanently delete the schema "{props.schemaName}" from database "{props.appName}". This action
+            cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => deleteSchema(props.appName, props.schemaName)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogAction
+            onClick={() => deleteSchema(props.appName, props.schemaName)}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
             Delete Schema
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -112,12 +115,15 @@ const ConfirmUpdateSchema = (props: { children: any; appName: string; schemaName
         <AlertDialogHeader>
           <AlertDialogTitle>Update Schema</AlertDialogTitle>
           <AlertDialogDescription>
-            This will update the schema "{props.schemaName}" in database "{props.appName}". Please ensure all field definitions are correct before updating.
+            This will update the schema "{props.schemaName}" in database "{props.appName}". Please ensure all field
+            definitions are correct before updating.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => updateSchema(props.appName, props.schemaName)}>Update Schema</AlertDialogAction>
+          <AlertDialogAction onClick={() => updateSchema(props.appName, props.schemaName)}>
+            Update Schema
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

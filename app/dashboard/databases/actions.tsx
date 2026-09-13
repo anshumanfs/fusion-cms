@@ -138,13 +138,16 @@ const ConfirmDeleteDatabase = (props: { children: any; appName: string }) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure you want to delete this database?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the database "{props.appName}" and all associated schemas, credentials, and configurations.
-            This action cannot be undone.
+            This will permanently delete the database "{props.appName}" and all associated schemas, credentials, and
+            configurations. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => deleteDatabase(props.appName)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogAction
+            onClick={() => deleteDatabase(props.appName)}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
             Delete Database
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -173,7 +176,8 @@ const ConfirmUpdateDatabase = (props: { children: any; appName: string }) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Update Database</AlertDialogTitle>
           <AlertDialogDescription>
-            This will update the database "{props.appName}" configuration. Please ensure all credentials are correct before updating.
+            This will update the database "{props.appName}" configuration. Please ensure all credentials are correct
+            before updating.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

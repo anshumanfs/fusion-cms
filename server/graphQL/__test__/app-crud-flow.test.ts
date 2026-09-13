@@ -171,4 +171,3 @@ describe('GraphQL app CRUD flow', () => {
     });
   });
 });
-

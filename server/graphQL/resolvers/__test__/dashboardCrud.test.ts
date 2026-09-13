@@ -213,7 +213,9 @@ describe('dashboard CRUD resolvers', () => {
   });
 
   it('upserts, reads, lists, and removes access schemas', async () => {
-    const { createAccessSchema, getAccessSchema, getAccessSchemas, removeAccessSchema } = await import('../accessSchemas');
+    const { createAccessSchema, getAccessSchema, getAccessSchemas, removeAccessSchema } = await import(
+      '../accessSchemas'
+    );
 
     const accessInput = {
       email: 'admin@example.com',

@@ -34,7 +34,9 @@ describe('generated API contract', () => {
     expect(schemaSource).toContain('posts(filters:JSONObject, options:findOptions): [post]');
     expect(schemaSource).toContain('count_posts(filters:JSONObject): Int');
     expect(schemaSource).toContain('create_post(input: postCreate!): post');
-    expect(schemaSource).toContain('update_post(filters: JSONObject!, updates: postUpdate!, options:updateOptions): post');
+    expect(schemaSource).toContain(
+      'update_post(filters: JSONObject!, updates: postUpdate!, options:updateOptions): post'
+    );
     expect(schemaSource).toContain('delete_post(filters: JSONObject!, options:deleteOptions): post');
 
     expect(resolverSource).toContain("checkPreAccess(parent, args, contextValue, info, 'blog', 'posts')");

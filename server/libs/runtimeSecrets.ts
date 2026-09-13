@@ -17,9 +17,7 @@ const validateRuntimeSecrets = (secrets: RuntimeSecrets, nodeEnv: string = proce
   if (isProductionLikeEnvironment(nodeEnv) && developmentSecretKeys.length > 0) {
     return {
       isValid: false,
-      errors: [
-        `Development-only secrets cannot be used in ${nodeEnv}. Replace: ${developmentSecretKeys.join(', ')}`,
-      ],
+      errors: [`Development-only secrets cannot be used in ${nodeEnv}. Replace: ${developmentSecretKeys.join(', ')}`],
     };
   }
 

@@ -69,4 +69,3 @@ describeIfDocker('MySQL integration smoke', () => {
     expect(deleteResult.affectedRows).toBe(1);
   });
 });
-

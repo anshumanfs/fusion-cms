@@ -52,4 +52,3 @@ describe('beta fixture shapes', () => {
     expect(apiKeyReadonlyAccess.records.filter((record) => record.isAllowed === 'false')).toHaveLength(3);
   });
 });
-

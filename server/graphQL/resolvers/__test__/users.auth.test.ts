@@ -17,7 +17,9 @@ const matchesQuery = (record: any, query: Record<string, any>) =>
 const mockDbModels = {
   users: {
     findOne: jest.fn(async (query: Record<string, any>) => mockUsersStore.find((user) => matchesQuery(user, query))),
-    find: jest.fn(async (query: Record<string, any> = {}) => mockUsersStore.filter((user) => matchesQuery(user, query))),
+    find: jest.fn(async (query: Record<string, any> = {}) =>
+      mockUsersStore.filter((user) => matchesQuery(user, query))
+    ),
     countDocuments: jest.fn(async () => mockUsersStore.length),
     create: jest.fn(async (user: any) => {
       const createdUser = {
@@ -52,7 +54,9 @@ const mockDbModels = {
     }),
   },
   authCodes: {
-    findOne: jest.fn(async (query: Record<string, any>) => mockAuthCodesStore.find((code) => matchesQuery(code, query))),
+    findOne: jest.fn(async (query: Record<string, any>) =>
+      mockAuthCodesStore.find((code) => matchesQuery(code, query))
+    ),
     findOneAndUpdate: jest.fn(async (query: Record<string, any>, update: any) => {
       const authCode = mockAuthCodesStore.find((code) => matchesQuery(code, query));
 
@@ -154,7 +158,8 @@ describe('user authentication flow', () => {
         baseUrl: '/appManager',
         headers: {},
         body: {
-          query: 'mutation { registerUser(email: "admin@example.com", firstName: "Ada", lastName: "Lovelace", password: "passw0rd") { _id } }',
+          query:
+            'mutation { registerUser(email: "admin@example.com", firstName: "Ada", lastName: "Lovelace", password: "passw0rd") { _id } }',
         },
       } as any)
     ).resolves.toEqual({

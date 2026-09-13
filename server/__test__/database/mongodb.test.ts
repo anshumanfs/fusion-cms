@@ -46,15 +46,10 @@ describeIfDocker('MongoDB integration smoke', () => {
     const found = await App.findOne({ appName: 'Mongo Smoke App' });
     expect(found?.dbType).toBe('mongo');
 
-    const updated = await App.findOneAndUpdate(
-      { appName: 'Mongo Smoke App' },
-      { running: true },
-      { new: true }
-    );
+    const updated = await App.findOneAndUpdate({ appName: 'Mongo Smoke App' }, { running: true }, { new: true });
     expect(updated?.running).toBe(true);
 
     await App.deleteOne({ appName: 'Mongo Smoke App' });
     await expect(App.countDocuments({ appName: 'Mongo Smoke App' })).resolves.toBe(0);
   });
 });
-

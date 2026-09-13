@@ -16,9 +16,15 @@ describe('MySQL generated resolvers', () => {
 
     expect(resolverSource).toContain("checkPreAccess(parent, args, contextValue, info, 'betaCommerce', 'orders')");
     expect(resolverSource).toContain("checkPreAccess(parent, args, contextValue, info, 'betaCommerce', 'order')");
-    expect(resolverSource).toContain("checkPreAccess(parent, args, contextValue, info, 'betaCommerce', 'create_order')");
-    expect(resolverSource).toContain("checkPreAccess(parent, args, contextValue, info, 'betaCommerce', 'update_order')");
-    expect(resolverSource).toContain("checkPreAccess(parent, args, contextValue, info, 'betaCommerce', 'delete_order')");
+    expect(resolverSource).toContain(
+      "checkPreAccess(parent, args, contextValue, info, 'betaCommerce', 'create_order')"
+    );
+    expect(resolverSource).toContain(
+      "checkPreAccess(parent, args, contextValue, info, 'betaCommerce', 'update_order')"
+    );
+    expect(resolverSource).toContain(
+      "checkPreAccess(parent, args, contextValue, info, 'betaCommerce', 'delete_order')"
+    );
     expect(resolverSource).toContain('checkPostAccess(parent, args, contextValue, info, postMiddlewareResult)');
   });
 

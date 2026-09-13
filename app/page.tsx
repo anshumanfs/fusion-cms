@@ -191,7 +191,11 @@ export default function Home() {
                 The open-source API development platform for modern engineering teams.
               </p>
               <div className="flex gap-4">
-                <Link href={repoUrl} aria-label="Fusion CMS on GitHub" className="text-muted-foreground hover:text-foreground">
+                <Link
+                  href={repoUrl}
+                  aria-label="Fusion CMS on GitHub"
+                  className="text-muted-foreground hover:text-foreground"
+                >
                   <GithubIcon className="h-5 w-5" />
                 </Link>
               </div>

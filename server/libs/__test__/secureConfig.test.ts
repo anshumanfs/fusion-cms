@@ -1,7 +1,12 @@
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { ensureSecureConfigRuntime, getDefaultConfigRoot, getSecureConfigPath, loadSecureConfig } from '../secureConfig';
+import {
+  ensureSecureConfigRuntime,
+  getDefaultConfigRoot,
+  getSecureConfigPath,
+  loadSecureConfig,
+} from '../secureConfig';
 
 const makeTempRoot = () => fs.mkdtempSync(path.join(os.tmpdir(), 'fusion-cms-secure-config-'));
 
