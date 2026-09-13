@@ -6,7 +6,7 @@
     "dev": "nodemon",
     "dev:next": "next dev",
     "typecheck": "tsc --noEmit && tsc --project tsconfig.server.json --noEmit",
-    "build:next": "next build",
+    "build:next": "next build --webpack",
     "build:server": "tsc --project tsconfig.server.json",
     "build": "npm run build:next && npm run build:server",
     "beta:check": "npm run typecheck && npm test -- --runInBand && npm run build",
@@ -17,7 +17,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@apollo/server": "^4.9.0",
+    "@apollo/server": "^5.5.1",
+    "@as-integrations/express5": "^1.1.2",
     "@aws-sdk/client-s3": "^3.721.0",
     "@aws-sdk/s3-request-presigner": "^3.721.0",
     "@envelop/apollo-server-errors": "^6.0.0",
@@ -41,7 +42,7 @@
     "@tanstack/react-table": "^8.20.6",
     "@types/cors": "^2.8.13",
     "@types/crypto-js": "^4.1.1",
-    "@types/express": "^4.17.17",
+    "@types/express": "^5.0.6",
     "@types/formidable": "^3.4.0",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash": "^4.14.196",
@@ -61,9 +62,9 @@
     "disposable-email-domains": "^1.0.62",
     "dot-env": "^0.0.1",
     "dotenv": "^16.3.1",
-    "eslint": "8.46.0",
+    "eslint": "^9.39.5",
     "eslint-config-next": "^16.1.1",
-    "express": "^4.19.2",
+    "express": "^5.2.1",
     "express-mongo-sanitize": "^2.2.0",
     "express-rate-limit": "^7.5.0",
     "express-slow-down": "^2.0.3",
@@ -84,20 +85,20 @@
     "mysql2": "^3.12.0",
     "next": "^16.1.1",
     "next-themes": "^0.4.6",
-    "nodemailer": "^6.9.12",
+    "nodemailer": "^10.0.9",
     "oracledb": "^6.7.2",
     "pg": "^8.23.0",
     "pg-hstore": "^2.3.4",
-    "pm2": "^5.3.0",
-    "postcss": "8.4.27",
+    "pm2": "^7.0.4",
+    "postcss": "^8.5.28",
     "prettier": "^3.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-hook-form": "^7.69.0",
     "request-ip": "^3.3.0",
-    "sequelize": "^6.32.1",
+    "sequelize": "^6.37.8",
     "sofa-api": "^0.18.0",
-    "sqlite3": "^5.1.7",
+    "sqlite3": "^6.0.1",
     "tailwind-merge": "^1.14.0",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.6",
@@ -123,6 +124,17 @@
   },
   "resolutions": {
     "@radix-ui/react-slot": "1.2.4-rc.1761760880074"
+  },
+  "overrides": {
+    "express": {
+      "qs": "^6.16.0"
+    },
+    "pm2": {
+      "js-yaml": "^5.4.2"
+    },
+    "sequelize": {
+      "uuid": "^11.1.1"
+    }
   },
   "license": "MIT"
 }

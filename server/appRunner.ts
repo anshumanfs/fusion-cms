@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { ApolloServer } from '@apollo/server';
 import { createYoga, createSchema } from 'graphql-yoga';
-import { expressMiddleware } from '@apollo/server/express4';
+import { expressMiddleware } from '@as-integrations/express5';
 import { useApolloServerErrors } from '@envelop/apollo-server-errors';
 import { useSofa } from 'sofa-api';
 import { makeExecutableSchema } from '@graphql-tools/schema';
