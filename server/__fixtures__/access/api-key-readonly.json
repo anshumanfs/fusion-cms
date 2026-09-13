@@ -1,0 +1,47 @@
+{
+  "description": "Read-only access policy for API-key based generated API checks.",
+  "apiKeyUser": {
+    "email": "api-reader@example.com",
+    "firstName": "API",
+    "lastName": "Reader",
+    "role": "user",
+    "apiKey": "test-api-key-readonly"
+  },
+  "records": [
+    {
+      "email": "api-reader@example.com",
+      "appName": "betaBlog",
+      "endPointName": "posts",
+      "isAllowed": "true",
+      "allowedInChain": true
+    },
+    {
+      "email": "api-reader@example.com",
+      "appName": "betaBlog",
+      "endPointName": "post",
+      "isAllowed": "true",
+      "allowedInChain": true
+    },
+    {
+      "email": "api-reader@example.com",
+      "appName": "betaBlog",
+      "endPointName": "create_post",
+      "isAllowed": "false",
+      "allowedInChain": false
+    },
+    {
+      "email": "api-reader@example.com",
+      "appName": "betaBlog",
+      "endPointName": "update_post",
+      "isAllowed": "false",
+      "allowedInChain": false
+    },
+    {
+      "email": "api-reader@example.com",
+      "appName": "betaBlog",
+      "endPointName": "delete_post",
+      "isAllowed": "false",
+      "allowedInChain": false
+    }
+  ]
+}

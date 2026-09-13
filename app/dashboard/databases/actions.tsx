@@ -25,8 +25,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { DotsVerticalIcon } from '@radix-ui/react-icons';
-import { ConfirmDelete } from '../forms/confirmDelete';
-import { Trash2Icon, PlayCircleIcon, PauseCircleIcon, EyeIcon } from 'lucide-react';
+import { Trash2Icon, PlayCircleIcon, PauseCircleIcon, EyeIcon, Edit3, X } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const ConfirmEndpointAction = (props: { children: any; appName: string; action: string }) => {
@@ -76,7 +75,7 @@ const ConfirmEndpointAction = (props: { children: any; appName: string; action: 
       <AlertDialogTrigger className="w-full">{props.children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure to {props.action} this endpoint ?</AlertDialogTitle>
+          <AlertDialogTitle>Are you sure to {props.action} this endpoint?</AlertDialogTitle>
           <AlertDialogDescription>
             You need to restart the application to {props.action === 'start' ? 'make' : 'disable'} the endpoint{' '}
             {props.action === 'start' ? 'visible' : ''}.
@@ -85,6 +84,105 @@ const ConfirmEndpointAction = (props: { children: any; appName: string; action: 
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={() => startEndpoint(props.appName, props.action)}>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+const ConfirmDeleteDatabase = (props: { children: any; appName: string }) => {
+  const { toast } = useToast();
+
+  const deleteDatabase = async (appName: string) => {
+    const payload = JSON.stringify({
+      query: `mutation RemoveApp($appName: String!) {
+        removeApp(appName: $appName) {
+          deletedApp
+          deletedCredentials
+        }
+      }`,
+      variables: {
+        appName,
+      },
+    });
+    axios
+      .post('/appManager', payload)
+      .then((response) => {
+        if (response.data.errors) {
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: response.data.errors[0].message,
+          });
+        } else {
+          toast({
+            variant: 'default',
+            title: 'Success',
+            description: `Database "${appName}" and all associated resources deleted successfully.`,
+          });
+        }
+      })
+      .catch((error) => {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: error.message,
+        });
+      });
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger className="w-full">{props.children}</AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you sure you want to delete this database?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will permanently delete the database "{props.appName}" and all associated schemas, credentials, and
+            configurations. This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => deleteDatabase(props.appName)}
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          >
+            Delete Database
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
+const ConfirmUpdateDatabase = (props: { children: any; appName: string }) => {
+  const { toast } = useToast();
+
+  const updateDatabase = async (appName: string) => {
+    // TODO: Implement database update mutation
+    // For now, we'll show a message that update functionality is coming soon
+    toast({
+      variant: 'default',
+      title: 'Update Coming Soon',
+      description: `The update functionality for database "${appName}" will be available in the next release.`,
+    });
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger className="w-full">{props.children}</AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Update Database</AlertDialogTitle>
+          <AlertDialogDescription>
+            This will update the database "{props.appName}" configuration. Please ensure all credentials are correct
+            before updating.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={() => updateDatabase(props.appName)}>Update Database</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -162,12 +260,19 @@ export function Actions(props: { appName: string; running: boolean }) {
             </ConfirmEndpointAction>
           )}
 
-          <ConfirmDelete appName={props.appName}>
+          <ConfirmUpdateDatabase appName={props.appName}>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <Edit3 className="w-5 h-5 mr-2" />
+              Update
+            </DropdownMenuItem>
+          </ConfirmUpdateDatabase>
+
+          <ConfirmDeleteDatabase appName={props.appName}>
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               <Trash2Icon className="w-5 h-5 mr-2" />
-              Delete
+              Delete Database
             </DropdownMenuItem>
-          </ConfirmDelete>
+          </ConfirmDeleteDatabase>
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>

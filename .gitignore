@@ -23,6 +23,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.logs/
 
 # local env files
 .env*.local
@@ -32,6 +33,7 @@ yarn-error.log*
 
 # ignore files that are marked as secure
 .secure*
+!.secure.example.json
 
 # ignore files that are marked as temp
 .temp*

@@ -1,8 +1,9 @@
 import chalk from 'chalk';
 import fs from 'fs-extra';
+import path from 'path';
 
 const env = process.env.NODE_ENV || 'development';
-const logFile = '../../.logs/logs.txt';
+const logFile = path.resolve(process.cwd(), '.logs/logs.txt');
 fs.ensureFileSync(logFile);
 
 const getTime = () => {

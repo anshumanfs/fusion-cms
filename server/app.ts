@@ -6,7 +6,7 @@ import logger from './libs/logger';
 import { applySentinel } from './libs/expressSentinel';
 
 require('dotenv').config({
-  path: '../.env',
+  path: path.resolve(__dirname, '../../.env'),
 });
 
 const port = parseInt(process.env.PORT || '3000');
@@ -22,25 +22,24 @@ const startExpressApp = async () => {
   app.get('/test', (_req, res) => {
     res.json({ status: 'All good', nodeVersion: childProcess.execSync('node -v').toString().trim() });
   });
+  app.get('/ping', (_req, res) => {
+    res.status(200).json({ status: 'Working fine ! Inside Ping' });
+  });
   app.use(Express.json());
   applySentinel(app);
-
-  app.listen(port);
-  logger.info(`✓ API is running on: http://${host}:${port}`);
 
   if (app_mode === 'monolith') {
     await runAsMonolith({ app, dev });
   } else {
     await runAsMicroService();
   }
-  // App:
-  app.get('/ping', (_req, res) => {
-    res.status(200).json({ status: 'Working fine ! Inside Ping' });
-  });
+
+  app.listen(port);
+  logger.info(`✓ API is running on: http://${host}:${port}`);
 };
 
 if (checkEnv.includes(node_env)) {
-  const nextApp = next({ dev, dir: path.resolve(__dirname, '../../'), port });
+  const nextApp = next({ dev, dir: path.resolve(__dirname, '../../'), port, webpack: true });
   const handle = nextApp.getRequestHandler();
   nextApp
     .prepare()

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { ApolloServer } from '@apollo/server';
 import { createYoga, createSchema } from 'graphql-yoga';
-import { expressMiddleware } from '@apollo/server/express4';
+import { expressMiddleware } from '@as-integrations/express5';
 import { useApolloServerErrors } from '@envelop/apollo-server-errors';
 import { useSofa } from 'sofa-api';
 import { makeExecutableSchema } from '@graphql-tools/schema';
@@ -15,7 +15,7 @@ import cors from 'cors';
 import { customFileParser } from './libs/customFileParser';
 import Application from './controllers/appStatus';
 import cmsConfig from '../config.json';
-import secureConfig from '../.secure.json';
+import secureConfig from './libs/secureConfig';
 import fs from 'fs-extra';
 import { authMiddleware } from './middlewares/auth';
 import packageJson from '../package.json';

@@ -110,8 +110,8 @@ export const columns: ColumnDef<SchemaDisplay>[] = [
     id: 'actions',
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
-      return <Actions />;
+      const schema = row.original;
+      return <Actions appName={schema.databaseName} />;
     },
   },
 ];

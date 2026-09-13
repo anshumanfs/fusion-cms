@@ -1,10 +1,11 @@
 import config from '../../config.json';
-import secureConfig from '../../.secure.json';
+import secureConfig from '../libs/secureConfig';
 import logger from '../libs/logger';
 import lodash from 'lodash';
 import { z } from 'zod';
 import { metaDataDbSchema, secretSchema } from '../schema/zod/configJsonSchema';
 import { dbModels } from '../db';
+import { validateRuntimeSecrets } from '../libs/runtimeSecrets';
 
 class Application {
   isRunning: boolean;
@@ -52,6 +53,12 @@ class Application {
     const configJson = lodash.cloneDeep(config);
     try {
       secretSchema.parse(configJson.secrets);
+      const runtimeSecretValidation = validateRuntimeSecrets(configJson.secrets);
+      if (!runtimeSecretValidation.isValid) {
+        runtimeSecretValidation.errors.forEach((error) => logger.error(error));
+        this.isSecretsConfigured = false;
+        return;
+      }
       this.isSecretsConfigured = true;
     } catch (error) {
       if (error instanceof z.ZodError) {

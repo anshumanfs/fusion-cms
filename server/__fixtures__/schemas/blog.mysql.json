@@ -1,0 +1,90 @@
+{
+  "name": "MySQL Blog",
+  "description": "A relational blog sample with authors and posts for Sequelize-backed generated APIs.",
+  "dbType": "mysql",
+  "app": {
+    "appName": "betaSqlBlog",
+    "dbType": "mysql",
+    "env": "development"
+  },
+  "schemas": [
+    {
+      "appName": "betaSqlBlog",
+      "originalCollectionName": "authors",
+      "singularCollectionName": "author",
+      "pluralCollectionName": "authors",
+      "schema": {
+        "id": {
+          "type": "INTEGER",
+          "required": true,
+          "isPrimaryKey": true,
+          "autoIncrement": true
+        },
+        "email": {
+          "type": "EMAIL",
+          "required": true,
+          "isUnique": true
+        },
+        "displayName": {
+          "type": "STRING",
+          "required": true,
+          "isIndex": true
+        }
+      }
+    },
+    {
+      "appName": "betaSqlBlog",
+      "originalCollectionName": "posts",
+      "singularCollectionName": "post",
+      "pluralCollectionName": "posts",
+      "schema": {
+        "id": {
+          "type": "INTEGER",
+          "required": true,
+          "isPrimaryKey": true,
+          "autoIncrement": true
+        },
+        "authorId": {
+          "type": "INTEGER",
+          "required": true,
+          "isIndex": true,
+          "ref": {
+            "to": "authors",
+            "type": "belongsTo",
+            "options": {
+              "foreignKey": "authorId"
+            }
+          }
+        },
+        "title": {
+          "type": "STRING",
+          "required": true
+        },
+        "slug": {
+          "type": "STRING",
+          "required": true,
+          "isUnique": true
+        },
+        "body": {
+          "type": "TEXT",
+          "required": true
+        },
+        "status": {
+          "type": "STRING",
+          "required": true,
+          "enums": "['draft', 'published', 'archived']",
+          "defaultValue": "'draft'"
+        }
+      }
+    }
+  ],
+  "accessSchemas": [
+    {
+      "email": "admin@example.com",
+      "appName": "betaSqlBlog",
+      "endPointName": "posts",
+      "isAllowed": "true",
+      "allowedInChain": true
+    }
+  ]
+}

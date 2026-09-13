@@ -1,0 +1,33 @@
+{
+  "description": "Access-control records for admin-only generated operations.",
+  "records": [
+    {
+      "email": "admin@example.com",
+      "appName": "betaBlog",
+      "endPointName": "create_post",
+      "isAllowed": "true",
+      "allowedInChain": true
+    },
+    {
+      "email": "admin@example.com",
+      "appName": "betaBlog",
+      "endPointName": "update_post",
+      "isAllowed": "true",
+      "allowedInChain": true
+    },
+    {
+      "email": "viewer@example.com",
+      "appName": "betaBlog",
+      "endPointName": "create_post",
+      "isAllowed": "false",
+      "allowedInChain": false
+    },
+    {
+      "email": "viewer@example.com",
+      "appName": "betaBlog",
+      "endPointName": "delete_post",
+      "isAllowed": "false",
+      "allowedInChain": false
+    }
+  ]
+}
